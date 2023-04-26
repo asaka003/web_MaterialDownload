@@ -1,0 +1,39 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: unset;
+}
+
+/* 全局主题色 */
+
+:root {
+  --primary-color: #46A055;
+  --secondary-color: #6cb678;
+  --shadow-color: rgba(108,182,120,0.25);
+  --border-color:#929292;
+  --text-color:#4A4A4A;
+  --iconfont-color:#555555;
+  --black-bg:#252525;
+  --black_secon_-bg:#F3F3F3;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.15);
+  transition: color 0.2s ease;
+}
+
+
