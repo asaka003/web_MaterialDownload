@@ -107,3 +107,53 @@ export const userBalanceApi = (data) => {
     data: data,
   });
 };
+
+// 用户添加授权账号  addAccountAuth
+export const addAccountAuthApi = (data) => {
+  return axios.request({
+    url: "/materialSys/materialSystem/addAccountAuth",
+    method: "post",
+    data: data,
+  });
+};
+
+// 获取授权账号列表信息
+export const getAuthInfoListApi = (data) => {
+  return axios.request({
+    url: "/materialSys/materialSystem/getAuthInfoList",
+    method: "post",
+    data: data,
+  });
+};
+
+// 管理员获取所有用户授权统计信息
+export const getAllUserAuthStatisticsApi = (data) => {
+  return axios.request({
+    url: "/materialSys/materialSystem/getAllUserAuthStatistics",
+    method: "post",
+    data: data,
+  });
+};
+
+
+// 管理员更新账户授权信息
+export const adminUpdateAuthInfoApi = (data) => {
+  return axios.request({
+    url: "/materialSys/materialSystem/adminUpdateAuthInfo",
+    method: "post",
+    data: data,
+  });
+};
+
+
+// 用户删除授权账号接口
+export const delUserAuthInfoApi = (data) => {
+  return axios.request({
+    url: "/materialSys/materialSystem/delUserAuthInfo",
+    method: "post",
+    data: data,
+  });
+};
+
+
+

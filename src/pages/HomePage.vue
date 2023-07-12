@@ -47,7 +47,11 @@
         <el-input v-model="ruleForm.code" type="text" />
       </el-form-item>
       <el-form-item v-if="loginOrregister == '注册'">
-        <el-button type="warning" :icon="Message" circle />
+        <img
+          src="@/assets/getCode.svg"
+          alt=""
+          style="width: 20px; height: 20px"
+        />
         <span style="margin-left: 0.625rem; cursor: pointer" @click="getCode"
           >获取激活码</span
         >
@@ -101,6 +105,11 @@
       v-model="inputMoney"
       placeholder="输入需要修改的潮币数"
       v-if="isChangeMoney"
+    />
+    <el-input
+      v-model="inputFilename"
+      placeholder="输入需要修改的文件名"
+      v-if="isChangeFileName"
     />
     <el-input
       v-model="RechargePhone"
@@ -196,7 +205,7 @@
   <!-- 其它提示 -->
   <div class="main">
     <el-backtop :bottom="80"></el-backtop>
-    <div class="user">
+    <!-- <div class="user">
       <div class="topName">
         <img src="@/assets/logo.svg" alt="" /> <span>番茄素材网</span>
       </div>
@@ -216,6 +225,14 @@
               <el-dropdown-menu>
                 <el-dropdown-item command="a" @click="changePass"
                   >修改密码</el-dropdown-item
+                >
+                <el-dropdown-item
+                  @click="toAuthorizationFun"
+                  v-if="identity != 1"
+                  >授权账号</el-dropdown-item
+                >
+                <el-dropdown-item @click="toAdminCheckFun" v-if="identity == 1"
+                  >授权账号查看</el-dropdown-item
                 >
 
                 <el-dropdown-item
@@ -247,7 +264,7 @@
 
         <div class="user_right" @click="login" v-if="phone == ''">登录</div>
       </div>
-    </div>
+    </div> -->
 
     <div class="top">
       未经授权账户使用拥有版权的素材将被视为侵权行为，我们将保护我们的版权并追究其法律责任。
@@ -258,14 +275,79 @@
       <el-button type="primary" @click="searchKeyword">搜索</el-button>
     </div>
     <div class="LabelField">
-      <el-tabs class="demo-tabs" @tab-click="handleClick">
+      <!-- <el-tabs
+        class="demo-tabs"
+        @tab-click="
+          (event) => {
+            handleClick(event, index);
+          }
+        "
+      >
         <el-tab-pane
           :label="item"
+          :name="index"
           v-for="(item, index) in labels"
           :key="index"
         ></el-tab-pane>
-      </el-tabs>
+      </el-tabs> -->
+      <div class="firstTabs">
+        <div
+          v-for="(item, index) in newlabels"
+          key="index"
+          @click="clcikTabs(item, index)"
+          class="firstTabs_item"
+          :class="firstTabsIndex == index ? 'firstTabs_item_active' : ''"
+        >
+          {{ item.name }}
+        </div>
+      </div>
+      <div class="allSeconTabs">
+        <div class="seconTabs">
+          <div
+            v-for="(item, index) in newlabels[firstTabsIndex].secondTags"
+            key="index"
+            @click="clcikSecondTabs(item, index)"
+            class="seconTabs_item"
+            :class="secondTabsIndex == index ? 'seconTabs_item_active' : ''"
+          >
+            {{ item.name }}
+          </div>
+        </div>
+        <div
+          class="seconTabs"
+          v-if="newlabels[firstTabsIndex].secondTags[secondTabsIndex].thirTags"
+        >
+          <div
+            v-for="(item, index) in newlabels[firstTabsIndex].secondTags[
+              secondTabsIndex
+            ].thirTags"
+            key="index"
+            @click="clcikThirdTabs(item, index)"
+            class="seconTabs_item"
+            :class="thirdTabsIndex == index ? 'seconTabs_item_active' : ''"
+          >
+            {{ item }}
+          </div>
+        </div>
+        <div
+          class="seconTabs"
+          v-if="newlabels[firstTabsIndex].secondTags[secondTabsIndex].fourTags"
+        >
+          <div
+            v-for="(item, index) in newlabels[firstTabsIndex].secondTags[
+              secondTabsIndex
+            ].fourTags"
+            key="index"
+            @click="clcikFourTabs(item, index)"
+            class="seconTabs_item"
+            :class="fourTabsIndex == index ? 'seconTabs_item_active' : ''"
+          >
+            {{ item }}
+          </div>
+        </div>
+      </div>
     </div>
+
     <div class="imgContainer">
       <el-empty
         description="没有该类型图片"
@@ -276,12 +358,12 @@
         <div class="img_copyright">版权</div>
         <el-image
           loading="lazy"
-          :src="
-            'https://www.eralab.cn/material/' + item.filename + '_mediumImg.jpg'
-          "
+          :src="'https://www.eralab.cn/material/' + item.filename + '.jpg'"
           fit="fill"
           :preview-src-list="[
-            'https://www.eralab.cn/material/' + item.filename + '.jpg',
+            'https://www.eralab.cn/material/' +
+              item.filename +
+              '_mediumImg.jpg',
           ]"
           :zoom-rate="1.2"
         >
@@ -290,7 +372,9 @@
           </template>
         </el-image>
         <div class="title">
-          <span class="img_name">{{ item.filename }}</span>
+          <span class="img_name" @click="changeFilename(item)">{{
+            item.filename
+          }}</span>
           <span v-if="identity == 1" class="delete" @click="deleteImgFun(item)"
             >删除</span
           >
@@ -310,7 +394,7 @@
                 <el-dropdown-item
                   v-for="(item1, index1) in item.file_exts.split('|')"
                   style="font-size: 0.75rem"
-                  @click="imgclickDown(item, item1)"
+                  @click="downloadFile(item, item1)"
                   >{{ item1.split(".")[1] + "格式" }}</el-dropdown-item
                 >
               </el-dropdown-menu>
@@ -320,6 +404,7 @@
         </div>
       </div>
     </div>
+
     <div class="imgContainerHide">图窗太小,请全屏使用</div>
     <div class="pager">
       <el-pagination
@@ -359,11 +444,24 @@ import {
   updateFileApi,
   adminRechargeApi,
   userBalanceApi,
+  addAccountAuthApi,
 } from "@/api/Allrequest.js";
+// import TopBar from '@/components/topBar.vue';
 import UploadInstance from "element-plus";
 import JSZip from "jszip";
 // import { useActiveStore } from "@/pina/index.js";
+import { useRouter } from "vue-router";
 // const store = useActiveStore();
+const router = useRouter();
+// 前往授权账号页面
+const toAuthorizationFun = () => {
+  router.push("/authorization");
+};
+// 前往管理员查看绑定账号页面
+const toAdminCheckFun = () => {
+  router.push("/administratorcheck");
+};
+
 // 管理员进行充值
 const RechargePhone = ref(null);
 const RechargeCount = ref(null);
@@ -390,11 +488,32 @@ const PopUpPrompt = reactive({
   content: "",
   button: "",
   options: "",
+  cost: "",
+  filename: "",
 });
 // 弹出提示框的boolean
 const dialogVisible = ref(false);
 // 弹出框按钮下一步操纵
 const dialogSubmit = (e) => {
+  if (e.title == "修改文件名") {
+    if (inputFilename.value == null) {
+      ElMessage({
+        message: "请输入文件名!",
+        type: "warning",
+      });
+      return;
+    } else {
+      // 修改图片信息
+      updateFileApi({
+        file_id: parseInt(e.options),
+        filename: inputFilename.value,
+        cost: parseFloat(e.cost),
+      }).then((res) => {
+        isChangeFileName.value = false;
+        dialogCustomize({ content: "修改成功" });
+      });
+    }
+  }
   if (e.button == "确认上传") {
     if (fileNum.value == 0) {
       ElMessage({
@@ -420,6 +539,10 @@ const dialogSubmit = (e) => {
   }
   if (e.button == "下载") {
     console.log("下载", e.options);
+    console.log(parseInt(e.options.cost) <= parseInt(userBalance.value))
+    console.log(parseInt(e.options.cost))
+    console.log(parseInt(userBalance.value))
+    console.log(userBalance.value)
     // 判断余额
     if (parseInt(e.options.cost) <= parseInt(userBalance.value)) {
       let filename = {
@@ -476,7 +599,6 @@ const dialogSubmit = (e) => {
             document.body.removeChild(a);
           }
         }
-
         // 更新潮币
         getLocalInfo();
       });
@@ -503,8 +625,6 @@ const dialogSubmit = (e) => {
       });
       return;
     } else {
-      console.log("参数测试", RechargePhone.value);
-      console.log("参数测试", RechargeCount.value);
       // 发送充值请求
       adminRechargeApi({
         phone: RechargePhone.value.toString(),
@@ -517,6 +637,7 @@ const dialogSubmit = (e) => {
     }
   }
   if (e.title == "修改潮币") {
+    console.log("文件名", e.filename);
     if (inputMoney.value == null) {
       ElMessage({
         message: "请输入潮币数!",
@@ -527,8 +648,8 @@ const dialogSubmit = (e) => {
       // 修改图片信息
       updateFileApi({
         file_id: parseInt(e.options),
-
         cost: parseFloat(inputMoney.value),
+        filename: e.filename,
       }).then((res) => {
         dialogCustomize({ content: "修改成功" });
       });
@@ -538,10 +659,10 @@ const dialogSubmit = (e) => {
     location.reload(true);
   }
   if (e.content == "删除成功") {
-    location.reload(true);
+    getImg();
   }
   if (e.content == "修改成功") {
-    location.reload(true);
+    getImg();
   }
   if (e.button == "删除") {
     // 删除api
@@ -582,150 +703,137 @@ const customerDialogClose = (e) => {
 const fileUploadSuccess = (res) => {
   // console.log("文件上传成功", res);
 };
-// 点击下载jpg图片
-const imgclickDown = (e, type) => {
+
+// 点击下载文件
+const downloadFile = (e, type) => {
   e.filetype = type;
   const phoneLocal = localStorage.getItem("phone");
-  console.log("当前点击下载图片", e);
+  console.log("当前点击下载文件", e);
+  
   if (phoneLocal == "" || phoneLocal == null) {
     dialogCustomize({ content: "请登录后再进行下载" });
     return;
+  }
+
+  if (identity == 1) {
+    // 处理特定身份的逻辑
   } else {
-    if (e.buy) {
+    if (e.buy || identity.value == 1) {
       let filename = {
         file_id: parseInt(e.id),
         ext: type,
       };
+
       downImgApi(filename).then((res) => {
         console.log("下载文件", res);
+
         if (res.type == "application/json") {
-          dialogCustomize({ content: "余额不足,请充值" });
+          dialogCustomize({ content: "余额不足，请充值" });
         } else {
-          if (filename.ext == ".fla") {
-            const zip = new JSZip();
-            zip.loadAsync(res.data).then((zip) => {
-              const file = zip.file("DOMDocument.xml");
-              if (!file) {
-                throw new Error("Failed to extract DOMDocument.xml");
-              }
-              file.async("uint8array").then((data) => {
-                const blob = new Blob([data], {
-                  type: "application/octet-stream",
-                });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.style.display = "none";
-                const filename = e.filename + ".fla";
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-              });
-            });
-          } else if (filename.ext == ".jpg") {
-            const blob = new Blob([res.data]);
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.style.display = "none";
-            const filename = e.filename + ".jpg";
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          } else {
-            const blob = new Blob([res.data], { type: "image/png" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.style.display = "none";
-            const filename = e.filename + ".png";
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          }
+          const blob = new Blob([res.data]);
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.style.display = "none";
+          const filename = e.filename + type;
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
         }
 
         // 更新潮币
         getLocalInfo();
       });
     } else {
-      console.log("执行了一次2");
       dialogCustomize({
         content: "确定花费" + e.cost + "潮币下载吗",
         button: "下载",
         options: e,
       });
     }
-
-    // 判断余额
-    // if (parseInt(e.cost) <= parseInt(userBalance.value)) {
-    //   let filename = {
-    //     file_id: parseInt(e.id),
-    //     ext: type,
-    //   };
-    //   downImgApi(filename).then((res) => {
-    //     console.log("下载文件", res);
-    //     if (res.type == "application/json") {
-    //       dialogCustomize({ content: "余额不足,请充值" });
-    //     } else {
-    //       if (filename.ext == ".fla") {
-    //         const zip = new JSZip();
-    //         zip.loadAsync(res.data).then((zip) => {
-    //           const file = zip.file("DOMDocument.xml");
-    //           if (!file) {
-    //             throw new Error("Failed to extract DOMDocument.xml");
-    //           }
-    //           file.async("uint8array").then((data) => {
-    //             const blob = new Blob([data], {
-    //               type: "application/octet-stream",
-    //             });
-    //             const url = URL.createObjectURL(blob);
-    //             const a = document.createElement("a");
-    //             a.style.display = "none";
-    //             const filename = e.filename + ".fla";
-    //             a.href = url;
-    //             a.download = filename;
-    //             document.body.appendChild(a);
-    //             a.click();
-    //             document.body.removeChild(a);
-    //           });
-    //         });
-    //       } else if (filename.ext == ".jpg") {
-    //         const blob = new Blob([res.data]);
-    //         const url = URL.createObjectURL(blob);
-    //         const a = document.createElement("a");
-    //         a.style.display = "none";
-    //         const filename = e.filename + ".jpg";
-    //         a.href = url;
-    //         a.download = filename;
-    //         document.body.appendChild(a);
-    //         a.click();
-    //         document.body.removeChild(a);
-    //       } else {
-    //         const blob = new Blob([res.data], { type: "image/png" });
-    //         const url = URL.createObjectURL(blob);
-    //         const a = document.createElement("a");
-    //         a.style.display = "none";
-    //         const filename = e.filename + ".png";
-    //         a.href = url;
-    //         a.download = filename;
-    //         document.body.appendChild(a);
-    //         a.click();
-    //         document.body.removeChild(a);
-    //       }
-    //     }
-
-    //     // 更新潮币
-    //     getLocalInfo();
-    //   });
-    // } else {
-    //   dialogCustomize({ content: "潮币不足，请点击右上角进行充值!" });
-    // }
   }
 };
+
+// 点击下载jpg图片
+// const imgclickDown = (e, type) => {
+//   e.filetype = type;
+//   const phoneLocal = localStorage.getItem("phone");
+//   console.log("当前点击下载图片", e);
+//   if (phoneLocal == "" || phoneLocal == null) {
+//     dialogCustomize({ content: "请登录后再进行下载" });
+//     return;
+//   } else if (identity == 1) {
+//   } else {
+//     if (e.buy || identity.value == 1) {
+//       let filename = {
+//         file_id: parseInt(e.id),
+//         ext: type,
+//       };
+//       downImgApi(filename).then((res) => {
+//         console.log("下载文件", res);
+//         if (res.type == "application/json") {
+//           dialogCustomize({ content: "余额不足,请充值" });
+//         } else {
+//           if (filename.ext == ".fla") {
+//             const zip = new JSZip();
+//             zip.loadAsync(res.data).then((zip) => {
+//               const file = zip.file("DOMDocument.xml");
+//               if (!file) {
+//                 throw new Error("Failed to extract DOMDocument.xml");
+//               }
+//               file.async("uint8array").then((data) => {
+//                 const blob = new Blob([data], {
+//                   type: "application/octet-stream",
+//                 });
+//                 const url = URL.createObjectURL(blob);
+//                 const a = document.createElement("a");
+//                 a.style.display = "none";
+//                 const filename = e.filename + ".fla";
+//                 a.href = url;
+//                 a.download = filename;
+//                 document.body.appendChild(a);
+//                 a.click();
+//                 document.body.removeChild(a);
+//               });
+//             });
+//           } else if (filename.ext == ".jpg") {
+//             const blob = new Blob([res.data]);
+//             const url = URL.createObjectURL(blob);
+//             const a = document.createElement("a");
+//             a.style.display = "none";
+//             const filename = e.filename + ".jpg";
+//             a.href = url;
+//             a.download = filename;
+//             document.body.appendChild(a);
+//             a.click();
+//             document.body.removeChild(a);
+//           } else {
+//             const blob = new Blob([res.data], { type: "image/png" });
+//             const url = URL.createObjectURL(blob);
+//             const a = document.createElement("a");
+//             a.style.display = "none";
+//             const filename = e.filename + ".png";
+//             a.href = url;
+//             a.download = filename;
+//             document.body.appendChild(a);
+//             a.click();
+//             document.body.removeChild(a);
+//           }
+//         }
+
+//         // 更新潮币
+//         getLocalInfo();
+//       });
+//     } else {
+//       dialogCustomize({
+//         content: "确定花费" + e.cost + "潮币下载吗",
+//         button: "下载",
+//         options: e,
+//       });
+//     }
+//   }
+// };
 
 // 是否点击修改密码
 const isChangePass = ref(false);
@@ -841,16 +949,39 @@ const upload = (item) => {
 
 // 删除图片
 const deleteImgFun = (e) => {
-  console.log("图片id", e);
   dialogCustomize({ content: "确定要删除吗", button: "删除", options: e.id });
 };
+
+// 修改文件名
+const isChangeFileName = ref(false);
+const inputFilename = ref(null);
+const changeFilename = (e) => {
+  if (identity.value == 1) {
+    isChangeFileName.value = true;
+    dialogCustomize({
+      title: "修改文件名",
+      button: "确认修改",
+      options: e.id,
+      cost: e.cost,
+      filename: e.filename,
+    });
+  }
+};
+
 // 修改金额
 const isChangeMoney = ref(false);
 const inputMoney = ref(null);
 const changeMoney = (e) => {
+  console.log("修改金额", e);
   if (identity.value == 1) {
     isChangeMoney.value = true;
-    dialogCustomize({ title: "修改潮币", button: "确认修改", options: e.id });
+    dialogCustomize({
+      title: "修改潮币",
+      button: "确认修改",
+      options: e.id,
+      cost: e.cost,
+      filename: e.filename,
+    });
   }
 };
 
@@ -876,6 +1007,12 @@ const dialogCustomize = (data) => {
   }
   if (PopUpPrompt.options != "" || PopUpPrompt.options != null) {
     PopUpPrompt.options = data.options;
+  }
+  if (PopUpPrompt.cost != "" || PopUpPrompt.cost != null) {
+    PopUpPrompt.cost = data.cost;
+  }
+  if (PopUpPrompt.filename != "" || PopUpPrompt.filename != null) {
+    PopUpPrompt.filename = data.filename;
   }
 
   dialogVisible.value = true;
@@ -1070,7 +1207,7 @@ const rules = reactive({
 });
 // 用户身份
 const identity = ref(0);
-// 用户名字
+// 用户手机号
 const phone = ref("");
 // 目前是登录表单还是注册表单
 const loginOrregister = ref("登录");
@@ -1093,14 +1230,35 @@ const buiedFilesFun = () => {};
 const getImg = () => {
   if (search.value == "") {
     getImgsApi({
-      filetype: chooseLabel.value,
+      type1: chooseLabel.value,
+
+      type2: secondTabsItem.value,
+
+      type3: thirdTabsItem.value == "全部" ? "" : thirdTabsItem.value,
+
+      type4: fourTabsItem.value == "全部" ? "" : fourTabsItem.value,
       index: startIndex.value,
       size: pageSize.value,
     }).then((res) => {
       if (res.code == 403 && isLogin.value == true) {
-        dialogCustomize({ content: "用户信息过期,请重新登录" });
+        //dialogCustomize({ content: "用户信息过期,请重新登录" });
+        ElMessage({
+          message: "用户信息过期,请重新登录!",
+          type: "warning",
+        });
+        login()
       } else if (res.code == 403) {
-        dialogCustomize({ content: "请登录" });
+        //dialogCustomize({ content: "请登录" });
+        ElMessage({
+          message: "请登录!",
+          type: "warning",
+        });
+        login()
+        // localStorage.clear();
+        // isLogin.value = false;
+        // setTimeout(() => {
+        //   location.reload();
+        // }, 2000);
       }
       if (res.code == 200) {
         // imgs.value = res.data.files;
@@ -1112,11 +1270,10 @@ const getImg = () => {
         if (phone.value != "") {
           if (imgs.value.length != 0) {
             buiedFiles.value = res.data.buiedFiles;
-            console.log("已购买", res.data.buiedFiles);
             for (let k = 0; k < imgs.value.length; k++) {
               for (let i = 0; i < buiedFiles.value.length; i++) {
-                console.log(imgs.value[k].id);
-                console.log(buiedFiles.value[i].file_id);
+                // console.log(imgs.value[k].id);
+                // console.log(buiedFiles.value[i].file_id);
                 if (imgs.value[k].id == buiedFiles.value[i].file_id) {
                   imgs.value[k].buy = true;
                 }
@@ -1185,9 +1342,10 @@ const loginFun = () => {
     phone: ruleForm.name.toString(),
     password: ruleForm.pass,
   }).then((res) => {
-    console.log("登录", res);
+    console.log("登录",res);
     if (res.code == 200) {
       isToLogin.value = false;
+      isLogin.value = true;
       // 数据存储在本地
       localStorage.setItem("token", res.data.tokne);
       localStorage.setItem("identity", res.data.identity);
@@ -1195,8 +1353,8 @@ const loginFun = () => {
       localStorage.setItem("balance", res.data.balance);
       identity.value = res.data.identity;
       phone.value = res.data.phone;
+      userBalance.value = res.data.balance;
 
-      // location.reload(true);
     } else {
       dialogCustomize({ content: res.msg });
     }
@@ -1251,17 +1409,260 @@ const submitForm = (formEl) => {
     }
   });
 };
-// 标签页数据
-const labels = ref(["全部", "人物", "背景图", "表情包"]);
-// 当前选择标签页
-const chooseLabel = ref("全部");
-// 标签页
-const handleClick = (tab, event) => {
-  console.log("点击了标签页", tab.props.label);
-  chooseLabel.value = tab.props.label;
+// 新的标签页数据
+const newlabels = ref([
+  {
+    name: "人物",
+    secondTags: [
+      {
+        name: "玄幻修仙",
+        //fourTags: ["全部", "男", "女", "非人族"],
+      },
+      {
+        name: "现代都市",
+        //fourTags: ["全部", "男", "女", "非人族"],
+      },
+      {
+        name: "历史朝代",
+        // thirTags: [
+        //   "全部",
+        //   "通用",
+        //   "秦汉",
+        //   "三国",
+        //   "秦汉",
+        //   "唐朝",
+        //   "三国",
+        //   "元朝",
+        //   "宋朝",
+        //   "明朝",
+        //   "清朝",
+        // ],
+        //fourTags: ["全部", "男", "女"],
+      },
+
+      {
+        name: "近代战争",
+        //fourTags: ["全部", "男", "女"],
+      },
+
+      {
+        name: "80/90年代",
+        //fourTags: ["全部", "男", "女"],
+      },
+
+      {
+        name: "荒野求生",
+        //fourTags: ["全部", "男", "女"],
+      },
+
+      {
+        name: "科技科幻",
+        //fourTags: ["全部", "男", "女"],
+      },
+    ],
+  },
+  {
+    name: "背景图",
+    secondTags: [
+      {
+        name: "玄幻修仙",
+        // thirTags: [
+        //   "全部",
+        //   "雪地",
+        //   "熔岩",
+        //   "草地",
+        //   "岩石",
+        //   "沙漠",
+        //   "其他野外",
+        //   "洞穴",
+        //   "天空",
+        //   "室内",
+        //   "建筑",
+        // ],
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+      {
+        name: "现代都市",
+        // thirTags: [
+        //   "全部",
+        //   "住宅楼",
+        //   "学校",
+        //   "办公室",
+        //   "医院",
+        //   "酒店/餐厅",
+        //   "其他室内",
+        //   "城市街道",
+        //   "乡村",
+        //   "森林野外",
+        //   "其它室外",
+        // ],
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+      {
+        name: "历史朝代",
+        // thirTags: [
+        //   "全部",
+        //   "宫殿",
+        //   "城墙外",
+        //   "府邸",
+        //   "街道",
+        //   "战场",
+        //   "海边",
+        //   "其他",
+        // ],
+      },
+
+      {
+        name: "近代战争",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+
+      {
+        name: "80/90年代",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+
+      {
+        name: "荒野求生",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+
+      {
+        name: "科技科幻",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+    ],
+  },
+  {
+    name: "道具图",
+    secondTags: [
+      {
+        name: "玄幻修仙",
+        //thirTags: ["全部", "武器法宝", "书籍", "丹药", "翅膀", "其他"],
+      },
+      {
+        name: "现代都市",
+        //thirTags: ["全部", "武器", "汽车", "日用品", "植物", "其他"],
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+      {
+        name: "历史朝代",
+        //thirTags: ["全部", "武器", "交通工具", "饮食", "其它"],
+      },
+
+      {
+        name: "近代战争",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+
+      {
+        name: "80/90年代",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+
+      {
+        name: "荒野求生",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+
+      {
+        name: "科技科幻",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+    ],
+  },
+  {
+    name: "表情包",
+    secondTags: [
+      {
+        name: "玄幻修仙",
+        //fourTags: ["全部", "男", "女", "非人族"],
+      },
+      {
+        name: "历史朝代",
+        //thirTags: ["全部", "通用", "秦汉", "三国"],
+        //fourTags: ["全部", "男", "女"],
+      },
+    ],
+  },
+]);
+
+// 当前标签页下标 一级
+const firstTabsIndex = ref(0);
+// 当前选择标签内容 一级
+const chooseLabel = ref(newlabels.value[firstTabsIndex.value].name);
+// 标签页 一级
+const clcikTabs = (item, index) => {
+  chooseLabel.value = item.name;
+  firstTabsIndex.value = index;
+  secondTabsIndex.value = 0;
+  secondTabsItem.value =
+    newlabels.value[firstTabsIndex.value].secondTags[
+      secondTabsIndex.value
+    ].name;
+  thirdTabsIndex.value = 0;
+  if (thirdTabsItem.value != "") {
+    thirdTabsItem.value =
+      newlabels.value[firstTabsIndex.value].secondTags[
+        secondTabsIndex.value
+      ].thirTags[thirdTabsIndex.value];
+  }
+  fourTabsIndex.value = 0;
+  if (fourTabsItem.value != "") {
+    fourTabsItem.value =
+      newlabels.value[firstTabsIndex.value].secondTags[
+        secondTabsIndex.value
+      ].fourTags[fourTabsIndex.value];
+  }
   getImg();
 };
-
+// 二级
+const secondTabsIndex = ref(0);
+const secondTabsItem = ref(
+  newlabels.value[firstTabsIndex.value].secondTags[secondTabsIndex.value].name
+);
+const clcikSecondTabs = (item, index) => {
+  secondTabsIndex.value = index;
+  secondTabsItem.value = item.name;
+  thirdTabsIndex.value = 0;
+  if (thirdTabsItem.value != "") {
+    thirdTabsItem.value =
+      newlabels.value[firstTabsIndex.value].secondTags[
+        secondTabsIndex.value
+      ].thirTags[thirdTabsIndex.value];
+  }
+  fourTabsIndex.value = 0;
+  if (fourTabsItem.value != "") {
+    fourTabsItem.value =
+      newlabels.value[firstTabsIndex.value].secondTags[
+        secondTabsIndex.value
+      ].fourTags[fourTabsIndex.value];
+  }
+  getImg();
+};
+// 三级
+const thirdTabsIndex = ref(0);
+const thirdTabsItem = ref("");
+const clcikThirdTabs = (item, index) => {
+  thirdTabsIndex.value = index;
+  thirdTabsItem.value = item;
+  fourTabsIndex.value = 0;
+  if (fourTabsItem.value != "") {
+    fourTabsItem.value =
+      newlabels.value[firstTabsIndex.value].secondTags[
+        secondTabsIndex.value
+      ].fourTags[fourTabsIndex.value];
+  }
+  getImg();
+};
+// 四级
+const fourTabsIndex = ref(0);
+const fourTabsItem = ref("");
+const clcikFourTabs = (item, index) => {
+  fourTabsIndex.value = index;
+  fourTabsItem.value = item;
+  getImg();
+};
 //上传图片类型选择
 const imgTypeselect = ref(null);
 const imgTypeselectOption = ref(["人物", "背景图", "表情包"]);
@@ -1342,6 +1743,55 @@ const removeFile = (e) => {
       background-color: rgba($color: #000000, $alpha: 0.35);
     }
   }
+  .firstTabs {
+    display: flex;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #ccc;
+    margin-bottom: 20px;
+
+    .firstTabs_item {
+      margin-left: 10px;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-radius: 8px 8px 0 0;
+      padding: 5px 25px;
+    }
+    .firstTabs_item:nth-of-type(1) {
+      margin-left: 0;
+    }
+    .firstTabs_item_active {
+      color: #d1e344;
+    }
+  }
+  .allSeconTabs {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    .seconTabs {
+      display: flex;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #eeeeee;
+      .seconTabs_item {
+        margin-left: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 5px 15px;
+        display: flex;
+      }
+      .seconTabs_item_active {
+        color: white;
+        border-radius: 10px;
+        background-color: #d1e344;
+      }
+    }
+  }
+
   .user {
     width: 100%;
     height: 3.125rem;
@@ -1447,11 +1897,16 @@ const removeFile = (e) => {
     .LabelField {
       width: 100%;
       display: flex;
+      flex-direction: column;
       box-sizing: border-box;
       margin-top: 1.875rem;
       display: flex;
       padding: 0 8.125rem;
-
+      .SecondLabelField {
+        display: flex;
+        padding: 0.9375rem 8.125rem;
+        box-sizing: border-box;
+      }
       .el-tabs {
         :deep(.el-tabs__header) {
           padding: 0 !important;
@@ -1478,6 +1933,7 @@ const removeFile = (e) => {
         }
       }
     }
+
     .imgContainer {
       width: 100%;
       display: flex;
@@ -1570,6 +2026,7 @@ const removeFile = (e) => {
     .LabelField {
       width: 100%;
       display: flex;
+      flex-direction: column;
       box-sizing: border-box;
       margin-top: 1.875rem;
       display: flex;
@@ -1601,6 +2058,7 @@ const removeFile = (e) => {
         }
       }
     }
+
     .imgContainer {
       width: 100%;
       display: flex;
