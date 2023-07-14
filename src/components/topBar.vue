@@ -169,7 +169,6 @@
         :http-request="upload"
         multiple
         :auto-upload="false"
-        :multiple="false"
         :on-remove="removeFile"
         :on-success="fileUploadSuccess"
         :on-change="FileUp"
@@ -1015,7 +1014,21 @@ const upload = (item) => {
   formData.append("cost", imgPrice.value);
   uploadFileApi(formData)
     .then((res) => {
-      dialogCustomize({ content: "上传成功", button: "完成" });
+      alreadyFileNum.value++;
+      ElMessage({
+        message: "文件"+item.file.name +"上传成功!  进度"+alreadyFileNum.value/fileNum.value*100+"%",
+        type: "success",
+      });
+      if(alreadyFileNum.value == fileNum.value){
+        ElMessage({
+          message: "所有文件上传成功!",
+          type: "success",
+        });
+
+        alreadyFileNum.value = 0;
+        fileNum.value = 0;
+      }
+      // dialogCustomize({ content: "上传成功", button: "完成" });
     })
     .catch((err) => {
       dialogCustomize({ content: err });
@@ -1026,11 +1039,14 @@ const upload = (item) => {
 const firstItem = ref([""]);
 // 上传图片价格
 const imgPrice = ref(null);
+// 上传总文件个数
+let fileNum = ref(0);
 // 文件个数
-const fileNum = ref(0);
+let alreadyFileNum = ref(0);
 // 上传图片
 const fileUploadSuccess = (res) => {
   // console.log("文件上传成功", res);
+  console.log(fileList);
 };
 // 文件上传次数检测
 const FileUp = (e) => {

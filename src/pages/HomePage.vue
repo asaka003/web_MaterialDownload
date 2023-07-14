@@ -166,7 +166,7 @@
         :http-request="upload"
         multiple
         :auto-upload="false"
-        :multiple="false"
+
         :on-remove="removeFile"
         :on-success="fileUploadSuccess"
         :on-change="FileUp"
@@ -938,7 +938,11 @@ const upload = (item) => {
   formData.append("cost", imgPrice.value);
   uploadFileApi(formData)
     .then((res) => {
-      dialogCustomize({ content: "上传成功", button: "完成" });
+      ElMessage({
+        message: "文件"+item.filename +"上传成功!",
+        type: "success",
+      });
+      // dialogCustomize({ content: "上传成功", button: "完成" });
     })
     .catch((err) => {
       dialogCustomize({ content: err });
