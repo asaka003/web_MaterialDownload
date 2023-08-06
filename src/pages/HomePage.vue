@@ -724,27 +724,32 @@ const downloadFile = (e, type) => {
         ext: type,
       };
 
-      downImgApi(filename).then((res) => {
-        console.log("下载文件", res);
+      window.open("/materialSys/materialSystem/getFile/"+filename.file_id+"/"+filename.ext)
+      // 更新潮币
+      getLocalInfo();
 
-        if (res.type == "application/json") {
-          dialogCustomize({ content: "余额不足，请充值" });
-        } else {
-          const blob = new Blob([res.data]);
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.style.display = "none";
-          const filename = e.filename + type;
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        }
+      // downImgApi(filename).then((res) => {
+      //   console.log("下载文件", res);
 
-        // 更新潮币
-        getLocalInfo();
-      });
+      //   if (res.type == "application/json") {
+      //     dialogCustomize({ content: "余额不足，请充值" });
+      //   } else {
+      //     const blob = new Blob([res.data]);
+      //     const url = URL.createObjectURL(blob);
+      //     const a = document.createElement("a");
+      //     a.style.display = "none";
+      //     const filename = e.filename + type;
+      //     a.href = url;
+      //     a.download = filename;
+      //     document.body.appendChild(a);
+      //     a.click();
+      //     document.body.removeChild(a);
+      //   }
+
+      //   // 更新潮币
+      //   getLocalInfo();
+      // });
+
     } else {
       dialogCustomize({
         content: "确定花费" + e.cost + "潮币下载吗",
@@ -1463,6 +1468,10 @@ const newlabels = ref([
         name: "科技科幻",
         //fourTags: ["全部", "男", "女"],
       },
+      {
+        name: "其他",
+        //fourTags: ["全部", "男", "女"],
+      },
     ],
   },
   {
@@ -1535,6 +1544,10 @@ const newlabels = ref([
         name: "科技科幻",
         //fourTags: ["全部", "白天", "黑夜"],
       },
+      {
+        name: "其他",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
     ],
   },
   {
@@ -1573,6 +1586,10 @@ const newlabels = ref([
         name: "科技科幻",
         //fourTags: ["全部", "白天", "黑夜"],
       },
+      {
+        name: "其他",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
     ],
   },
   {
@@ -1586,6 +1603,10 @@ const newlabels = ref([
         name: "历史朝代",
         //thirTags: ["全部", "通用", "秦汉", "三国"],
         //fourTags: ["全部", "男", "女"],
+      },
+      {
+        name: "其他",
+        //fourTags: ["全部", "白天", "黑夜"],
       },
     ],
   },

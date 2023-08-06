@@ -387,6 +387,10 @@ const newlabels = ref([
         name: "科技科幻",
         fourTags: ["全部", "男", "女"],
       },
+      {
+        name: "其他",
+        fourTags: ["其他"],
+      },
     ],
   },
   {
@@ -459,6 +463,10 @@ const newlabels = ref([
         name: "科技科幻",
         fourTags: ["全部", "白天", "黑夜"],
       },
+      {
+        name: "其他",
+        fourTags: ["其他"],
+      },
     ],
   },
   {
@@ -497,6 +505,10 @@ const newlabels = ref([
         name: "科技科幻",
         fourTags: ["全部", "白天", "黑夜"],
       },
+      {
+        name: "其他",
+        fourTags: ["其他"],
+      },
     ],
   },
   {
@@ -510,6 +522,10 @@ const newlabels = ref([
         name: "历史朝代",
         thirTags: ["全部", "通用", "秦汉", "三国"],
         fourTags: ["全部", "男", "女"],
+      },
+      {
+        name: "其他",
+        fourTags: ["其他"],
       },
     ],
   },
