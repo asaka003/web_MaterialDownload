@@ -1243,9 +1243,9 @@ const getImg = () => {
 
       type2: secondTabsItem.value,
 
-      type3: thirdTabsItem.value == "全部" ? "" : thirdTabsItem.value,
+      type3: "",//thirdTabsItem.value == "全部" ? "" : thirdTabsItem.value,
 
-      type4: fourTabsItem.value == "全部" ? "" : fourTabsItem.value,
+      type4: "",//fourTabsItem.value == "全部" ? "" : fourTabsItem.value,
       index: startIndex.value,
       size: pageSize.value,
     }).then((res) => {

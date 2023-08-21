@@ -206,7 +206,7 @@
             :value="item.name"
           />
         </el-select>
-        <el-select
+        <!-- <el-select
           v-model="chooseThird"
           placeholder="图片类型3"
           @change="ThirdTypes"
@@ -239,7 +239,7 @@
             :label="item"
             :value="item"
           />
-        </el-select>
+        </el-select> -->
         <div class="imgprice">
           <el-input v-model="imgPrice" placeholder="请输入图片价格"></el-input>
           <div class="unit">潮币</div>
