@@ -140,6 +140,7 @@
           type="password"
           autocomplete="off"
           :show-password="true"
+          v-if="isChangePass"
         />
       </el-form-item>
       <el-form-item label="新密码" prop="newpass" style="width: 90%">
@@ -148,6 +149,7 @@
           type="password"
           autocomplete="off"
           :show-password="true"
+          v-if="isChangePass"
         />
       </el-form-item>
       <el-form-item label="确认密码" prop="checknewpass" style="width: 90%">
@@ -156,6 +158,7 @@
           type="password"
           autocomplete="off"
           :show-password="true"
+          v-if="isChangePass"
         />
       </el-form-item>
     </el-form>
@@ -259,11 +262,30 @@
     <div class="topName">
       <img src="@/assets/logo.svg" alt="" /> <span>番茄素材网</span>
     </div>
+    <div class="topCenter">
+      <el-menu
+        :default-active="activeIndex"
+        class="el-menu-demo"
+        mode="horizontal"
+        @select="handleSelect"
+      >
+      <el-menu-item index="1">素材中心</el-menu-item>
+        <el-sub-menu index="2">
+          <template #title>AI工具</template>
+          <el-menu-item index="2-1">AI配音</el-menu-item>
+          <el-menu-item index="2-2">AI文章助手</el-menu-item>
+          <el-menu-item index="2-3">AI绘图</el-menu-item>
+        </el-sub-menu>
+        <el-menu-item index="3">软件下载</el-menu-item>
+        <el-menu-item index="4">课程教学</el-menu-item>
+      </el-menu>
+    </div>
+
     <div class="allright">
-      <div class="user_left" v-if="identity != 1 && phone != ''">
+      <!-- <div class="user_left" v-if="identity != 1 && phone != ''">
         潮币: <span>{{ userBalance }}</span>
         <span @click="topup">去充值</span>
-      </div>
+      </div> -->
 
       <div class="user_right" v-if="phone != ''">
         <el-dropdown trigger="click">
@@ -806,6 +828,11 @@ const rules = reactive({
   username: [{ validator: checkUsername, trigger: "blur" }],
 });
 
+const changePassForm = {
+  pass:'',
+  newpass:'',
+  checknewpass:''
+}
 // 修改密码
 const changePass = () => {
   dialogCustomize({ title: "修改密码", button: "修改密码" });
@@ -970,9 +997,7 @@ const dialogSubmit = (e) => {
   if (e.button == "修改密码") {
     changePassApi({
       cur_password: changePassForm.pass,
-
       password: changePassForm.newpass,
-
       re_password: changePassForm.checknewpass,
     }).then((res) => {
       if (res.code == 200) {
@@ -989,6 +1014,7 @@ const dialogSubmit = (e) => {
   ServiceCode.value = false;
   dialogVisible.value = false;
   AdministratorRecharge.value = false;
+  isChangePass.value = false;
 };
 // 用户退出登录
 const logout = () => {
@@ -1004,6 +1030,7 @@ const customerDialogClose = (e) => {
   ServiceCode.value = false;
   dialogVisible.value = false;
   AdministratorRecharge.value = false;
+  isChangePass.value = false;
 };
 // 管理员进行充值
 const RechargePhone = ref(null);
@@ -1156,8 +1183,50 @@ const getLocalInfo = async () => {
 onMounted(() => {
   getLocalInfo();
 });
+
+var activeIndex = '1';
+const handleSelect = (key, keyPath) => {
+  activeIndex = key;
+  console.log(key)
+  switch(key){
+    case '1': router.push("/");break;
+    case '2-2': router.push("/AIchat");break;
+    case '4': //检测登录token是否有效
+              //var self = this
+              getCountSync()
+              .then((res) => {
+                localStorage.setItem("balance", res.data.balance);
+                userBalance.value = localStorage.getItem("balance");
+              })
+              .catch((err) => {
+                console.log(err);
+                login()
+              });
+              router.push("/videos");
+              break;
+  }
+  console.log(key, keyPath);
+};
 </script>
 
+<!-- <script>
+export default {
+    data() {
+      return {
+        activeIndex: '1',
+      };
+    },
+    methods: {
+      handleSelect(key, keyPath) {
+        this.activeIndex = key;
+        if(key == 4){
+          router.push("/administratorcheck");
+        }
+        console.log(key, keyPath);
+      }
+    }
+  }
+</script> -->
 <style lang="scss" scoped>
 // 自定义弹出框 上传图片样式修改
 :deep(.formContainer_select) {
@@ -1225,6 +1294,9 @@ onMounted(() => {
       height: 3.125rem;
       margin-right: 0.625rem;
     }
+  }
+  .topCenter{
+    width: 50%;
   }
   .allright {
     white-space: nowrap;

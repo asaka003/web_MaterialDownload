@@ -27,9 +27,18 @@ const routes = [
     },
   },
   {
+    path: "/videos",
+    component: () => import("@/pages/Videos.vue"),
+  },
+  {
+    path: "/AIchat",
+    component: () => import("@/pages/AIChat.vue"),
+  },
+  {
     path: "/test",
     component: () => import("@/components/dialogInfo.vue"),
   },
+  
 ];
 
 const router = createRouter({

@@ -1,5 +1,5 @@
 <template>
-  <!-- 登录注册弹出框 -->
+  <!-- 登录注册弹出框 用于校验是否登录-->
   <el-dialog
     v-model="isToLogin"
     title="素材网"
@@ -89,7 +89,7 @@
   </el-dialog>
   <!-- 登录注册弹出框 -->
   <!-- 其它提示 -->
-  <el-dialog
+  <!-- <el-dialog
     center
     v-model="dialogVisible"
     :title="PopUpPrompt.title"
@@ -157,43 +157,6 @@
       </el-form-item>
     </el-form>
 
-    <div class="formContainer" v-if="PopUpPrompt.title == '上传图片'">
-      <el-upload
-        ref="uploadRef"
-        class="upload-demo"
-        drag
-        action=""
-        :http-request="upload"
-        multiple
-        :auto-upload="false"
-
-        :on-remove="removeFile"
-        :on-success="fileUploadSuccess"
-        :on-change="FileUp"
-      >
-        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-        <div class="el-upload__text">拖入文本或者<em>点击这里上传文本</em></div>
-        <template #tip>
-          <div class="el-upload__tip">
-            <!-- jpg/png files with a size less than 500kb -->
-          </div>
-        </template>
-      </el-upload>
-      <div class="formContainer_select">
-        <el-select v-model="imgTypeselect" placeholder="图片类型">
-          <el-option
-            v-for="(item, index) in imgTypeselectOption"
-            key="index"
-            :label="item"
-            :value="item"
-          />
-        </el-select>
-        <div class="imgprice">
-          <el-input v-model="imgPrice" placeholder="请输入图片价格"></el-input>
-          <div class="unit">潮币</div>
-        </div>
-      </div>
-    </div>
     <template #footer>
       <span class="dialog-footer">
         <el-button type="primary" @click="dialogSubmit(PopUpPrompt)">
@@ -201,7 +164,7 @@
         </el-button>
       </span>
     </template>
-  </el-dialog>
+  </el-dialog> -->
   <!-- 其它提示 -->
   <div class="main">
     <el-backtop :bottom="80"></el-backtop>
@@ -378,10 +341,10 @@
           <span v-if="identity == 1" class="delete" @click="deleteImgFun(item)"
             >删除</span
           >
-          <span class="money" v-if="item.buy" key="index">已购买 </span>
+          <!-- <span class="money" v-if="item.buy" key="index">已购买 </span>
           <span class="money" @click="changeMoney(item)"
             >{{ item.cost }}潮币</span
-          >
+          > -->
 
           <el-dropdown
             class="downLoad"
@@ -430,7 +393,7 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import FormInstance from "element-plus";
-import { Message, UploadFilled } from "@element-plus/icons-vue";
+// import { Message, UploadFilled } from "@element-plus/icons-vue";
 import {
   loginApi,
   getImgsApi,
