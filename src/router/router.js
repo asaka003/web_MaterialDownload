@@ -38,6 +38,10 @@ const routes = [
     path: "/test",
     component: () => import("@/components/dialogInfo.vue"),
   },
+  {
+    path: "/toolsDownload",
+    component: () => import("@/pages/toolsDownload.vue")
+  }
   
 ];
 

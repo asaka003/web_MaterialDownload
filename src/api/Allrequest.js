@@ -168,7 +168,7 @@ export const LongTextDigest = (data) => {
 // 文案文本(文件)
 export const uploadFile = (data) => {
   return axios.request({
-    url: "https://chat.totrygpt.com/gpt/material/Upload?mode=true",
+    url: "/gpt/material/Upload?mode=true",
     method: "post",
     data: data,
   });

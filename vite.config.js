@@ -27,6 +27,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
+      "/gpt":{
+        target: "https://www.eralab.cn",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      }
     },
   },
   css: {

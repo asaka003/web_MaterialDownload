@@ -1191,6 +1191,17 @@ const handleSelect = (key, keyPath) => {
   switch(key){
     case '1': router.push("/");break;
     case '2-2': router.push("/AIchat");break;
+    case '3':
+              getCountSync()
+              .then((res) => {
+                localStorage.setItem("balance", res.data.balance);
+                userBalance.value = localStorage.getItem("balance");
+              })
+              .catch((err) => {
+                console.log(err);
+                login()
+              }); 
+              router.push("/toolsDownload");break;
     case '4': //检测登录token是否有效
               //var self = this
               getCountSync()
