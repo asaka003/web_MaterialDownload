@@ -11,7 +11,7 @@
                 <!-- :href="`#/player?file_hash=${video.file_hash}`" -->
                     <a name="file_url" @click="handlePlayer(video.file_id)">
                         <div :style="{boxShadow: `var(--el-box-shadow-light)`,}">
-                            <img :src="`/material/`+video.faceImgPath" alt="[]">
+                            <img :src="`/AIweb_material/`+video.faceImgPath" alt="[]">
                         </div>
                         <h3 name="title">{{video.file_name}}<el-button class="button-del" type="danger" @click.stop="handleDelete(video.file_id)" v-if="identity == 1"><el-icon><Delete /></el-icon>删除</el-button></h3>
                         <p name="time">{{(new Date(video.create_time)).toLocaleString() }}</p>
@@ -43,7 +43,7 @@
                 <el-upload
                     ref="uploadImg"
                     class="upload-demo"
-                    action="/materialSys/materialSystem/uploadFaceImg"
+                    action="/AIweb_materialSys/materialSystem/uploadFaceImg"
                     :auto-upload="false"
                     :data="uploadFileInfo"
                 >

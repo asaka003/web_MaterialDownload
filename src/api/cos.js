@@ -2,7 +2,7 @@ import COS from 'cos-js-sdk-v5'; // 通过 npm 安装的 SDK
 export const cos = new COS({
     // getAuthorization 必选参数
     getAuthorization: function (options, callback) {
-        var url = '/materialSys/materialSystem/getTmpSecret'; // url 替换成您自己的后端服务
+        var url = '/AIweb_materialSys/materialSystem/getTmpSecret'; // url 替换成您自己的后端服务
         var xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
         xhr.onload = function (e) {

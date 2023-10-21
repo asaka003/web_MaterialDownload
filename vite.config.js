@@ -17,15 +17,14 @@ export default defineConfig({
   base: "/",
   server: {
     proxy: {
-      "/materialSys": {
+      "/AIweb_materialSys": {
         target: "https://www.eralab.cn",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
-      "/material": {
+      "/AIweb_material": {
         target: "https://www.eralab.cn",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
       },
       "/gpt":{
         target: "https://www.eralab.cn",

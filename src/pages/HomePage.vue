@@ -89,7 +89,7 @@
   </el-dialog>
   <!-- 登录注册弹出框 -->
   <!-- 其它提示 -->
-  <!-- <el-dialog
+  <el-dialog
     center
     v-model="dialogVisible"
     :title="PopUpPrompt.title"
@@ -164,13 +164,13 @@
         </el-button>
       </span>
     </template>
-  </el-dialog> -->
+  </el-dialog>
   <!-- 其它提示 -->
   <div class="main">
     <el-backtop :bottom="80"></el-backtop>
     <!-- <div class="user">
       <div class="topName">
-        <img src="@/assets/logo.svg" alt="" /> <span>番茄素材网</span>
+        <img src="@/assets/logo.svg" alt="" /> <span>沙雕素材网</span>
       </div>
       <div class="allright">
         <div class="user_left" v-if="identity != 1 && phone != ''">
@@ -256,7 +256,7 @@
       <div class="firstTabs">
         <div
           v-for="(item, index) in newlabels"
-          key="index"
+          :key="index"
           @click="clcikTabs(item, index)"
           class="firstTabs_item"
           :class="firstTabsIndex == index ? 'firstTabs_item_active' : ''"
@@ -268,7 +268,7 @@
         <div class="seconTabs">
           <div
             v-for="(item, index) in newlabels[firstTabsIndex].secondTags"
-            key="index"
+            :key="index"
             @click="clcikSecondTabs(item, index)"
             class="seconTabs_item"
             :class="secondTabsIndex == index ? 'seconTabs_item_active' : ''"
@@ -284,7 +284,7 @@
             v-for="(item, index) in newlabels[firstTabsIndex].secondTags[
               secondTabsIndex
             ].thirTags"
-            key="index"
+            :key="index"
             @click="clcikThirdTabs(item, index)"
             class="seconTabs_item"
             :class="thirdTabsIndex == index ? 'seconTabs_item_active' : ''"
@@ -300,7 +300,7 @@
             v-for="(item, index) in newlabels[firstTabsIndex].secondTags[
               secondTabsIndex
             ].fourTags"
-            key="index"
+            :key="index"
             @click="clcikFourTabs(item, index)"
             class="seconTabs_item"
             :class="fourTabsIndex == index ? 'seconTabs_item_active' : ''"
@@ -317,16 +317,23 @@
         v-if="imgs.length == 0"
         style="width: 100%; display: flex; justify-content: center"
       />
-      <div class="img" v-for="(item, inedx) in imgs" key="index">
+      
+      <div class="img" v-for="(item, index) in imgs" :key="index" >
         <div class="img_copyright">版权</div>
+        <div v-if="chooseLabel == '音频'">
+          <img src="https://www.eralab.cn/AIweb_material/voice_temp.png" style="width:100%" alt="">
+          <!-- 音频播放控件 -->
+          <audio :src="'/AIweb_material/' + item.filename + getBrowserExt(item.file_exts)" controls controlsList="nodownload" style="width:100%"></audio>
+        </div>
         <el-image
+          v-if="chooseLabel != '音频'"
           loading="lazy"
-          :src="'https://www.eralab.cn/material/' + item.filename + '.jpg'"
+          :src="'/AIweb_material/' + item.filename + getBrowserExt(item.file_exts)"
           fit="fill"
           :preview-src-list="[
-            'https://www.eralab.cn/material/' +
+            '/AIweb_material/' +
               item.filename +
-              '_mediumImg.jpg',
+              '_mediumImg' + getBrowserExt(item.file_exts),
           ]"
           :zoom-rate="1.2"
         >
@@ -411,6 +418,7 @@ import {
 } from "@/api/Allrequest.js";
 // import TopBar from '@/components/topBar.vue';
 import UploadInstance from "element-plus";
+// import APlayer from '@moefe/vue-aplayer';
 import JSZip from "jszip";
 // import { useActiveStore } from "@/pina/index.js";
 import { useRouter } from "vue-router";
@@ -677,50 +685,57 @@ const downloadFile = (e, type) => {
     dialogCustomize({ content: "请登录后再进行下载" });
     return;
   }
+  let filename = {
+    file_id: parseInt(e.id),
+    ext: type,
+  };
+  window.open("/AIweb_materialSys/materialSystem/getFile/"+filename.file_id+"/"+filename.ext)
+  // 更新潮币
+  getLocalInfo();
 
-  if (identity == 1) {
-    // 处理特定身份的逻辑
-  } else {
-    if (e.buy || identity.value == 1) {
-      let filename = {
-        file_id: parseInt(e.id),
-        ext: type,
-      };
+  // if (identity == 1) {
+  //   // 处理特定身份的逻辑
+  // } else {
+  //   if (e.buy || identity.value == 1) {
+  //     let filename = {
+  //       file_id: parseInt(e.id),
+  //       ext: type,
+  //     };
 
-      window.open("/materialSys/materialSystem/getFile/"+filename.file_id+"/"+filename.ext)
-      // 更新潮币
-      getLocalInfo();
+  //     window.open("/AIweb_materialSys/materialSystem/getFile/"+filename.file_id+"/"+filename.ext)
+  //     // 更新潮币
+  //     getLocalInfo();
 
-      // downImgApi(filename).then((res) => {
-      //   console.log("下载文件", res);
+  //     // downImgApi(filename).then((res) => {
+  //     //   console.log("下载文件", res);
 
-      //   if (res.type == "application/json") {
-      //     dialogCustomize({ content: "余额不足，请充值" });
-      //   } else {
-      //     const blob = new Blob([res.data]);
-      //     const url = URL.createObjectURL(blob);
-      //     const a = document.createElement("a");
-      //     a.style.display = "none";
-      //     const filename = e.filename + type;
-      //     a.href = url;
-      //     a.download = filename;
-      //     document.body.appendChild(a);
-      //     a.click();
-      //     document.body.removeChild(a);
-      //   }
+  //     //   if (res.type == "application/json") {
+  //     //     dialogCustomize({ content: "余额不足，请充值" });
+  //     //   } else {
+  //     //     const blob = new Blob([res.data]);
+  //     //     const url = URL.createObjectURL(blob);
+  //     //     const a = document.createElement("a");
+  //     //     a.style.display = "none";
+  //     //     const filename = e.filename + type;
+  //     //     a.href = url;
+  //     //     a.download = filename;
+  //     //     document.body.appendChild(a);
+  //     //     a.click();
+  //     //     document.body.removeChild(a);
+  //     //   }
 
-      //   // 更新潮币
-      //   getLocalInfo();
-      // });
+  //     //   // 更新潮币
+  //     //   getLocalInfo();
+  //     // });
 
-    } else {
-      dialogCustomize({
-        content: "确定花费" + e.cost + "潮币下载吗",
-        button: "下载",
-        options: e,
-      });
-    }
-  }
+  //   } else {
+  //     dialogCustomize({
+  //       content: "确定花费" + e.cost + "潮币下载吗",
+  //       button: "下载",
+  //       options: e,
+  //     });
+  //   }
+  // }
 };
 
 // 点击下载jpg图片
@@ -922,6 +937,7 @@ const upload = (item) => {
 // 删除图片
 const deleteImgFun = (e) => {
   dialogCustomize({ content: "确定要删除吗", button: "删除", options: e.id });
+  console.log("tet")
 };
 
 // 修改文件名
@@ -1011,6 +1027,26 @@ const pageSize = ref(50);
 const small = ref(false);
 const background = ref(false);
 const disabled = ref(false);
+
+//获取文件预览格式后缀
+const getBrowserExt = (exts) =>{
+  if(exts.includes(".gif")){
+    return ".gif";
+  }else if(exts.includes(".wav")){
+    return ".wav";
+  }else if(exts.includes(".mp3")){
+    return ".mp3";
+  }else{
+    return ".jpg";
+  }
+}
+
+//播放音频文件
+// const playAudio = (url) =>{
+//   console.log(url)
+//   const audioElement = new Audio(url);
+//   audioElement.play();
+// }
 
 // 切换页数大小
 const handleSizeChange = (e) => {
@@ -1573,6 +1609,38 @@ const newlabels = ref([
       },
     ],
   },
+  {
+    name: "特效",
+    secondTags: [
+      {
+        name: "常规特效",   
+      },
+      {
+        name: "打斗特效",
+      },
+      {
+        name: "全屏特效",
+      },
+
+      {
+        name: "其他",
+      },
+    ],
+  },
+  {
+    name: "音频",
+    secondTags: [
+      {
+        name: "常规",   
+      },
+      {
+        name: "动物",
+      },
+      {
+        name: "攻击特效",
+      },
+    ],
+  },
 ]);
 
 // 当前标签页下标 一级
@@ -1928,6 +1996,7 @@ const removeFile = (e) => {
       flex-wrap: wrap;
       padding: 3.125rem 9.375rem;
       box-sizing: border-box;
+      
 
       .img {
         display: flex;

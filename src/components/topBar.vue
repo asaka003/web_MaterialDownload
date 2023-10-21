@@ -187,7 +187,7 @@
       <div class="formContainer_select">
         <el-select
           v-model="chooseFirst"
-          placeholder="图片类型"
+          placeholder="文件类型"
           @change="firstTypes"
         >
           <el-option
@@ -199,7 +199,7 @@
         </el-select>
         <el-select
           v-model="chooseSecond"
-          placeholder="图片类型2"
+          placeholder="文件类型2"
           @change="SecondTypes"
         >
           <el-option
@@ -211,7 +211,7 @@
         </el-select>
         <!-- <el-select
           v-model="chooseThird"
-          placeholder="图片类型3"
+          placeholder="文件类型3"
           @change="ThirdTypes"
         >
           <el-option
@@ -228,7 +228,7 @@
         </el-select>
         <el-select
           v-model="chooseFour"
-          placeholder="图片类型4"
+          placeholder="文件类型4"
           @change="FourTypes"
         >
           <el-option
@@ -260,7 +260,7 @@
   <!-- 其它提示 -->
   <div class="user">
     <div class="topName">
-      <img src="@/assets/logo.svg" alt="" /> <span>番茄素材网</span>
+      <img src="@/assets/logo3.png" alt="" /> <span>沙雕素材网</span>
     </div>
     <div class="topCenter">
       <el-menu
@@ -548,6 +548,38 @@ const newlabels = ref([
       {
         name: "其他",
         fourTags: ["其他"],
+      },
+    ],
+  },
+  {
+    name: "特效",
+    secondTags: [
+      {
+        name: "常规特效",   
+      },
+      {
+        name: "打斗特效",
+      },
+      {
+        name: "全屏特效",
+      },
+
+      {
+        name: "其他",
+      },
+    ],
+  },
+  {
+    name: "音频",
+    secondTags: [
+      {
+        name: "常规",   
+      },
+      {
+        name: "动物",
+      },
+      {
+        name: "攻击特效",
       },
     ],
   },
@@ -851,7 +883,7 @@ const dialogSubmit = (e) => {
       return;
     } else if (chooseFirst.value == null) {
       ElMessage({
-        message: "请选择图片类型!",
+        message: "请选择文件类型!",
         type: "warning",
       });
       return;

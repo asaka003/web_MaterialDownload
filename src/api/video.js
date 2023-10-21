@@ -4,7 +4,7 @@ import axios from "axios";
 export const getVideoList = (params) => {
     // const token = localStorage.getItem("userToken");
     return axios.request({
-      url: "/materialSys/materialSystem/getVideoList",
+      url: "/AIweb_materialSys/materialSystem/getVideoList",
       method: "get",
       params:params
     });
@@ -18,7 +18,7 @@ export const UploadFileInfo = (data) =>{
 //获取视频播放token
 export const GetVideoToken = (params)=>{
     return axios.request({
-        url: "/materialSys/materialSystem/getVideoToken",
+        url: "/AIweb_materialSys/materialSystem/getVideoToken",
         method: "get",
         params:params
       });
@@ -26,7 +26,7 @@ export const GetVideoToken = (params)=>{
 //获取视频上传token
 export const GetUploadToken = ()=>{
     return axios.request({
-        url: "/materialSys/materialSystem/getUploadToken",
+        url: "/AIweb_materialSys/materialSystem/getUploadToken",
         method: "get",
       });
 }
@@ -34,7 +34,7 @@ export const GetUploadToken = ()=>{
 //删除视频
 export const DelVideo = (params) =>{
   return axios.request({
-    url: "/materialSys/materialSystem/delVideo",
+    url: "/AIweb_materialSys/materialSystem/delVideo",
     method: "get",
     params:params
   });
