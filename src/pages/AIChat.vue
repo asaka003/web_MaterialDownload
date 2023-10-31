@@ -29,7 +29,7 @@
         
         <div class="c2_title">
           <div class="prompt">
-            点击这里进行文本概括
+            点击这里进行文本生成
             <img src="@/assets/there.svg" alt="" />
             <img
               src="@/assets/change.png"
@@ -41,29 +41,29 @@
           <div class="clearAll" @click="clearAll">清空文本</div>
         </div>
         <div class="c2_content">
-          
           <div class="c2_content_textarea line">
+            <input type="text" style="width:93.859%;height:30px;padding: 2px 20px ;font-size:15px" placeholder="请输入提示词,示例:请将以下文章内容精简" v-model="question">
             <!-- <p v-if="!textarea1">请输入或粘贴文本查看修改后的文案</p> -->
             <textarea
               class="t1 ScrollBar"
+              style="max-height:92.5%"
               name=""
               id=""
               cols="30"
               rows="32"
-              placeholder="请输入提示词,示例:请将以下文章内容精简"
+              placeholder="请输入要处理的文本内容"
               v-model="textarea1"
             ></textarea>
             <div class="NumberOfWords">
               <span>{{ textarea1.length }}</span> 字
             </div>
 
-            <el-upload
+            <!-- <el-upload
               ref="uploadRef"
               class="upload-demo"
               drag
               action=""
               :http-request="upload"
-              multiple
               :auto-upload="false"
               :limit="1"
               :on-exceed="OutOfLimit"
@@ -78,10 +78,10 @@
               </div>
               <template #tip>
                 <div class="el-upload__tip">
-                  <!-- jpg/png files with a size less than 500kb -->
+                  
                 </div>
               </template>
-            </el-upload>
+            </el-upload> -->
           </div>
 
           <div class="c2_content_textarea">
@@ -153,6 +153,7 @@ const clearAll = () => {
   if (fileNum.value != 0) {
     uploadRef.value.clearFiles();
   }
+  question.value = "";
   textarea1.value = "";
   textarea2.value = "";
   fileNum.value = 0;
@@ -202,6 +203,8 @@ const dialogSubmit = (e) => {
 
 // 文本内容1
 const textarea1 = ref("");
+//提示词
+const question = ref("");
 // 文本内容2
 const textarea2 = ref("");
 // 是否加载中
@@ -215,22 +218,25 @@ const fileUploadSuccess = (res) => {
 const toModify = () => {
   // 检测内容是否为空 或者文件为空
   if (textarea1.value == "") {
-    dialogCustomize({ content: "提示词不能为空!" });
+    dialogCustomize({ content: "文案不能为空!" });
     return;
-  } else if (fileNum.value == 0) {
-    dialogCustomize({ content: "文案不能为空" });
+  } else if (question.value == 0) {
+    dialogCustomize({ content: "提示词不能为空" });
     return;
   } else {
     loading.value = true;
-    uploadRef.value.submit();
+    upload()
   }
 };
 const upload = (item) => {
   let formData = new FormData();
-  formData.append("file", item.file);
+  
+  //formData.append("file", item.file);
+  
   formData.append("type", "SKU");
-  formData.append("question", textarea1.value);
-  uploadFile(formData)
+  formData.append("question", question.value);
+  formData.append("content",textarea1.value)
+  LongTextDigest(formData)
     .then((res) => {
       if (res.data.content != "") {
         textarea2.value = res.data.content;
@@ -458,9 +464,11 @@ const upload = (item) => {
         display: flex;
         box-sizing: border-box;
         min-height: 31.25rem;
+        //height: 31.25rem;
         .c2_content_textarea {
           flex: 1;
           max-height: 31.25rem;
+          //height: 100%;
           position: relative;
           textarea {
             padding: 1.875rem;

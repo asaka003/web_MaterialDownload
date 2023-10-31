@@ -54,7 +54,7 @@
       >
         <el-input v-model="ruleForm.code" type="text" />
       </el-form-item>
-      <el-form-item v-if="loginOrregister == '注册'">
+      <!-- <el-form-item v-if="loginOrregister == '注册'">
         <img
           src="@/assets/getCode.svg"
           alt=""
@@ -69,7 +69,7 @@
           >添加客服获取激活码，素材网一个月内免费使用
           （素材陆续更新中，尽请期待）</span
         >
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item v-if="loginOrregister == '登录'">
         <span
           style="cursor: pointer; color: var(--el-color-primary)"
@@ -192,7 +192,7 @@
         >
           <el-option
             v-for="(item, index) in newlabels"
-            key="index"
+            :key="index"
             :label="item.name"
             :value="item.name"
           />
@@ -204,10 +204,18 @@
         >
           <el-option
             v-for="(item, index) in newlabels[chooseFirstIndex].secondTags"
-            key="index"
+            :key="index"
             :label="item.name"
             :value="item.name"
           />
+        </el-select>
+        <el-select
+          v-model="copyRight"
+          placeholder="版权设置"
+          @change="copyRights"
+        >
+          <el-option label="版权" value="版权" />
+          <el-option label="非版权" value="非版权" />
         </el-select>
         <!-- <el-select
           v-model="chooseThird"
@@ -595,6 +603,8 @@ const chooseThird = ref("");
 const chooseThirdIndex = ref(0);
 // 四级选项
 const chooseFour = ref("");
+//版权选项
+const copyRight = ref(""); 
 const chooseFourIndex = ref(0);
 // 选中第一个类型
 const firstTypes = (e) => {
@@ -611,6 +621,9 @@ const SecondTypes = (e) => {
   ].secondTags.findIndex((option) => option.name === chooseSecond.value);
   console.log("第二个选择的下标", chooseSecondIndex.value);
 };
+const copyRights = (e) => {
+  copyRight.value = e;
+}
 // 选中第三个类型
 const ThirdTypes = (e) => {
   chooseThird.value = e;
@@ -1086,6 +1099,8 @@ const upload = (item) => {
   formData.append("type2", chooseSecond.value);
   formData.append("type3", chooseThird.value);
   formData.append("type4", chooseFour.value);
+  formData.append("copyRight",copyRight.value);
+  formData.append("waterMark", "false");
   formData.append("cost", imgPrice.value);
   uploadFileApi(formData)
     .then((res) => {

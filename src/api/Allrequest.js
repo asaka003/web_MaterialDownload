@@ -159,7 +159,7 @@ export const delUserAuthInfoApi = (data) => {
 export const LongTextDigest = (data) => {
   console.log("请求参数", data);
   return axios.request({
-    url: "/AIweb_materialSys/materialSystem/gpt/LongTextDigest",
+    url: "/gpt/material/LongText?mode=true",
     method: "post",
     data: data,
   });

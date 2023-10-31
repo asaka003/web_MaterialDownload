@@ -319,9 +319,11 @@
       />
       
       <div class="img" v-for="(item, index) in imgs" :key="index" >
-        <div class="img_copyright">版权</div>
-        <div v-if="chooseLabel == '音频'">
-          <img src="https://www.eralab.cn/AIweb_material/voice_temp.png" style="width:100%" alt="">
+        <div class="img_copyright" v-if="item.copyRight == '版权'">版权</div>
+        <div v-if="chooseLabel == '音频'" style="text-align: center;">
+          <span style="color: #409eff;font-size:20px;padding:20px;" @click="changeFilename(item)">{{
+            item.filename
+          }}</span>
           <!-- 音频播放控件 -->
           <audio :src="'/AIweb_material/' + item.filename + getBrowserExt(item.file_exts)" controls controlsList="nodownload" style="width:100%"></audio>
         </div>
@@ -919,6 +921,7 @@ const upload = (item) => {
   formData.append("file", item.file);
   formData.append("type", imgTypeselect.value);
   formData.append("cost", imgPrice.value);
+  formData.append("waterMark", "false");
   uploadFileApi(formData)
     .then((res) => {
       ElMessage({
@@ -2003,7 +2006,7 @@ const removeFile = (e) => {
         flex-direction: column;
         box-sizing: border-box;
         max-height: 12.5rem;
-        min-height: 12.5rem;
+        //min-height: 12.5rem;
         overflow: hidden;
         width: calc((100% - 5rem) / 5);
         max-width: calc((100% - 5rem) / 5);
