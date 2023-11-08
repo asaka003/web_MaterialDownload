@@ -268,7 +268,7 @@
   <!-- 其它提示 -->
   <div class="user">
     <div class="topName">
-      <img src="@/assets/logo3.png" alt="" /> <span>沙雕素材网</span>
+      <img src="@/assets/logo3.png" alt="" />
     </div>
     <div class="topCenter">
       <el-menu
@@ -277,6 +277,7 @@
         mode="horizontal"
         @select="handleSelect"
       >
+      <el-menu-item index="0">首页</el-menu-item>
       <el-menu-item index="1">素材中心</el-menu-item>
         <el-sub-menu index="2">
           <template #title>AI工具</template>
@@ -1231,12 +1232,13 @@ onMounted(() => {
   getLocalInfo();
 });
 
-var activeIndex = '1';
+var activeIndex = '0';
 const handleSelect = (key, keyPath) => {
   activeIndex = key;
   console.log(key)
   switch(key){
-    case '1': router.push("/");break;
+    case '0': router.push("/");break;
+    case '1': router.push("/material-center");break;
     case '2-2': router.push("/AIchat");break;
     case '3':
               getCountSync()
@@ -1310,6 +1312,15 @@ export default {
   }
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    font-family: "Helvetica Neue For Number", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #fff;
+}
+
 .PopUpPrompt {
   width: 100%;
   height: 100%;
@@ -1324,6 +1335,7 @@ export default {
   justify-content: center;
 }
 
+
 .user {
   width: 100%;
   height: 3.125rem;
@@ -1333,36 +1345,56 @@ export default {
   top: 0;
   left: 0;
   z-index: 99;
-  padding: 0 8.125rem;
   box-sizing: border-box;
-  justify-content: space-between;
-  background-color: white;
-  box-shadow: 0 0.25rem 0.25rem 0.25rem rgba($color: #000000, $alpha: 0.25);
+  background-color: #fafafa;
   overflow: hidden;
-  cursor: pointer;
+  @media screen and (max-width: 1280px){
+    padding: 0 14px;
+  }
+  padding: 0 24px;
   .topName {
-    height: 100%;
-    font-size: 1.25rem;
-    font-weight: bold;
+    display: -ms-flexbox;
     display: flex;
+    -ms-flex-align: center;
     align-items: center;
+    -ms-flex-pack: center;
     justify-content: center;
+    width: 9em;
+    height: 4.5em;
+    margin-right: .625em;
+
     img {
-      width: 3.125rem;
-      height: 3.125rem;
-      margin-right: 0.625rem;
+      display: block;
+      width: 6.375em;
+      border-style: none;
     }
   }
   .topCenter{
-    width: 50%;
-  }
+      width: 100%;
+    }
   .allright {
-    white-space: nowrap;
+    -ms-flex: 1;
+    flex: 1;
+    display: -ms-flexbox;
     display: flex;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -ms-flex-align: center;
+    align-items: center;
+
     .user_right {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: transparent;
+      outline: none;
+      padding: .625em 1.25em;
+      border: 1px solid #555;
+      border-radius: 4px;
+      white-space: nowrap;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      font-size: 1em;
       .img {
         width: 0.9375rem;
         height: 0.9375rem;

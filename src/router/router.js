@@ -3,7 +3,11 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    component: () => import("@/pages/HomePage.vue"), // 首页使用懒加载
+    component: () => import("@/pages/home.vue"), // 首页使用懒加载
+  },
+  {
+    path: "/material-center",
+    component: () => import("@/pages/HomePage.vue"),
   },
   {
     path: "/authorization",
@@ -42,7 +46,7 @@ const routes = [
     path: "/toolsDownload",
     component: () => import("@/pages/toolsDownload.vue")
   }
-  
+
 ];
 
 const router = createRouter({
