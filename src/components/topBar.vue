@@ -1385,7 +1385,8 @@ html, body {
     .user_right {
       background: transparent;
       outline: none;
-      padding: .625em 1.25em;
+      padding: .3125em .625em;
+      margin: .3125em .625em;
       border: 1px solid #555;
       border-radius: 4px;
       white-space: nowrap;
@@ -1395,6 +1396,8 @@ html, body {
       -ms-user-select: none;
       user-select: none;
       font-size: 1em;
+      display: flex;
+      align-items: center;
       .img {
         width: 0.9375rem;
         height: 0.9375rem;
