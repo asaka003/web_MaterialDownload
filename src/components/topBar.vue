@@ -277,16 +277,18 @@
         mode="horizontal"
         @select="handleSelect"
       >
-      <el-menu-item index="0">首页</el-menu-item>
-      <el-menu-item index="1">素材中心</el-menu-item>
+      <el-menu-item class="menu-item" index="0">首页</el-menu-item>
+      <el-menu-item class="menu-item" index="1">素材中心</el-menu-item>
         <el-sub-menu index="2">
-          <template #title>AI工具</template>
+          <template #title>
+            <span class="menu-item">AI工具</span>
+          </template>
           <el-menu-item index="2-1">AI配音</el-menu-item>
           <el-menu-item index="2-2">AI文章助手</el-menu-item>
           <el-menu-item index="2-3">AI绘图</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="3">软件下载</el-menu-item>
-        <el-menu-item index="4">课程教学</el-menu-item>
+        <el-menu-item class="menu-item" index="3">软件下载</el-menu-item>
+        <el-menu-item class="menu-item" index="4">课程教学</el-menu-item>
       </el-menu>
     </div>
 
@@ -1371,6 +1373,9 @@ html, body {
   }
   .topCenter{
       width: 100%;
+      .menu-item{
+        font-size: 1em;
+      }
     }
   .allright {
     -ms-flex: 1;

@@ -234,8 +234,11 @@
     </div>
 
     <div class="search">
-      <el-input v-model="search" placeholder="输入关键字" clearable />
-      <el-button type="primary" @click="searchKeyword">搜索</el-button>
+      <el-input v-model="search" placeholder="输入关键字" clearable>
+        <template #append>
+          <el-button :icon="Search" @click="searchKeyword" style="width: 53px;"/>
+        </template>
+      </el-input>
     </div>
     <div class="LabelField">
       <!-- <el-tabs
@@ -347,31 +350,29 @@
           <span class="img_name" @click="changeFilename(item)">{{
             item.filename
           }}</span>
-          <span v-if="identity == 1" class="delete" @click="deleteImgFun(item)"
-            >删除</span
-          >
-          <!-- <span class="money" v-if="item.buy" key="index">已购买 </span>
-          <span class="money" @click="changeMoney(item)"
-            >{{ item.cost }}潮币</span
-          > -->
+          <div class="downLoad">
+            <el-button v-if="identity == 1" type="danger" plain :icon="Delete" size="small" style="margin:10px;" 
+              @click="deleteImgFun(item)"/>
+            <!-- <span class="money" v-if="item.buy" key="index">已购买 </span>
+            <span class="money" @click="changeMoney(item)"
+              >{{ item.cost }}潮币</span
+            > -->
 
-          <el-dropdown
-            class="downLoad"
-            trigger="click"
-            style="font-size: 0.75rem"
-          >
-            <span class="el-dropdown-link"> 下载 </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item
-                  v-for="(item1, index1) in item.file_exts.split('|')"
-                  style="font-size: 0.75rem"
-                  @click="downloadFile(item, item1)"
-                  >{{ item1.split(".")[1] + "格式" }}</el-dropdown-item
-                >
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+            <el-dropdown trigger="click">
+              <!-- <el-button plain :icon="Download"/> -->
+              <el-button type="success" size="small">下载</el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    v-for="(item1, index1) in item.file_exts.split('|')"
+                    style="font-size: 0.75rem"
+                    @click="downloadFile(item, item1)"
+                    >{{ item1.split(".")[1] + "格式" }}</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
           <!-- <span class="downLoad" @click="imgclickDown(item)">下载</span> -->
         </div>
       </div>
@@ -402,6 +403,8 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import FormInstance from "element-plus";
+import { Search,Delete, Download } from '@element-plus/icons-vue'
+
 // import { Message, UploadFilled } from "@element-plus/icons-vue";
 import {
   loginApi,
@@ -1787,7 +1790,7 @@ const removeFile = (e) => {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  padding-top: 4.375rem;
+  padding-top: 3.125rem;
   // background-image: url("@/assets/bg.png");
   // background-size: 20%;
   // background-position: center;
@@ -1804,49 +1807,50 @@ const removeFile = (e) => {
   }
   .firstTabs {
     display: flex;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #ccc;
-    margin-bottom: 20px;
+    font-size: 16px;
+    height: 36px;
+    line-height: 36px;
+    margin-top: 16px;
 
     .firstTabs_item {
-      margin-left: 10px;
-      font-size: 24px;
-      font-weight: bold;
+      display: block;
+      width: 64px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      margin-right: 24px;
       cursor: pointer;
-      border: 1px solid #ccc;
-      border-radius: 8px 8px 0 0;
-      padding: 5px 25px;
+      border-radius: 4px;
     }
     .firstTabs_item:nth-of-type(1) {
       margin-left: 0;
     }
     .firstTabs_item_active {
-      color: #d1e344;
+      color: #fff;
+      background: #d1e344;
     }
   }
-  .allSeconTabs {
-    display: flex;
-    flex-direction: column;
-    background-color: #f9f9f9;
-    border-radius: 6px;
+
+  .allSeconTabs{
+    padding-top: 16px;
+
     .seconTabs {
-      display: flex;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #eeeeee;
+      margin-bottom: 6px;
+
       .seconTabs_item {
-        margin-left: 20px;
-        font-size: 20px;
-        font-weight: bold;
+        display: inline-block;
+        font-size: 12px;
+        background: #fff;
+        padding: 8px 16px;
+        border: 1px solid #eee;
+        border-radius: 34px;
+        margin: 0 10px 10px 0;
+        color: #333;
         cursor: pointer;
-        padding: 5px 15px;
-        display: flex;
       }
       .seconTabs_item_active {
-        color: white;
-        border-radius: 10px;
-        background-color: #d1e344;
+        border: 1px solid #d1e344;
+        color: #d1e344;
       }
     }
   }
@@ -1935,7 +1939,7 @@ const removeFile = (e) => {
     flex-wrap: nowrap;
     height: 2.5rem;
     margin-top: 1.25rem;
-    padding: 0 8.125rem;
+    padding: 0 10rem 0 8.125rem;
     box-sizing: border-box;
     :deep(.el-input) {
       flex: 9.5;
@@ -1997,7 +2001,7 @@ const removeFile = (e) => {
       width: 100%;
       display: flex;
       flex-wrap: wrap;
-      padding: 3.125rem 9.375rem;
+      padding: 2.5rem 8.125rem;
       box-sizing: border-box;
       
 
@@ -2049,26 +2053,24 @@ const removeFile = (e) => {
           margin-right: 0rem;
         }
         .title {
-          padding: 0 0.625rem;
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          font-size: 1rem;
-          height: 3.125rem;
-          font-size: 0.75rem;
-          border-top: 0.0625rem solid #ccc;
-          box-sizing: border-box;
-          .delete {
-            color: #f56c6c;
+          .img_name{
+            display: flex;
+            align-items: center;
+            padding: 0 1.25rem;
+            height: 3.125rem;   
+            font-size: 14px;
+            font-weight: 700;
+            color: #666;
           }
-          .money {
-            color: #f56c6c;
-          }
-          span {
-            cursor: pointer;
-          }
-          .downLoad {
-            color: #409eff;
+          
+          .downLoad{
+            display: flex;
+            align-items: center;
+            position: absolute;
+            right: 0;
+            padding: 0 1.25rem;
           }
         }
       }
@@ -2172,24 +2174,24 @@ const removeFile = (e) => {
           margin-right: 0rem;
         }
         .title {
-          padding: 0 0.625rem;
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          font-size: 1rem;
-          height: 3.125rem;
-          font-size: 0.75rem;
-          .delete {
-            color: #f56c6c;
+          .img_name{
+            display: flex;
+            align-items: center;
+            padding: 0 1.25rem;
+            height: 3.125rem;   
+            font-size: 14px;
+            font-weight: 700;
+            color: #666;
           }
-          .money {
-            color: #f56c6c;
-          }
-          span {
-            cursor: pointer;
-          }
-          :deep(.el-dropdown-menu__item) {
-            font-size: 0.75rem !important;
+          
+          .downLoad{
+            display: flex;
+            align-items: center;
+            position: absolute;
+            right: 0;
+            padding: 0 1.25rem;
           }
         }
       }

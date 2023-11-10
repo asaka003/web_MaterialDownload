@@ -1,11 +1,11 @@
 <template>
     <div class="main">
-        <el-carousel height="45vh">
+        <el-carousel height="65vh">
             <el-carousel-item v-for="item in carouselImages" :key="item">
                 <img :src="item" style="width: 100%;" />
             </el-carousel-item>
         </el-carousel>
-        
+
         <div v-for="(showList, key) in images">
             <div class="tag"> {{ key }} </div>
             <el-row style="height: 100%;margin: 5px 20px;">
@@ -43,7 +43,6 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-// import { imageList } from "@/components/imageList.vue";
 
 const carouselImages = ref([])
 const images = ref({})
@@ -154,7 +153,7 @@ body {
     font-size: 24px;
     font-weight: 700;
     color: #333;
-    margin-top: 2.5rem;
+    margin-top: 3rem;
     padding: 0 50px;
 }
 
