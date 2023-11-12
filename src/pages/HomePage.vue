@@ -2009,8 +2009,6 @@ const removeFile = (e) => {
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
-        max-height: 12.5rem;
-        //min-height: 12.5rem;
         overflow: hidden;
         width: calc((100% - 5rem) / 5);
         max-width: calc((100% - 5rem) / 5);
@@ -2126,13 +2124,12 @@ const removeFile = (e) => {
       display: flex;
       flex-wrap: wrap;
       box-sizing: border-box;
-      padding: 3.125rem 3.125rem 0 3.125rem;
+      padding: 2.5rem 7.5rem;
 
       .img {
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
-        max-height: 12.5rem;
         overflow: hidden;
         width: calc((100% - 1.25rem) / 3);
         max-width: calc((100% - 1.25rem) / 3);
