@@ -427,6 +427,8 @@ import UploadInstance from "element-plus";
 import JSZip from "jszip";
 // import { useActiveStore } from "@/pina/index.js";
 import { useRouter } from "vue-router";
+import { tags } from '../router/jump';
+
 // const store = useActiveStore();
 const router = useRouter();
 // 前往授权账号页面
@@ -1086,6 +1088,14 @@ onMounted(() => {
       behavior: "smooth",
     });
   };
+
+  const t = tags.value
+  if (t.length){
+    const index1 = newlabels.value.findIndex(obj => obj.name === t[0]);
+    clcikTabs(newlabels.value[index1], index1)
+    const index2 = newlabels.value[index1]['secondTags'].findIndex(obj => obj.name === t[1])
+    clcikSecondTabs(newlabels.value[index1]['secondTags'][index2], index2)
+  }
   getImg();
   getLocalInfo();
 });
