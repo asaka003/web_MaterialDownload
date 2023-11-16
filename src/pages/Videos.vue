@@ -11,7 +11,7 @@
                 <!-- :href="`#/player?file_hash=${video.file_hash}`" -->
                     <a name="file_url" @click="handlePlayer(video.file_id)">
                         <div :style="{boxShadow: `var(--el-box-shadow-light)`,}">
-                            <img :src="`/AIweb_material/`+video.faceImgPath" alt="[]">
+                            <img :src="`/AIweb_material/`+video.faceImgPath" alt="[]" :style="{}">
                         </div>
                         <h3 name="title">{{video.file_name}}<el-button class="button-del" type="danger" @click.stop="handleDelete(video.file_id)" v-if="identity == 1"><el-icon><Delete /></el-icon>删除</el-button></h3>
                         <p name="time">{{(new Date(video.create_time)).toLocaleString() }}</p>
@@ -98,7 +98,7 @@ export default {
             query: {
                 search: '',
                 pageIndex: 0,
-                pageSize: 10
+                pageSize: 50
             },
             tableData: [
                 
@@ -240,7 +240,7 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
+            this.query.pageIndex = val;
             this.getData();
         },
         handleDelete(fileId){
@@ -271,6 +271,7 @@ export default {
     padding: 10px;
 }
 .pagination { 
+    margin-top: 50px;
     display: flex; 
     justify-content: center; 
     padding-bottom: 80px;
@@ -324,8 +325,9 @@ export default {
 .nav05_centent_mb{
 	width: 250px;
 	height: 230px;
-	margin: 20px 1%;
+	margin: 30px 1%;
 	position: relative;
+    margin-bottom: 50px;
 }
 
 .nav05_centent_mb a{
@@ -341,16 +343,19 @@ export default {
     text-decoration:none
 }
 .nav05_centent_mb>a>div{
-	width: 100%;
-	height: 140px;
-	border-radius: 8px;
-	text-align: center;
-	overflow: hidden;
-	background: #e4e0e0;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
 }
 .nav05_centent_mb>a>div img{
 	text-align: center;
-	height: 100%;
+    width: 100%;
+    vertical-align: middle;
 }
 .nav05_centent_mb>a>h3{
 	margin-left: 8%;
