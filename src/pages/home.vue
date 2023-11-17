@@ -10,7 +10,8 @@
             <div class="tag"> {{ key }} </div>
             <el-row style="height: 100%;margin: 5px 20px;">
                 <el-col :span="9" class="cell">
-                    <el-card v-if="showList.length > 0" :body-style="{ padding: '0px', height: '100%' }">
+                    <el-card v-if="showList.length > 0" :body-style="{ padding: '0px', height: '100%', cursor: 'pointer' }"
+                        @click="jump(key, showList[0]['type2'])">
                         <img :src="url_prefix + showList[0]['filename']" class="image" />
                         <div class="description">
                             <span class="title">{{ showList[0]['type2'] }}</span>
@@ -24,7 +25,8 @@
                     <el-row v-for="i in 2" style="height: 50%;">
                         <el-col v-for="j in 3" :span="8" class="cell">
                             <el-card v-if="showList.length > ((i - 1) * 3 + j)"
-                                :body-style="{ padding: '0px', height: '100%' }">
+                                :body-style="{ padding: '0px', height: '100%', cursor: 'pointer' }"
+                                @click="jump(key, showList[(i - 1) * 3 + j]['type2'])">
                                 <img :src="url_prefix + showList[(i - 1) * 3 + j]['filename']" class="subimage" />
                                 <div class="description">
                                     <span class="title">{{ showList[(i - 1) * 3 + j]['type2'] }}</span>
@@ -43,6 +45,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { tags } from '../router/jump';
 
 const carouselImages = ref([])
 const images = ref({})
@@ -74,6 +77,12 @@ function removeFileExtension(filename) {
         return filename.substring(0, dotIndex);
     }
     return filename;
+}
+
+function jump(tag1, tag2) {
+    console.log(tag1, tag2)
+    tags.value = [tag1, tag2]
+    window.location.href = '#/material-center'
 }
 
 // api.js
