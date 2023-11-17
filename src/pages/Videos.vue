@@ -97,7 +97,7 @@ export default {
         return {
             query: {
                 search: '',
-                pageIndex: 0,
+                pageIndex: 1,
                 pageSize: 50
             },
             tableData: [
@@ -143,11 +143,25 @@ export default {
     methods: {
         //获取用户文件信息列表
         getData() {
-            var res = getVideoList(this.query);
+            var self = this;
+            var res = getVideoList({
+                pageIndex: (self.query.pageIndex-1)*self.query.pageSize,
+                pageSize: self.query.pageSize,
+                search: self.query.search
+            });
             res.then(response => {
                 console.log(response.data);
                 var data = response.data.data;
                 this.tableData = data.list;
+                // 根据 file_name 中点前面的数字大小进行排序
+                this.tableData.sort((a, b) => {
+                    // 从字符串中提取点前面的数字，并将其转换为数字类型进行比较
+                    let aNumber = parseInt(a.file_name.match(/\d+/)[0]);
+                    let bNumber = parseInt(b.file_name.match(/\d+/)[0]);
+
+                    return aNumber - bNumber;
+                });
+
                 this.pageTotal = data.total;
             }).catch(error => {
                 // this.$message.error('获取文件信息失败')
@@ -204,7 +218,7 @@ export default {
           },
         // 触发搜索按钮
         handleSearch() {
-            this.$set(this.query, 'pageIndex', 1);
+            this.query.pageIndex = 1;
             this.getData();
         },
         handleUpload(){

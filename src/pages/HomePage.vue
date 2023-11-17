@@ -325,7 +325,7 @@
         <div class="img_copyright" v-if="item.copyRight == '版权'">版权</div>
         <div v-if="chooseLabel == '音频'" style="text-align: center;">
           <span style="color: #409eff;font-size:20px;padding:20px;" @click="changeFilename(item)">{{
-            item.filename
+            item.filename.includes('_')?item.filename.split('_',3)[2]:item.filename
           }}</span>
           <!-- 音频播放控件 -->
           <audio :src="'/AIweb_material/' + item.filename + getBrowserExt(item.file_exts)" controls controlsList="nodownload" style="width:100%"></audio>
@@ -348,7 +348,7 @@
         </el-image>
         <div class="title">
           <span class="img_name" @click="changeFilename(item)">{{
-            item.filename
+            item.filename.includes('_')?item.filename.split('_',3)[2]:item.filename
           }}</span>
           <div class="downLoad">
             <el-button v-if="identity == 1" type="danger" plain :icon="Delete" size="small" style="margin:10px;" 
@@ -1460,7 +1460,7 @@ const newlabels = ref([
       },
 
       {
-        name: "80/90年代",
+        name: "80|90年代",
         //fourTags: ["全部", "男", "女"],
       },
 
@@ -1536,7 +1536,7 @@ const newlabels = ref([
       },
 
       {
-        name: "80/90年代",
+        name: "80|90年代",
         //fourTags: ["全部", "白天", "黑夜"],
       },
 
@@ -1578,7 +1578,7 @@ const newlabels = ref([
       },
 
       {
-        name: "80/90年代",
+        name: "80|90年代",
         //fourTags: ["全部", "白天", "黑夜"],
       },
 
