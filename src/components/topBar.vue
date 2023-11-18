@@ -407,7 +407,7 @@ const newlabels = ref([
       },
 
       {
-        name: "80/90年代",
+        name: "80|90年代",
         fourTags: ["全部", "男", "女"],
       },
 
@@ -483,7 +483,7 @@ const newlabels = ref([
       },
 
       {
-        name: "80/90年代",
+        name: "80|90年代",
         fourTags: ["全部", "白天", "黑夜"],
       },
 
@@ -525,7 +525,7 @@ const newlabels = ref([
       },
 
       {
-        name: "80/90年代",
+        name: "80|90年代",
         fourTags: ["全部", "白天", "黑夜"],
       },
 
