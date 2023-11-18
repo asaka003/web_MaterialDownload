@@ -1090,7 +1090,7 @@ onMounted(() => {
   };
 
   const t = tags.value
-  if (t.length){
+  if (t && t.length){
     const index1 = newlabels.value.findIndex(obj => obj.name === t[0]);
     clcikTabs(newlabels.value[index1], index1)
     const index2 = newlabels.value[index1]['secondTags'].findIndex(obj => obj.name === t[1])
