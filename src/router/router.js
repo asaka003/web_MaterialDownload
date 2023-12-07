@@ -39,6 +39,14 @@ const routes = [
     component: () => import("@/pages/AIChat.vue"),
   },
   {
+    path: "/soundAiChart",
+    component: () => import("@/pages/SoundAIChart.vue"),
+  },
+  {
+    path: "/TextToImage",
+    component: () => import("@/pages/TextToImage.vue"),
+  },
+  {
     path: "/test",
     component: () => import("@/components/dialogInfo.vue"),
   },
@@ -48,6 +56,7 @@ const routes = [
   }
 
 ];
+
 
 const router = createRouter({
   history: createWebHashHistory(),

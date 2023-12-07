@@ -1883,6 +1883,7 @@ const removeFile = (e) => {
     cursor: pointer;
     .allright {
       white-space: nowrap;
+      border: 1px solid red;
       display: flex;
       .user_right {
         display: flex;

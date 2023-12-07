@@ -1233,15 +1233,19 @@ const getLocalInfo = async () => {
 onMounted(() => {
   getLocalInfo();
 });
-
+// Dubbing
 var activeIndex = '0';
 const handleSelect = (key, keyPath) => {
   activeIndex = key;
-  console.log(key)
+  console.log(key);
   switch(key){
     case '0': router.push("/");break;
     case '1': router.push("/material-center");break;
+    case '2-1': router.push("/soundAIChart");break;
     case '2-2': router.push("/AIchat");break;
+    case '2-3': router.push("/TextToImage");break;
+    // case '2-3': router.push("/soundAIChart");break;
+
     case '3':
               getCountSync()
               .then((res) => {

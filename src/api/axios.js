@@ -32,7 +32,7 @@ export default class HttpRequest {
     instance.interceptors.request.use(
       (config) => {
         NProgress.start();
-        console.log("请求拦截", config);
+        // console.log("请求拦截============", config);
         if (!Object.keys(this.queue).length) {
           // store.commit("changeloading", true);
         }
@@ -49,7 +49,8 @@ export default class HttpRequest {
 
         this.distroy(url);
         const { data } = res;
-        console.log("响应拦截", res);
+        // console.log("响应拦截", res);
+        // console.log("响应拦截",res.data.code)
         if (res.headers.option == "download") {
           return res;
         } else {
@@ -68,6 +69,8 @@ export default class HttpRequest {
               err.message = "未授权，请登录";
               break;
             case 403:
+              // this.router.replace('/login');
+              // ======================
               err.message = "拒绝访问";
               break;
             case 404:

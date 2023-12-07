@@ -164,6 +164,15 @@ export const LongTextDigest = (data) => {
     data: data,
   });
 };
+// AI文章助手
+export const TextGenerate = (data) => {
+  console.log("请求参数", data);
+  return axios.request({
+    url: "/gpt/material/TextGenerate",
+    method: "post",
+    data: data,
+  });
+};
 //https://chat.totrygpt.com/gpt/material/Upload?mode=true
 // 文案文本(文件)
 export const uploadFile = (data) => {
@@ -260,4 +269,40 @@ export const mocktest = (data) => {
     data: data,
   });
 };
+
+// 
+
+// 获取剩余语音转文字次数
+export const GetGenerateTime = (data) => {
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/GetGenerateTime", 
+    method: "post",
+    data: data,
+  });
+};
+// 获取用户收藏列表
+export const GetUserCollectionList = (data) => {
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/GetUserCollectionList", 
+    method: "get",
+  });
+};
+// 获取所有人声配置信息
+export const getTextToSpeechConfig = (data) => {
+  
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/getTextToSpeechConfig", 
+    method: "post",
+    params: data,
+  });
+};
+// 添加收藏信息
+export const AddUserCollection = (data) => {
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/AddUserCollection", 
+    method: "post",
+    data: data,
+  });
+};
+
 
