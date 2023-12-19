@@ -152,12 +152,12 @@ function msToDate(msec) {
 const getUserList = () => {
   getAllUserAuthStatisticsApi({
     index: 0,
-    size: 5,
+    size: 50,
     search: "",
   }).then((res) => {
     console.log(res);
-    total.value = res.data.length;
-    tableData.value = res.data;
+    total.value = res.data.total;
+    tableData.value = res.data.list;
   });
 };
 onMounted(() => {
@@ -245,7 +245,7 @@ const handleSizeChange = (e) => {
 };
 // 切换页数
 const handleCurrentChange = (e) => {
-  scrollToTop();
+  // scrollToTop();
   currentPage.value = e;
   console.log("当前页面", currentPage.value);
   if (e == 1) {

@@ -104,7 +104,7 @@
                 </div>
                 <div>
                   <el-button
-                    @click="handleCollectionSave"
+                    @click="openCollectionSave"
                     size="large"
                     icon="Star"
                     type="primary"
@@ -252,35 +252,51 @@
               </div>
             </div>
             <div class="cle-content">
-              <div class="parameter parameter-left">
-                <div name="collectionList" v-for="collection in collectionList" :key="collection.id">
-                  <div class="el-image parameter-head">
+              <div name="collectionList">
+                <div class="collectionList" v-for="collection in collectionList" :key="collection.id">
+                  <el-tooltip
+                    class="box-item"
+                    effect="light"
+                    placement="top-start"
+                  >
+                    <template #content> 
+                      主播: {{collection.speakerName}}<br>
+                      情绪: {{collection.speaker_emotion}}<br>
+                      速度: {{collection.speed}}<br>
+                      音量: {{collection.volume}}<br>
+                      语调: {{collection.pitch}}<br>
+                    </template>
                     <img
                       :src="collection.headerImage"
-                      class="el-image__inner"
                       style="
                         border-radius: 50%;
                         border: 5px solid #fff;
                         box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.16);
                         width: 60px;
-                        height: 60px
+                        height: 60px;
+                        cursor: pointer;
                       "
+                      @click="collectionReload(collection)"
                     />
-                  </div>
-                  <div
-                    class="zb-name"
-                    style="
-                      font-size: 15px;
-                      font-family: PingFang SC-Semibold, PingFang SC;
-                      font-weight: 500;
-                      color: #1a1a1a;
-                      margin-top: 12px;
-                    "
-                  >
-                    {{ collection.remark }}
-                  </div>
+                  </el-tooltip><br>
+                  <el-text>{{ collection.remark }}</el-text>
                 </div>
               </div>
+              <el-dialog v-model="collectionFormVisible" title="收藏主播配置">
+                <el-form :model="form">
+                  <el-form-item label="备注" :label-width="80">
+                    <el-input v-model="remark" autocomplete="off" />
+                  </el-form-item>
+                </el-form>
+                <template #footer>
+                  <span class="dialog-footer">
+                    <el-button @click="collectionFormVisible = false">取消</el-button>
+                    <el-button type="primary" @click="handleCollectionSave">
+                      确认
+                    </el-button>
+                  </span>
+                </template>
+              </el-dialog>
             </div>
           </div>
         </el-col>
@@ -445,6 +461,12 @@ const handleSureZb = (row) => {
 // 收藏
 const remark = ref("");
 const collectionList = ref([]);
+const collectionFormVisible = ref(false);
+const deleteMode = ref(false);
+const editMode = ref(false);
+const openCollectionSave = () =>{
+  collectionFormVisible.value = true;
+}
 //添加收藏信息
 const handleCollectionSave = () => {
   AddUserCollection({
@@ -470,15 +492,47 @@ const handleCollectionSave = () => {
         console.log("=======", zbData.value);
       }
     }
+    getCollectionList()
   });
+  collectionFormVisible.value = false;
 };
 //获取收藏列表信息
 const getCollectionList = () =>{
   GetUserCollectionList().then(res =>{
     collectionList.value = res.data;
+    console.log(res)
   })
 }
+//重载收藏主播信息
+const collectionReload = (collection) =>{
+  //查询主播信息
+  if(sureZb.value != collection.speakerName){
+    getTextToSpeechConfig({
+      keyWord: collection.speakerName,
+      pageSize: 10,
+      pageNum: 1,
+    }).then((res) => {
+      if (res.code == 200) {
+        let data = res.data[0];
+        processArray(data.speakerEmotion);
+        userInfo.value = data;
+        sureZb.value = data.headerImage;
+      }
+    });
+  }
+  speakerEmotion.value = collection.speaker_emotion;
+  slider.value.ld = collection.speed;
+  slider.value.yl = collection.volume;
+  slider.value.yd = collection.pitch;
+}
+//删除收藏主播信息
+const deleteCollection = (id) => {
 
+}
+//编辑手长主播信息
+const editCollection = () => {
+  
+}
 
 
 // ===================
@@ -628,7 +682,7 @@ import stopImage from "@/assets/image/boom-zt.png";
 import playImage from "@/assets/image/boom-bf.png";
 
 const makeActive = ref("");
-const speakerEmotion = ref("")
+const speakerEmotion = ref("通用")
 const handleMood = (speaker, demoUrl,emotion) => {
   console.log(speaker,demoUrl)
   speakerEmotion.value = emotion;
@@ -693,6 +747,12 @@ const generateTextToSpeech = () => {
   }).then((res) => {
     if (res.code == 200) {
       saveAudioUrl.value = "/AIweb_materialSys/materialSystem/GetTextToSpeechFile/" + res.data;
+    }
+    else if(res.code == 403){
+        ElMessage.error('请重新登录!')
+        return;
+    }else{
+        ElMessage.error('参数有误!')
     }
   })
 }
@@ -1138,11 +1198,13 @@ const getGenerateTime = () => {
   }
 }
 
-:deep(.el-dialog__body) {
-  background-color: red;
-  width: 100%;
-  .el-dialog--center {
-    text-align: center;
-  }
+.collectionList{
+  width: 70px;
+  height: 80px;
+  float: left;
+  margin-top: 20px;
+  margin-right: 10px ;
+  text-align: center;
 }
+
 </style>

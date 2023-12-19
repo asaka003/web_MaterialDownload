@@ -323,6 +323,7 @@
       
       <div class="img" v-for="(item, index) in imgs" :key="index" >
         <div class="img_copyright" v-if="item.copyRight == '版权'">版权</div>
+        <el-tag v-if="shouldShowNewTag(item.create_time)" class="new-tag" type="success">New</el-tag>
         <div v-if="chooseLabel == '音频'" style="text-align: center;">
           <span style="color: #409eff;font-size:20px;padding:20px;" @click="changeFilename(item)">{{
             item.filename.includes('_')?item.filename.split('_',3)[2]:item.filename
@@ -982,7 +983,6 @@ const changeMoney = (e) => {
 };
 
 // 弹出框消息自定义
-
 const dialogCustomize = (data) => {
   if (
     PopUpPrompt.content != "" ||
@@ -1306,6 +1306,9 @@ const getImg = () => {
           }
         }
       }
+    }).catch(err =>{
+      ElMessage.error('请重新登录!');
+      return;
     });
   } else {
     getImgsApi({
@@ -1323,6 +1326,7 @@ const getImg = () => {
         // imgs.value = res.data.files;
         // 对图片名进行排序
         let fin1 = getSortedNames(res.data.files);
+
         imgs.value = fin1;
         total.value = res.data.total;
 
@@ -1333,11 +1337,14 @@ const getImg = () => {
         }
         console.log("测试", buiedFiles.value);
       }
+    }).catch(err =>{
+      ElMessage.error('请重新登录!');
+      return;
     });
   }
 };
 
-// 图片名按照类型的名字进行数字排序
+// 图片名按照图片的名字先排序，后按照图片序号后排序
 const getSortedNames = (arr) => {
   arr.sort(function (a, b) {
     var reg = /(\d+)/;
@@ -1350,6 +1357,23 @@ const getSortedNames = (arr) => {
       return aNum - bNum;
     } else {
       return cmp;
+    }
+  });
+
+  // 获取当前时间
+  const currentDate = new Date();
+  // 找到符合日期条件的项的索引
+  const indexToInsertList = arr.filter(item => {
+    const diff = Math.abs(new Date(item.create_time) - currentDate);
+    return diff <= 10 * 24 * 60 * 60 * 1000; // 10天的毫秒数
+  });
+  // 如果找到了符合日期条件的项，则将其插入到数组的最前面
+  
+  indexToInsertList.reverse().forEach(item => {
+    const index = arr.indexOf(item);
+    if (index !== -1) {
+      arr.splice(index, 1); // 从原位置删除
+      arr.unshift(item);    // 插入到最前面
     }
   });
   return arr;
@@ -1754,6 +1778,20 @@ const removeFile = (e) => {
   fileNum.value--;
   // console.log(fileNum.value);
 };
+
+const shouldShowNewTag = (createTime)=> {
+  // 获取当前时间
+  const currentDate = new Date();
+  // 将 item.create_time 转换为日期对象
+  const itemCreateTime = new Date(createTime);
+  // 计算两个日期之间的差异
+  const timeDifference = currentDate - itemCreateTime;
+  // 将差异转换为天数
+  const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+  // 判断差异天数是否小于等于 10
+  return daysDifference <= 10;
+}
+  
 </script>
 
 <style lang="scss" scoped>
@@ -2247,5 +2285,12 @@ const removeFile = (e) => {
       color: black;
     }
   }
+}
+
+.img .new-tag {
+  width: 35px;
+  height: 30px;
+  margin-left: 80%;
+  margin-top: 10px;
 }
 </style>

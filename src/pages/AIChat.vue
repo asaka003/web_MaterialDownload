@@ -584,6 +584,10 @@ const upload = (item) => {
   TextGenerate(formData)
     .then((res) => {
       stopTimer();
+      if(res.code == 403){
+        ElMessage.error('请重新登录!');
+        return;
+      }
       if (res.data.content != "") {
         if (textType.value == "Ai神标题") {
           // textarea2Arr.value = res.data;

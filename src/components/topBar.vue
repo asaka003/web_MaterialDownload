@@ -1239,38 +1239,25 @@ const handleSelect = (key, keyPath) => {
   activeIndex = key;
   console.log(key);
   switch(key){
-    case '0': router.push("/");break;
-    case '1': router.push("/material-center");break;
-    case '2-1': router.push("/soundAIChart");break;
-    case '2-2': router.push("/AIchat");break;
-    case '2-3': router.push("/TextToImage");break;
-    // case '2-3': router.push("/soundAIChart");break;
-
-    case '3':
-              getCountSync()
-              .then((res) => {
-                localStorage.setItem("balance", res.data.balance);
-                userBalance.value = localStorage.getItem("balance");
-              })
-              .catch((err) => {
-                console.log(err);
-                login()
-              }); 
-              router.push("/toolsDownload");break;
-    case '4': //检测登录token是否有效
-              //var self = this
-              getCountSync()
-              .then((res) => {
-                localStorage.setItem("balance", res.data.balance);
-                userBalance.value = localStorage.getItem("balance");
-              })
-              .catch((err) => {
-                console.log(err);
-                login()
-              });
-              router.push("/videos");
-              break;
+    case '0': router.push("/");return;
+    case '1': router.push("/material-center");return;
   }
+  getCountSync()
+  .then((res) => {
+    localStorage.setItem("balance", res.data.balance);
+    userBalance.value = localStorage.getItem("balance");
+    switch(key){
+      case '2-1': router.push("/soundAIChart");break;
+      case '2-2': router.push("/AIchat");break;
+      case '2-3': router.push("/TextToImage");break;
+      case '3':router.push("/toolsDownload");break;
+      case '4': router.push("/videos");break;
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+    login()
+  }); 
   console.log(key, keyPath);
 };
 </script>

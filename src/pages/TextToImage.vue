@@ -51,6 +51,7 @@
             </el-tabs>
         </el-aside>
         <el-main >
+            <el-button class="img-button" type="primary" @click="downloadImg">下载</el-button>
             <img class="AiImage" @load="loading" v-if="AiImageUrl == ''" src="@/assets/背景.png" alt="">  
             <img class="AiImage" v-loading="loading" v-else :src="AiImageUrl" alt="">     
         </el-main>
@@ -88,17 +89,33 @@ const InitTextToImageConfig = () =>{
 
 //生成图片
 const generateImage = () =>{
+    AiImageUrl.value = '';
     const loading = ElLoading.service({
         lock: true,
         text: 'Loading',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    AiImageUrl.value = '';
     TextToImage(generateImageParams.value).then(res =>{
+        if(res.code == 403){
+            ElMessage.error('请重新登录!')
+            return
+        }
         AiImageUrl.value = "/gpt/material/GetImage/"+res.data
         loading.close();
         console.log(AiImageUrl.value)
     })
+}
+
+//下载图片文件
+const downloadImg = () =>{
+    if(AiImageUrl.value == ''){
+        ElMessage({
+            message: '请先生成图片！',
+            type: 'warning',
+        })
+    }else{
+        window.open(AiImageUrl.value)
+    }
 }
     
 const handleTapsClick = (tab, event) => {
@@ -143,6 +160,11 @@ const handleTapsClick = (tab, event) => {
     width: 100%;
     border-radius: 8px;
     border: 2px solid;
+}
+
+.img-button{
+    float: right;
+    margin-bottom: 10px;
 }
 
 </style>
