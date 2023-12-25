@@ -42,6 +42,7 @@
           <div class="message-count">
             <div class="ai-message">Ai自动转化文案为字幕版</div>
             <div class="ai-count">（应用于剪映后期）</div>
+            <div>今日剩余文本处理{{ generateTime }}次</div>
           </div>
           <div class="ai-button">
             <el-button type="primary" :loading="loading" @click="toModify">
@@ -347,9 +348,11 @@
 import { ref, reactive, onMounted } from "vue";
 import { UploadFilled } from "@element-plus/icons-vue";
 import UploadInstance from "element-plus";
-import { uploadFile, LongTextDigest, TextGenerate } from "@/api/Allrequest";
+import { TextGenerate } from "@/api/Allrequest";
 // 页面渲染
-onMounted(() => {});
+onMounted(() => {
+  getGenerateTime()
+});
 
 const uploadRef = ref(UploadInstance);
 // 超出文件限制
@@ -631,7 +634,22 @@ const upload = (item) => {
       }
     })
     .catch((err) => {
-      // console.log("报错", err);
+      ElMessage.error('请重新登录或次数已用完!')
+      dialogCustomize({ content: err });
+      return;
+    });
+};
+
+import { GetGenerateTime } from '@/api/Allrequest';
+const generateTime = ref("");
+const getGenerateTime = () => {
+  GetGenerateTime()
+    .then((res) => {
+      if (res.code == 200) {
+        generateTime.value = res.data.textToText;
+      }
+    })
+    .catch((err) => {
       dialogCustomize({ content: err });
       return;
     });

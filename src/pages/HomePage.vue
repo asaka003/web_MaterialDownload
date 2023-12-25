@@ -1307,7 +1307,13 @@ const getImg = () => {
         }
       }
     }).catch(err =>{
-      ElMessage.error('请重新登录!');
+      //console.log(111,newlabels.value)
+      if(newlabels.value[firstTabsIndex.value].name == "专属素材"){
+        ElMessage.error('请重新登录或联系客服升级专属用户!');
+      }else{
+        ElMessage.error('请重新登录!');
+      }
+      return;
       return;
     });
   } else {
@@ -1338,7 +1344,12 @@ const getImg = () => {
         console.log("测试", buiedFiles.value);
       }
     }).catch(err =>{
-      ElMessage.error('请重新登录!');
+      //console.log(111,newlabels.value)
+      if(newlabels.value[firstTabsIndex.value].name == "专属素材"){
+        ElMessage.error('请重新登录或联系客服升级专属用户!');
+      }else{
+        ElMessage.error('请重新登录!');
+      }
       return;
     });
   }
@@ -1678,6 +1689,48 @@ const newlabels = ref([
       },
       {
         name: "攻击特效",
+      },
+    ],
+  },
+  {
+    name: "专属素材",
+    secondTags: [
+      {
+        name: "玄幻修仙",
+        //thirTags: ["全部", "武器法宝", "书籍", "丹药", "翅膀", "其他"],
+      },
+      {
+        name: "现代都市",
+        //thirTags: ["全部", "武器", "汽车", "日用品", "植物", "其他"],
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+      {
+        name: "历史朝代",
+        //thirTags: ["全部", "武器", "交通工具", "饮食", "其它"],
+      },
+
+      {
+        name: "近代战争",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+
+      {
+        name: "80|90年代",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+
+      {
+        name: "荒野求生",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+
+      {
+        name: "科技科幻",
+        //fourTags: ["全部", "白天", "黑夜"],
+      },
+      {
+        name: "其他",
+        //fourTags: ["全部", "白天", "黑夜"],
       },
     ],
   },

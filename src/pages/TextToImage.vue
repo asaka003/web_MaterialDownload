@@ -51,6 +51,7 @@
             </el-tabs>
         </el-aside>
         <el-main >
+            <div>今日剩余AI绘图{{ generateTime }}次</div>
             <el-button class="img-button" type="primary" @click="downloadImg">下载</el-button>
             <img class="AiImage" @load="loading" v-if="AiImageUrl == ''" src="@/assets/背景.png" alt="">  
             <img class="AiImage" v-loading="loading" v-else :src="AiImageUrl" alt="">     
@@ -66,6 +67,7 @@ import { ElLoading } from 'element-plus'
 // 页面渲染
 onMounted(() => {
   InitTextToImageConfig()
+  getGenerateTime();
 });
 
 const activeName = ref('二次元模型')
@@ -87,6 +89,24 @@ const InitTextToImageConfig = () =>{
     })
 }
 
+import { GetGenerateTime } from '@/api/Allrequest';
+const generateTime = ref("");
+const getGenerateTime = () => {
+  GetGenerateTime()
+    .then((res) => {
+      if (res.code == 200) {
+        generateTime.value = res.data.textToImage;
+        if(res.data.textToImage <= 0){
+            ElMessage.error('当日次数已用完!')
+        }
+      }
+    })
+    .catch((err) => {
+      dialogCustomize({ content: err });
+      return;
+    });
+};
+
 //生成图片
 const generateImage = () =>{
     AiImageUrl.value = '';
@@ -96,13 +116,14 @@ const generateImage = () =>{
         background: 'rgba(0, 0, 0, 0.7)',
     })
     TextToImage(generateImageParams.value).then(res =>{
-        if(res.code == 403){
-            ElMessage.error('请重新登录!')
-            return
-        }
         AiImageUrl.value = "/gpt/material/GetImage/"+res.data
         loading.close();
-        console.log(AiImageUrl.value)
+        if(res.code == 403){
+            ElMessage.error('输入文字非法!')
+        }
+    }).catch(err =>{
+        console.log(err)
+        ElMessage.error('请重新登录或当日次数已使用完!')
     })
 }
 
@@ -110,7 +131,7 @@ const generateImage = () =>{
 const downloadImg = () =>{
     if(AiImageUrl.value == ''){
         ElMessage({
-            message: '请先生成图片！',
+            message: '请先绘制图片！',
             type: 'warning',
         })
     }else{

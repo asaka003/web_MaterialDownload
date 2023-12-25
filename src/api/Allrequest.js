@@ -155,124 +155,19 @@ export const delUserAuthInfoApi = (data) => {
   });
 };
 
-// 文案文本
-export const LongTextDigest = (data) => {
-  console.log("请求参数", data);
-  return axios.request({
-    url: "/gpt/material/LongText?mode=true",
-    method: "post",
-    data: data,
-  });
-};
+
 // AI文章助手
 export const TextGenerate = (data) => {
   console.log("请求参数", data);
   return axios.request({
-    url: "/gpt/material/TextGenerate",
-    method: "post",
-    data: data,
-  });
-};
-//https://chat.totrygpt.com/gpt/material/Upload?mode=true
-// 文案文本(文件)
-export const uploadFile = (data) => {
-  return axios.request({
-    url: "/gpt/material/Upload?mode=true",
+    url: "/AIweb_materialSys/materialSystem/TextToText",
     method: "post",
     data: data,
   });
 };
 
-// 发送信息
-export const chat = (data) => {
-  console.log("发送参数", data);
-  const token = localStorage.getItem("userToken");
-  return axios.request({
-    url: "/gpt/sendQuest",
-    method: "post",
-    data: data,
-    headers: {
-      "access-token": token,
-    },
-  });
-};
 
-// 获取聊天内容
-export const getmsg = (data) => {
-  const token = localStorage.getItem("userToken");
-  return axios.request({
-    url: "/gpt/getHistoryDialog",
-    method: "post",
-    data: data,
-    headers: {
-      "access-token": token,
-    },
-  });
-};
-// 创建会话列表
-export const createsession = (data) => {
-  const token = localStorage.getItem("userToken");
-  return axios.request({
-    url: "/gpt/createSessionID",
-    method: "post",
-    data: data,
-    headers: {
-      "access-token": token,
-    },
-  });
-};
-
-// 获取会话列表
-export const getSessionIds = (data) => {
-  const token = localStorage.getItem("userToken");
-  return axios.request({
-    url: "/gpt/getSessionID",
-    method: "post",
-    data: data,
-    headers: {
-      "access-token": token,
-    },
-  });
-};
-
-// 删除会话
-export const delSession = (data) => {
-  const token = localStorage.getItem("userToken");
-  return axios.request({
-    url: "/gpt/delUserSession",
-    method: "post",
-    data: data,
-    headers: {
-      "access-token": token,
-    },
-  });
-};
-// 修改会话标题
-export const editorTitle = (data) => {
-  console.log("测试触发接口", data);
-  const token = localStorage.getItem("userToken");
-  return axios.request({
-    url: "/gpt/updateTitle",
-    method: "post",
-    data: data,
-    headers: {
-      "access-token": token,
-    },
-  });
-};
-
-// mock.test
-export const mocktest = (data) => {
-  return axios.request({
-    url: "/home/getData",
-    method: "post",
-    data: data,
-  });
-};
-
-// 
-
-// 获取剩余语音转文字次数
+// 获取AI次数
 export const GetGenerateTime = (data) => {
   return axios.request({
     url: "/AIweb_materialSys/materialSystem/GetGenerateTime", 

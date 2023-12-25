@@ -50,7 +50,7 @@
               <el-input
                 v-model="textareaValue"
                 autosize
-                maxlength="1000"
+                maxlength="300"
                 show-word-limit
                 placeholder="请输入配音内容"
                 type="textarea"
@@ -431,7 +431,6 @@ import UploadInstance from "element-plus";
 import {
   GetGenerateTime,
   GetUserCollectionList,
-  TextGenerate,
   getTextToSpeechConfig,
   AddUserCollection,
 } from "@/api/Allrequest";
@@ -754,6 +753,8 @@ const generateTextToSpeech = () => {
     }else{
         ElMessage.error('参数有误!')
     }
+  }).catch(err =>{
+    ElMessage.error('请重新登录或次数已用完!')
   })
 }
 const downloadSpeechFile = () =>{
@@ -764,12 +765,12 @@ const getGenerateTime = () => {
   GetGenerateTime()
     .then((res) => {
       if (res.code == 200) {
-        generateTime.value = res.data;
+        generateTime.value = res.data.textToSpeech;
       }
     })
     .catch((err) => {
-      dialogCustomize({ content: err });
-
+      ElMessage.error('请重新登录或当日次数已使用完!')
+      //dialogCustomize({ content: err });
       return;
     });
 };

@@ -70,13 +70,13 @@
           （素材陆续更新中，尽请期待）</span
         >
       </el-form-item> -->
-      <el-form-item v-if="loginOrregister == '登录'">
+      <!-- <el-form-item v-if="loginOrregister == '登录'">
         <span
           style="cursor: pointer; color: var(--el-color-primary)"
           @click="toRegister"
           >前往注册</span
         ></el-form-item
-      >
+      > -->
       <el-form-item v-if="loginOrregister == '注册'">
         <span
           style="cursor: pointer; color: var(--el-color-primary)"
@@ -316,24 +316,24 @@
                 >授权账号查看</el-dropdown-item
               >
 
-              <el-dropdown-item
+              <!-- <el-dropdown-item
                 command="b"
                 @click="AddActivationCode"
                 v-if="identity == 1"
                 >添加激活码</el-dropdown-item
-              >
+              > -->
               <el-dropdown-item
                 command="c"
                 v-if="identity == 1"
                 @click="uploadImg"
                 >上传图片</el-dropdown-item
               >
-              <el-dropdown-item
+              <!-- <el-dropdown-item
                 command="d"
                 v-if="identity == 1"
                 @click="Recharge"
                 >充值系统</el-dropdown-item
-              >
+              > -->
               <el-dropdown-item command="b" @click="logout"
                 >退出</el-dropdown-item
               >
@@ -594,6 +594,46 @@ const newlabels = ref([
       },
     ],
   },
+  {
+    name: "专属素材",
+    secondTags: [
+      {
+        name: "玄幻修仙",
+        fourTags: ["全部", "男", "女", "非人族"],
+      },
+      {
+        name: "现代都市",
+        fourTags: ["全部", "男", "女", "非人族"],
+      },
+      {
+        name: "历史朝代",
+      },
+
+      {
+        name: "近代战争",
+        fourTags: ["全部", "男", "女"],
+      },
+
+      {
+        name: "80|90年代",
+        fourTags: ["全部", "男", "女"],
+      },
+
+      {
+        name: "荒野求生",
+        fourTags: ["全部", "男", "女"],
+      },
+
+      {
+        name: "科技科幻",
+        fourTags: ["全部", "男", "女"],
+      },
+      {
+        name: "其他",
+        fourTags: ["其他"],
+      },
+    ],
+  },
 ]);
 // 一级选项
 const chooseFirst = ref("");
@@ -754,6 +794,8 @@ const loginFun = () => {
     } else {
       dialogCustomize({ content: res.msg });
     }
+  }).catch(err =>{
+    ElMessage.error('用户名或密码错误！')
   });
 };
 // 用户注册

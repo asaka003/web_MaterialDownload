@@ -124,7 +124,6 @@
 import { ref, reactive, onMounted } from "vue";
 import { UploadFilled } from "@element-plus/icons-vue";
 import UploadInstance from "element-plus";
-import { uploadFile, LongTextDigest } from "@/api/Allrequest";
 // 页面渲染
 onMounted(() => {});
 
