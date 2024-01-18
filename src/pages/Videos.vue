@@ -11,7 +11,7 @@
                 <!-- :href="`#/player?file_hash=${video.file_hash}`" -->
                     <a name="file_url" @click="handlePlayer(video.file_id)">
                         <div :style="{boxShadow: `var(--el-box-shadow-light)`,}">
-                            <img :src="`/AIweb_material/`+video.faceImgPath" alt="[]" :style="{}">
+                            <img :src="`https://eralab-1317463756.cos.ap-guangzhou.myqcloud.com/materials/`+video.faceImgPath" alt="[]" :style="{}">
                         </div>
                         <h3 name="title">{{video.file_name}}<el-button class="button-del" type="danger" @click.stop="handleDelete(video.file_id)" v-if="identity == 1"><el-icon><Delete /></el-icon>删除</el-button></h3>
                         <p name="time">{{(new Date(video.create_time)).toLocaleString() }}</p>
@@ -329,7 +329,7 @@ export default {
 	width: 100%;
 	height: auto;
 	overflow: hidden;
-	background-color: #ffffff;
+	/*background-color: #212121;*/
 	text-align: center;
     display: flex; 
     justify-content: center; 
@@ -346,7 +346,7 @@ export default {
 
 .nav05_centent_mb a{
 	width: 100%;
-	height: 100%;
+	
 	border-radius: 8px;
 	text-align: left;
 	background-color: #FFFFFF;

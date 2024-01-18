@@ -697,6 +697,7 @@ const getGenerateTime = () => {
   flex-direction: column;
   box-sizing: border-box;
   align-items: center; 
+  
   .top {
     width: 100%;
     height: 3.75rem;
@@ -1059,6 +1060,7 @@ const getGenerateTime = () => {
         .ai-message {
           font-size: 1.25rem;
           font-weight: 500;
+          
         }
 
         .ai-count {
@@ -1090,13 +1092,21 @@ const getGenerateTime = () => {
 
         .el-textarea textarea {
           line-height: 1.5rem;
+          
         }
 
         .ai-text {
           position: relative;
           :deep(.el-textarea__inner) {
             height: 67rem !important;
+            color: white;
+            background-color: #212121;
           }
+          :deep(.el-input__count){
+            color: white;
+            background-color: #212121;
+          }
+          
 
           // .el-textarea {
           //   position: relative;
@@ -1187,8 +1197,9 @@ const getGenerateTime = () => {
               height: 100%;
               width: 100%;
               height: 67rem;
+              border: 0.0625rem solid white;
               border-radius: 0.5rem;
-              background: #f5f6f7;
+              background: #212121;
               padding: 0.6rem;
               overflow-y: auto;
               padding-top: 1rem;
@@ -1231,7 +1242,8 @@ const getGenerateTime = () => {
               .no-textarea2 {
                 height: 100%;
                 width: 100%;
-                background: rgba(255, 255, 255, 0.8);
+                //background: rgba(255, 255, 255, 0.8);
+                background: rgba(0, 0, 0, 0.062);
                 .tips {
                   text-align: center;
                   color: #d1e344;
@@ -1252,10 +1264,11 @@ const getGenerateTime = () => {
                   padding: 1rem 0;
                 }
                 .list-m {
-                  background: #f5f6f7;
+                  //background: #212121;
+                  border: 0.0625rem solid white;
                   border-radius: 0.2rem;
                   margin: 0 1.25rem 0 0.3rem;
-                  margin-right: 0;
+                  margin-right: 2px;
                   display: flex;
                   align-items: center;
                   justify-content: space-around;
@@ -1297,4 +1310,9 @@ const getGenerateTime = () => {
     white-space: -o-pre-wrap; /* Opera7 */
   }
 }
+
+div{
+  color: white;
+}
+
 </style>

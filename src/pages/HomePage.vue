@@ -229,17 +229,29 @@
       </div>
     </div> -->
 
-    <div class="top">
-      未经授权账户使用拥有版权的素材将被视为侵权行为，我们将保护我们的版权并追究其法律责任。
-    </div>
+    <el-dialog
+      v-model="HomePageMessageVisable"
+      width="500px"
+      :show-close="false"
+    >
+      <template #header="{titleId, titleClass}">
+        <div class="homePageHeader">
+          <h4 :id="titleId" :class="titleClass"><el-icon><WarningFilled /></el-icon>版权声明</h4>
+        </div>
+      </template>
+      <span>
+        未经授权账户使用拥有版权的素材将被视为侵权行为，我们将保护我们的版权并追究其法律责任。
+        <br><br>如您是合法用户，请及时给对应账号进行授权！
+      </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="HomePageMessageVisable = false">
+            已熟知
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
 
-    <div class="search">
-      <el-input v-model="search" placeholder="输入关键字" clearable>
-        <template #append>
-          <el-button :icon="Search" @click="searchKeyword" style="width: 53px;"/>
-        </template>
-      </el-input>
-    </div>
     <div class="LabelField">
       <!-- <el-tabs
         class="demo-tabs"
@@ -265,6 +277,13 @@
           :class="firstTabsIndex == index ? 'firstTabs_item_active' : ''"
         >
           {{ item.name }}
+        </div>
+        <div class="search">
+          <el-input v-model="search" placeholder="输入关键字" clearable>
+            <template #append>
+              <el-button :icon="Search" @click="searchKeyword" style="width: 53px;"/>
+            </template>
+          </el-input>
         </div>
       </div>
       <div class="allSeconTabs">
@@ -329,15 +348,15 @@
             item.filename.includes('_')?item.filename.split('_',3)[2]:item.filename
           }}</span>
           <!-- 音频播放控件 -->
-          <audio :src="'/AIweb_material/' + item.filename + getBrowserExt(item.file_exts)" controls controlsList="nodownload" style="width:100%"></audio>
+          <audio :src="'https://eralab-1317463756.cos.ap-guangzhou.myqcloud.com/materials/' + item.filename + getBrowserExt(item.file_exts)" controls controlsList="nodownload" style="width:100%"></audio>
         </div>
         <el-image
           v-if="chooseLabel != '音频'"
           loading="lazy"
-          :src="'/AIweb_material/' + item.filename + getBrowserExt(item.file_exts)"
+          :src="'https://eralab-1317463756.cos.ap-guangzhou.myqcloud.com/materials/' + item.filename + getBrowserExt(item.file_exts)"
           fit="fill"
           :preview-src-list="[
-            '/AIweb_material/' +
+            'https://eralab-1317463756.cos.ap-guangzhou.myqcloud.com/materials/' +
               item.filename +
               '_mediumImg' + getBrowserExt(item.file_exts),
           ]"
@@ -384,7 +403,7 @@
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
-        :page-sizes="[50, 100, 150, 200]"
+        :page-sizes="[25, 50, 100, 200]"
         :small="small"
         :disabled="disabled"
         :background="background"
@@ -429,6 +448,9 @@ import JSZip from "jszip";
 // import { useActiveStore } from "@/pina/index.js";
 import { useRouter } from "vue-router";
 import { tags } from '../router/jump';
+
+// 消息弹出框
+const HomePageMessageVisable = ref(true)
 
 // const store = useActiveStore();
 const router = useRouter();
@@ -1031,7 +1053,7 @@ const currentPage = ref(1);
 // 图片下标
 const startIndex = ref(0);
 const currentImgIndex = ref(0);
-const pageSize = ref(50);
+const pageSize = ref(25);
 const small = ref(false);
 const background = ref(false);
 const disabled = ref(false);
@@ -1044,6 +1066,10 @@ const getBrowserExt = (exts) =>{
     return ".wav";
   }else if(exts.includes(".mp3")){
     return ".mp3";
+  }else if(exts.includes(".MP3")){
+    return ".MP3";
+  }else if(exts.includes(".WAV")){
+    return ".WAV";
   }else{
     return ".jpg";
   }
@@ -1230,7 +1256,7 @@ const rules = reactive({
   checkpass: [{ validator: checkPass, trigger: "blur" }],
 });
 // 用户身份
-const identity = ref(0);
+const identity = ref("");
 // 用户手机号
 const phone = ref("");
 // 目前是登录表单还是注册表单
@@ -1308,7 +1334,7 @@ const getImg = () => {
       }
     }).catch(err =>{
       //console.log(111,newlabels.value)
-      if(newlabels.value[firstTabsIndex.value].name == "专属素材"){
+      if(newlabels.value[firstTabsIndex.value].name == "在下零零玖"){
         ElMessage.error('请重新登录或联系客服升级专属用户!');
       }else{
         ElMessage.error('请重新登录!');
@@ -1474,15 +1500,16 @@ const newlabels = ref([
     name: "人物",
     secondTags: [
       {
-        name: "玄幻修仙",
+        //name: "修仙",
+        name:"修仙"
         //fourTags: ["全部", "男", "女", "非人族"],
       },
       {
-        name: "现代都市",
+        name: "都市",
         //fourTags: ["全部", "男", "女", "非人族"],
       },
       {
-        name: "历史朝代",
+        name: "历史古代",
         // thirTags: [
         //   "全部",
         //   "通用",
@@ -1500,24 +1527,24 @@ const newlabels = ref([
       },
 
       {
-        name: "近代战争",
+        name: "战争",
         //fourTags: ["全部", "男", "女"],
       },
 
       {
-        name: "80|90年代",
+        name: "旧时代",
         //fourTags: ["全部", "男", "女"],
       },
 
-      {
-        name: "荒野求生",
-        //fourTags: ["全部", "男", "女"],
-      },
+      // {
+      //   name: "荒野求生",
+      //   //fourTags: ["全部", "男", "女"],
+      // },
 
-      {
-        name: "科技科幻",
-        //fourTags: ["全部", "男", "女"],
-      },
+      // {
+      //   name: "科技科幻",
+      //   //fourTags: ["全部", "男", "女"],
+      // },
       {
         name: "其他",
         //fourTags: ["全部", "男", "女"],
@@ -1528,7 +1555,7 @@ const newlabels = ref([
     name: "背景图",
     secondTags: [
       {
-        name: "玄幻修仙",
+        name: "修仙",
         // thirTags: [
         //   "全部",
         //   "雪地",
@@ -1545,7 +1572,7 @@ const newlabels = ref([
         //fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "现代都市",
+        name: "都市",
         // thirTags: [
         //   "全部",
         //   "住宅楼",
@@ -1562,7 +1589,7 @@ const newlabels = ref([
         //fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "历史朝代",
+        name: "历史古代",
         // thirTags: [
         //   "全部",
         //   "宫殿",
@@ -1576,24 +1603,16 @@ const newlabels = ref([
       },
 
       {
-        name: "近代战争",
+        name: "战争",
         //fourTags: ["全部", "白天", "黑夜"],
       },
 
       {
-        name: "80|90年代",
+        name: "旧时代",
         //fourTags: ["全部", "白天", "黑夜"],
       },
 
-      {
-        name: "荒野求生",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
-
-      {
-        name: "科技科幻",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
+      
       {
         name: "其他",
         //fourTags: ["全部", "白天", "黑夜"],
@@ -1604,38 +1623,30 @@ const newlabels = ref([
     name: "道具图",
     secondTags: [
       {
-        name: "玄幻修仙",
+        name: "修仙",
         //thirTags: ["全部", "武器法宝", "书籍", "丹药", "翅膀", "其他"],
       },
       {
-        name: "现代都市",
+        name: "都市",
         //thirTags: ["全部", "武器", "汽车", "日用品", "植物", "其他"],
         //fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "历史朝代",
+        name: "历史古代",
         //thirTags: ["全部", "武器", "交通工具", "饮食", "其它"],
       },
 
       {
-        name: "近代战争",
+        name: "战争",
         //fourTags: ["全部", "白天", "黑夜"],
       },
 
       {
-        name: "80|90年代",
+        name: "旧时代",
         //fourTags: ["全部", "白天", "黑夜"],
       },
 
-      {
-        name: "荒野求生",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
-
-      {
-        name: "科技科幻",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
+      
       {
         name: "其他",
         //fourTags: ["全部", "白天", "黑夜"],
@@ -1646,16 +1657,16 @@ const newlabels = ref([
     name: "表情包",
     secondTags: [
       {
-        name: "玄幻修仙",
+        name: "全部",
         //fourTags: ["全部", "男", "女", "非人族"],
       },
       {
-        name: "历史朝代",
+        name: "男性",
         //thirTags: ["全部", "通用", "秦汉", "三国"],
         //fourTags: ["全部", "男", "女"],
       },
       {
-        name: "其他",
+        name: "女性",
         //fourTags: ["全部", "白天", "黑夜"],
       },
     ],
@@ -1692,49 +1703,27 @@ const newlabels = ref([
       },
     ],
   },
-  {
-    name: "专属素材",
+]);
+
+if(localStorage.getItem("userType") == '管理员' || localStorage.getItem("userType") == '专属用户'){
+  newlabels.value.push({
+    name: "在下零零玖",
     secondTags: [
       {
-        name: "玄幻修仙",
+        name: "修仙",
         //thirTags: ["全部", "武器法宝", "书籍", "丹药", "翅膀", "其他"],
       },
       {
-        name: "现代都市",
-        //thirTags: ["全部", "武器", "汽车", "日用品", "植物", "其他"],
+        name: "表情包",
         //fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "历史朝代",
-        //thirTags: ["全部", "武器", "交通工具", "饮食", "其它"],
-      },
-
-      {
-        name: "近代战争",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
-
-      {
-        name: "80|90年代",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
-
-      {
-        name: "荒野求生",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
-
-      {
-        name: "科技科幻",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
-      {
-        name: "其他",
+        name: "道具",
         //fourTags: ["全部", "白天", "黑夜"],
       },
     ],
-  },
-]);
+  })
+}
 
 // 当前标签页下标 一级
 const firstTabsIndex = ref(0);
@@ -1892,6 +1881,7 @@ const shouldShowNewTag = (createTime)=> {
   display: flex;
   flex-direction: column;
   padding-top: 3.125rem;
+  //background-color: #212121;
   // background-image: url("@/assets/bg.png");
   // background-size: 20%;
   // background-position: center;
@@ -1912,10 +1902,11 @@ const shouldShowNewTag = (createTime)=> {
     height: 36px;
     line-height: 36px;
     margin-top: 16px;
+    color: white;
 
     .firstTabs_item {
       display: block;
-      width: 64px;
+      width: 100px;
       height: 30px;
       line-height: 30px;
       text-align: center;
@@ -1928,7 +1919,7 @@ const shouldShowNewTag = (createTime)=> {
     }
     .firstTabs_item_active {
       color: #fff;
-      background: #d1e344;
+      background: grey;
     }
   }
 
@@ -2036,12 +2027,13 @@ const shouldShowNewTag = (createTime)=> {
     }
   }
   .search {
-    width: 100%;
+    width: 50%;
     display: flex;
     flex-wrap: nowrap;
     height: 2.5rem;
-    margin-top: 1.25rem;
-    padding: 0 10rem 0 8.125rem;
+    float: right;
+    //margin-top: 1.25rem;
+    padding: 0 1.5rem 0 8.125rem;
     box-sizing: border-box;
     :deep(.el-input) {
       flex: 9.5;
@@ -2345,5 +2337,11 @@ const shouldShowNewTag = (createTime)=> {
   height: 30px;
   margin-left: 80%;
   margin-top: 10px;
+}
+
+.homePageHeader{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 </style>

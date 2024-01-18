@@ -3,7 +3,7 @@
     <el-container >
       <el-aside  width="35%">
             <el-tabs v-model="activeName" class="tabs" @tab-click="handleTapsClick">
-                <el-tab-pane label="二次元模型" name="二次元模型">
+                <el-tab-pane class="tabs" label="二次元模型" name="二次元模型">
                     <div name="textarea-input">
                         <el-text tag="b" size="large">描述你想生成的图片</el-text>
                         <el-input class="textarea-style"
@@ -47,7 +47,7 @@
                         <el-button type="primary" size="large" :style="{'width':'93.5%'}" @click="generateImage">开始创作</el-button>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="图生图模型" name="图生图模型">功能开发中</el-tab-pane>
+                <el-tab-pane class="tabs" label="图生图模型" name="图生图模型">功能开发中</el-tab-pane>
             </el-tabs>
         </el-aside>
         <el-main >
@@ -144,9 +144,7 @@ const handleTapsClick = (tab, event) => {
 }
 </script>
 
-<style>
-
-
+<style lang="scss" scoped>
 .container {
     margin-top: 100px;
     margin-left: 50px;
@@ -160,6 +158,14 @@ const handleTapsClick = (tab, event) => {
 .textarea-style{
     margin-top: 10px;
     width: 93.5%;
+    :deep(.el-textarea__inner) {
+        color: white;
+        background-color: #212121;
+    }
+    :deep(.el-input__count){
+        color: white;
+        background-color: #212121;
+    }
 }
 
 .radio-group-div{
@@ -180,7 +186,7 @@ const handleTapsClick = (tab, event) => {
 .AiImage{
     width: 100%;
     border-radius: 8px;
-    border: 2px solid;
+    border: 2px solid gray;
 }
 
 .img-button{
@@ -188,6 +194,15 @@ const handleTapsClick = (tab, event) => {
     margin-bottom: 10px;
 }
 
+div{
+    color: aliceblue;
+}
+.el-tabs__item{
+    color: aliceblue;
+}
+.el-text{
+    color: aliceblue;
+}
 </style>
 
 <style scoped>

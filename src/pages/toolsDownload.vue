@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main">
         <div class="container">
             <div class="handle-box">
                 <!-- <el-input v-model="query.search" placeholder="工具搜索" class="handle-input mr10"></el-input>
@@ -7,7 +7,7 @@
                 <el-button type="primary" @click="handleUpload" v-if="identity == 1"><el-icon><UploadFilled /></el-icon>上传工具</el-button>
             </div>
             <div class="nav05_centent">
-                <el-table :data="tableData" style="width: 80%">
+                <el-table :data="tableData" class="fileTable">
                     
                     <el-table-column label="文件名">
                         <template #default="scope">
@@ -265,6 +265,9 @@ export default {
 </script>
 
 <style scoped>
+.main{
+    background-color: #212121;
+}
 .w-100px{
     margin-left: 10px;
 }
@@ -272,6 +275,7 @@ export default {
     width: 95%;
     border: 1px solid #888;
     padding: 10px;
+    
 }
 .pagination { 
     margin-top: 20px;
@@ -312,17 +316,23 @@ export default {
 }
 </style>
 
-<style scoped>
+<style lang="scss" scoped>
 /* 页面五-站点展示 */
 .nav05_centent{
 	width: 100%;
 	height: auto;
 	overflow: hidden;
-	background-color: #ffffff;
+	/*background-color: #212121;*/
 	text-align: center;
     display: flex; 
     justify-content: center; 
     flex-wrap: wrap;
+}
+
+.fileTable{
+    width: 80%;
+    border-radius: 1rem;
+    border: 0.1rem solid wheat;
 }
 
 .nav05_centent_mb{

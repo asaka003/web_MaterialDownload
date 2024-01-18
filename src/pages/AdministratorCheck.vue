@@ -46,7 +46,7 @@
           <el-table-column label="待审核" prop="wait_for_check" />
           <el-table-column align="left">
             <template #header>
-              <el-input v-model="search" size="small" placeholder="搜索" />
+              <el-input v-model="search" size="small" placeholder="搜索" @change="handleSearchChange"/>
             </template>
             <template #default="scope">
               <el-button
@@ -68,7 +68,7 @@
         <el-pagination
           v-model:current-page="currentPage"
           v-model:page-size="pageSize"
-          :page-sizes="[50, 100, 150, 200]"
+          :page-sizes="[10, 20, 30, 40]"
           :small="small"
           :disabled="disabled"
           :background="background"
@@ -151,9 +151,9 @@ function msToDate(msec) {
 // 获取用户授权列表数
 const getUserList = () => {
   getAllUserAuthStatisticsApi({
-    index: 0,
-    size: 50,
-    search: "",
+    index: currentIndex.value,
+    size: pageSize.value,
+    search: search.value,
   }).then((res) => {
     console.log(res);
     total.value = res.data.total;
@@ -233,10 +233,11 @@ const currentPage = ref(1);
 // 列表数下标
 const startIndex = ref(0);
 const currentIndex = ref(0);
-const pageSize = ref(50);
+const pageSize = ref(10);
 const small = ref(false);
 const background = ref(false);
 const disabled = ref(false);
+
 
 // 切换页数大小
 const handleSizeChange = (e) => {
@@ -248,15 +249,21 @@ const handleCurrentChange = (e) => {
   // scrollToTop();
   currentPage.value = e;
   console.log("当前页面", currentPage.value);
-  if (e == 1) {
-    // 当前图片的下标
-    startIndex.value = 0;
-  } else {
-    startIndex.value =
-      (currentPage.value - 1) * pageSize.value + currentIndex.value;
-  }
+  // if (e == 1) {
+  //   // 当前图片的下标
+  //   startIndex.value = 0;
+  // } else {
+  //   startIndex.value =
+  //     (currentPage.value - 1) * pageSize.value + currentIndex.value;
+  // }
+  currentIndex.value = pageSize.value*(currentPage.value-1)
+
   getUserList();
 };
+//搜索字段变更
+const handleSearchChange = (e) =>{
+  getUserList()
+}
 </script>
 
 <style lang="scss" scoped>
@@ -280,6 +287,7 @@ const handleCurrentChange = (e) => {
   }
   .checkTop {
     width: 80%;
+    color: white;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;

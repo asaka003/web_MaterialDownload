@@ -128,6 +128,7 @@ body {
 .main {
     margin-top: 3.125rem;
     position: relative;
+    /*background-color: black;*/
 }
 
 :deep(.el-card) {
@@ -161,7 +162,7 @@ body {
 .tag {
     font-size: 24px;
     font-weight: 700;
-    color: #333;
+    color: white;
     margin-top: 3rem;
     padding: 0 50px;
 }

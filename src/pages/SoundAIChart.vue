@@ -86,7 +86,7 @@
                     font-size: 20px;
                     font-family: PingFang SC-Semibold, PingFang SC;
                     font-weight: 600;
-                    color: #1a1a1a;
+                    color: white;
                     margin-top: 12px;
                   "
                 >
@@ -231,7 +231,7 @@
               <div class="search">
                 <span class="cle-title">收藏</span>
                 <el-select
-                  style="margin-left: 10px !important"
+                  style="margin-left: 10px !important;"
                   v-model="value"
                   class="m-2"
                   size="small"
@@ -279,7 +279,7 @@
                       @click="collectionReload(collection)"
                     />
                   </el-tooltip><br>
-                  <el-text>{{ collection.remark }}</el-text>
+                  <el-text class="remark">{{ collection.remark }}</el-text>
                 </div>
               </div>
               <el-dialog v-model="collectionFormVisible" title="收藏主播配置">
@@ -304,7 +304,7 @@
     </div>
   </div>
   <el-dialog
-    style="width: 950px; border-radius: 15px !important"
+    style="width: 950px; border-radius: 15px !important;background-color: #212121;"
     center
     v-model="dialogVisible"
   >
@@ -791,7 +791,7 @@ const getGenerateTime = () => {
       font-size: 15px;
       font-family: PingFang SC-Medium, PingFang SC;
       font-weight: 700;
-      color: #333;
+      color: #fff;
       width: 40px;
       margin-right: 20px;
       -ms-flex-negative: 0;
@@ -800,7 +800,7 @@ const getGenerateTime = () => {
     .nav-items {
       font-size: 14px;
       font-family: PingFang SC-Regular, PingFang SC;
-      color: #333;
+      color: #fff;
       font-weight: 400;
       margin-right: 9px;
       display: flex;
@@ -808,7 +808,7 @@ const getGenerateTime = () => {
       .nav-item {
         font-size: 14px;
         font-family: PingFang SC-Regular, PingFang SC;
-        color: #333;
+        color: #fff;
         font-weight: 400;
         margin-right: 9px;
         cursor: pointer;
@@ -818,7 +818,7 @@ const getGenerateTime = () => {
       .nav-item.active {
         padding: 0 5px;
         background-color: #ecf5ff;
-        color: #409eff;
+        color: #000;
         border-radius: 13px;
       }
     }
@@ -941,11 +941,13 @@ const getGenerateTime = () => {
         margin-top: 2px;
         height: 49px;
         padding: 14px 29px;
+        color: #fff;
 
         .list-top {
           display: flex;
           flex-direction: row;
           align-items: center;
+          color: #fff;
 
           img {
             width: 18px;
@@ -989,8 +991,9 @@ const getGenerateTime = () => {
 
   .make-txt {
     padding: 1rem;
-    background: #f8f8f8;
+    background: #212121;
     border-radius: 1.2rem;
+    border: 0.0625rem solid white;
     font-size: 0.875rem;
     .l-b-m {
       margin-top: 1rem;
@@ -1000,6 +1003,12 @@ const getGenerateTime = () => {
         border: none;
         outline: none;
         box-shadow: none;
+        color: white;
+        background-color: #212121;
+      }
+      :deep(.el-input__count){
+        color: white;
+        background-color: #212121;
       }
 
       // border: 1px solid red;
@@ -1053,6 +1062,7 @@ const getGenerateTime = () => {
             font-size: 1.25rem;
             font-weight: 600;
             padding-bottom: 1.25rem;
+            color: white;
             // line-height: 2.5rem;
           }
           .moods {
@@ -1141,7 +1151,8 @@ const getGenerateTime = () => {
           .type-v {
             .title {
               line-height: 3rem;
-              color: #000;
+              //color: #000;
+              color: white;
               font-family: Helvetica Neue, Helvetica, PingFang SC,
                 Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
             }
@@ -1206,6 +1217,14 @@ const getGenerateTime = () => {
   margin-top: 20px;
   margin-right: 10px ;
   text-align: center;
+}
+
+.cle-title{
+  color: white;
+}
+
+.remark{
+  color: #fff;
 }
 
 </style>

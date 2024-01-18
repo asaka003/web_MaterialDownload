@@ -275,20 +275,23 @@
         :default-active="activeIndex"
         class="el-menu-demo"
         mode="horizontal"
+        background-color="#131313"
+        
+        text-color="#ffffff"
         @select="handleSelect"
       >
-      <el-menu-item class="menu-item" index="0">首页</el-menu-item>
-      <el-menu-item class="menu-item" index="1">素材中心</el-menu-item>
+      <el-menu-item class="menu-item" index="0"><el-icon><HomeFilled /></el-icon>首页</el-menu-item>
+      <el-menu-item class="menu-item" index="1"><el-icon><Guide /></el-icon>素材中心</el-menu-item>
         <el-sub-menu index="2">
           <template #title>
-            <span class="menu-item">AI工具</span>
+            <span class="menu-item"><el-icon><Brush /></el-icon>AI工具</span>
           </template>
-          <el-menu-item index="2-1">AI配音</el-menu-item>
-          <el-menu-item index="2-2">AI文章助手</el-menu-item>
-          <el-menu-item index="2-3">AI绘图</el-menu-item>
+          <el-menu-item index="2-1"><el-icon><Mic /></el-icon>AI配音</el-menu-item>
+          <el-menu-item index="2-2"><el-icon><Reading /></el-icon>AI文章助手</el-menu-item>
+          <el-menu-item index="2-3"><el-icon><Picture /></el-icon>AI绘图</el-menu-item>
         </el-sub-menu>
-        <el-menu-item class="menu-item" index="3">软件下载</el-menu-item>
-        <el-menu-item class="menu-item" index="4">课程教学</el-menu-item>
+        <el-menu-item class="menu-item" index="3"><el-icon><Download /></el-icon>软件下载</el-menu-item>
+        <el-menu-item class="menu-item" index="4"><el-icon><VideoPlay /></el-icon>课程教学</el-menu-item>
       </el-menu>
     </div>
 
@@ -343,7 +346,7 @@
         <img class="img" src="@/assets/toDown.png" alt="" />
       </div>
 
-      <div class="user_right" @click="login" v-if="phone == ''">登录</div>
+      <div class="user_right" @click="login" v-if="phone == ''"><span class="el-dropdown-link">登录</span></div>
     </div>
   </div>
 </template>
@@ -376,15 +379,15 @@ const newlabels = ref([
     name: "人物",
     secondTags: [
       {
-        name: "玄幻修仙",
+        name: "修仙",
         fourTags: ["全部", "男", "女", "非人族"],
       },
       {
-        name: "现代都市",
+        name: "都市",
         fourTags: ["全部", "男", "女", "非人族"],
       },
       {
-        name: "历史朝代",
+        name: "历史古代",
         thirTags: [
           "全部",
           "通用",
@@ -402,24 +405,16 @@ const newlabels = ref([
       },
 
       {
-        name: "近代战争",
+        name: "战争",
         fourTags: ["全部", "男", "女"],
       },
 
       {
-        name: "80|90年代",
+        name: "旧年代",
         fourTags: ["全部", "男", "女"],
       },
 
-      {
-        name: "荒野求生",
-        fourTags: ["全部", "男", "女"],
-      },
-
-      {
-        name: "科技科幻",
-        fourTags: ["全部", "男", "女"],
-      },
+      
       {
         name: "其他",
         fourTags: ["其他"],
@@ -430,7 +425,7 @@ const newlabels = ref([
     name: "背景图",
     secondTags: [
       {
-        name: "玄幻修仙",
+        name: "修仙",
         thirTags: [
           "全部",
           "雪地",
@@ -447,7 +442,7 @@ const newlabels = ref([
         fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "现代都市",
+        name: "都市",
         thirTags: [
           "全部",
           "住宅楼",
@@ -464,7 +459,7 @@ const newlabels = ref([
         fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "历史朝代",
+        name: "历史古代",
         thirTags: [
           "全部",
           "宫殿",
@@ -478,24 +473,16 @@ const newlabels = ref([
       },
 
       {
-        name: "近代战争",
+        name: "战争",
         fourTags: ["全部", "白天", "黑夜"],
       },
 
       {
-        name: "80|90年代",
+        name: "旧年代",
         fourTags: ["全部", "白天", "黑夜"],
       },
 
-      {
-        name: "荒野求生",
-        fourTags: ["全部", "白天", "黑夜"],
-      },
-
-      {
-        name: "科技科幻",
-        fourTags: ["全部", "白天", "黑夜"],
-      },
+    
       {
         name: "其他",
         fourTags: ["其他"],
@@ -506,36 +493,26 @@ const newlabels = ref([
     name: "道具图",
     secondTags: [
       {
-        name: "玄幻修仙",
+        name: "修仙",
         thirTags: ["全部", "武器法宝", "书籍", "丹药", "翅膀", "其他"],
       },
       {
-        name: "现代都市",
+        name: "都市",
         thirTags: ["全部", "武器", "汽车", "日用品", "植物", "其他"],
         fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "历史朝代",
+        name: "历史古代",
         thirTags: ["全部", "武器", "交通工具", "饮食", "其它"],
       },
 
       {
-        name: "近代战争",
+        name: "战争",
         fourTags: ["全部", "白天", "黑夜"],
       },
 
       {
-        name: "80|90年代",
-        fourTags: ["全部", "白天", "黑夜"],
-      },
-
-      {
-        name: "荒野求生",
-        fourTags: ["全部", "白天", "黑夜"],
-      },
-
-      {
-        name: "科技科幻",
+        name: "旧年代",
         fourTags: ["全部", "白天", "黑夜"],
       },
       {
@@ -548,16 +525,16 @@ const newlabels = ref([
     name: "表情包",
     secondTags: [
       {
-        name: "玄幻修仙",
+        name: "全部",
         fourTags: ["全部", "男", "女", "非人族"],
       },
       {
-        name: "历史朝代",
+        name: "男性",
         thirTags: ["全部", "通用", "秦汉", "三国"],
         fourTags: ["全部", "男", "女"],
       },
       {
-        name: "其他",
+        name: "女性",
         fourTags: ["其他"],
       },
     ],
@@ -594,47 +571,29 @@ const newlabels = ref([
       },
     ],
   },
-  {
-    name: "专属素材",
+]);
+
+//判断用户的身份
+if(localStorage.getItem("userType") == '管理员' || localStorage.getItem("userType") == '专属用户'){
+  newlabels.value.push({
+    name: "在下零零玖",
     secondTags: [
       {
-        name: "玄幻修仙",
-        fourTags: ["全部", "男", "女", "非人族"],
+        name: "修仙",
+        //thirTags: ["全部", "武器法宝", "书籍", "丹药", "翅膀", "其他"],
       },
       {
-        name: "现代都市",
-        fourTags: ["全部", "男", "女", "非人族"],
+        name: "表情包",
+        //fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "历史朝代",
-      },
-
-      {
-        name: "近代战争",
-        fourTags: ["全部", "男", "女"],
-      },
-
-      {
-        name: "80|90年代",
-        fourTags: ["全部", "男", "女"],
-      },
-
-      {
-        name: "荒野求生",
-        fourTags: ["全部", "男", "女"],
-      },
-
-      {
-        name: "科技科幻",
-        fourTags: ["全部", "男", "女"],
-      },
-      {
-        name: "其他",
-        fourTags: ["其他"],
+        name: "道具",
+        //fourTags: ["全部", "白天", "黑夜"],
       },
     ],
-  },
-]);
+  })
+}
+
 // 一级选项
 const chooseFirst = ref("");
 const chooseFirstIndex = ref(0);
@@ -786,6 +745,8 @@ const loginFun = () => {
       localStorage.setItem("identity", res.data.identity);
       localStorage.setItem("phone", res.data.phone);
       localStorage.setItem("balance", res.data.balance);
+      localStorage.setItem("userType", res.data.userType);
+
       identity.value = res.data.identity;
       phone.value = res.data.phone;
       userBalance.value = res.data.balance;
@@ -1269,6 +1230,7 @@ const getLocalInfo = async () => {
       })
       .catch((err) => {
         console.log(err);
+        phone.value=""
       });
   }
 };
@@ -1353,7 +1315,6 @@ html, body {
     padding: 0;
     min-height: 100%;
     font-family: "Helvetica Neue For Number", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: #fff;
 }
 
 .PopUpPrompt {
@@ -1373,7 +1334,7 @@ html, body {
 
 .user {
   width: 100%;
-  height: 3.125rem;
+  height: 4.125rem;
   display: flex;
   align-items: center;
   position: fixed;
@@ -1381,11 +1342,14 @@ html, body {
   left: 0;
   z-index: 99;
   box-sizing: border-box;
-  background-color: #fafafa;
   overflow: hidden;
+  background-color: rgb(11, 25, 34);  //背景图
+  
+
   @media screen and (max-width: 1280px){
     padding: 0 14px;
   }
+  
   padding: 0 24px;
   .topName {
     display: -ms-flexbox;
@@ -1409,6 +1373,9 @@ html, body {
       .menu-item{
         font-size: 1em;
       }
+      //ul{
+      //  background-color: black;
+      //}
     }
   .allright {
     -ms-flex: 1;
@@ -1425,7 +1392,7 @@ html, body {
       outline: none;
       padding: .3125em .625em;
       margin: .3125em .625em;
-      border: 1px solid #555;
+      border: 1px solid #ffffff;
       border-radius: 4px;
       white-space: nowrap;
       cursor: pointer;
@@ -1436,6 +1403,9 @@ html, body {
       font-size: 1em;
       display: flex;
       align-items: center;
+      span{
+        color: white;
+      }
       .img {
         width: 0.9375rem;
         height: 0.9375rem;
