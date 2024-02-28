@@ -17,7 +17,6 @@
   </el-dialog>
   <!-- 其它提示 -->
   <div class="write">
-    <div class="top"></div>
     <div class="copywriter">
       <div class="ai-menu">
         <div
@@ -691,76 +690,16 @@ const getGenerateTime = () => {
 }
 
 .write {
-  width: 100%;
-  min-width: 1000px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   align-items: center; 
+  background-color: rgb(255, 255, 255,0.5);
+  border-radius: 10px;
+  margin-top: 10px;
+  //margin-left: 20px;
+  margin-right: 20px;
   
-  .top {
-    width: 100%;
-    height: 3.75rem;
-    background-color: #ffffff;
-    display: flex;
-    justify-content: space-between;
-    box-sizing: border-box;
-    max-width: 87.5rem;
-    padding: 0.3125rem 0.625rem;
-    .logo {
-      display: flex;
-      .logo_fix {
-        position: relative;
-        width: 5.625rem;
-        height: 100%;
-        border: 0.0625rem solid #037171;
-        border-radius: 0.3125rem;
-      }
-      .title {
-        display: flex;
-        align-items: center;
-        font-size: 1rem;
-        margin-left: 0.625rem;
-        span {
-          margin-right: 0.3125rem;
-        }
-        .deepl {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #0f2b46;
-          font-weight: 800;
-          font-size: 1.125rem;
-        }
-        .future {
-          font-size: 0.875rem;
-        }
-        .beta {
-          width: 2.9375rem;
-          height: 1.625rem;
-          color: white;
-          background-color: #037171;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.75rem;
-          border-radius: 0.3125rem;
-          margin-left: 0.3125rem;
-        }
-      }
-    }
-    .login {
-      display: flex;
-      align-items: center;
-      span {
-        margin: 0.625rem;
-      }
-      img {
-        width: 2.25rem;
-        height: 2rem;
-      }
-    }
-  }
   .content {
     padding: 0 4.375rem 2.5rem 4.375rem;
     box-sizing: border-box;
@@ -1099,12 +1038,13 @@ const getGenerateTime = () => {
           position: relative;
           :deep(.el-textarea__inner) {
             height: 67rem !important;
-            color: white;
-            background-color: #212121;
+            color: #212121;
+            
+            background-color: #fff;
           }
           :deep(.el-input__count){
-            color: white;
-            background-color: #212121;
+            color: #212121;
+            background-color: #fff;
           }
           
 
@@ -1197,9 +1137,9 @@ const getGenerateTime = () => {
               height: 100%;
               width: 100%;
               height: 67rem;
-              border: 0.0625rem solid white;
+              border: 0.0625rem solid black;
               border-radius: 0.5rem;
-              background: #212121;
+              background: #fff;
               padding: 0.6rem;
               overflow-y: auto;
               padding-top: 1rem;
@@ -1265,7 +1205,7 @@ const getGenerateTime = () => {
                 }
                 .list-m {
                   //background: #212121;
-                  border: 0.0625rem solid white;
+                  border: 0.0625rem solid black;
                   border-radius: 0.2rem;
                   margin: 0 1.25rem 0 0.3rem;
                   margin-right: 2px;
@@ -1312,7 +1252,7 @@ const getGenerateTime = () => {
 }
 
 div{
-  color: white;
+  color: black;
 }
 
 </style>

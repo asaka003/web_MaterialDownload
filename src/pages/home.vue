@@ -55,7 +55,7 @@ onMounted(async () => {
     images.value = trans(await getShowList())
 })
 
-const url_prefix = 'https://www.eralab.cn/AIweb_material/show_'
+const url_prefix = 'https://cdncos.eralab.cn/materials/show_'
 
 function trans(list) {
     return list.reduce((result, item) => {

@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    component: () => import("@/pages/home.vue"), // 首页使用懒加载
+    component: () => import("@/pages/HomePage.vue"), // 首页使用懒加载
   },
   {
     path: "/material-center",
@@ -50,10 +50,10 @@ const routes = [
     path: "/test",
     component: () => import("@/components/dialogInfo.vue"),
   },
-  {
-    path: "/toolsDownload",
-    component: () => import("@/pages/toolsDownload.vue")
-  }
+  // {
+  //   path: "/toolsDownload",
+  //   component: () => import("@/pages/toolsDownload.vue")
+  // }
 
 ];
 

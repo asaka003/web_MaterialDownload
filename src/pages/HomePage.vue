@@ -170,7 +170,7 @@
     <el-backtop :bottom="80"></el-backtop>
     <!-- <div class="user">
       <div class="topName">
-        <img src="@/assets/logo.svg" alt="" /> <span>沙雕素材网</span>
+        <img src="@/assets/logo.svg" alt="" /> <span>番茄素材网</span>
       </div>
       <div class="allright">
         <div class="user_left" v-if="identity != 1 && phone != ''">
@@ -268,8 +268,9 @@
           :key="index"
         ></el-tab-pane>
       </el-tabs> -->
+
       <div class="firstTabs">
-        <div
+        <!-- <div
           v-for="(item, index) in newlabels"
           :key="index"
           @click="clcikTabs(item, index)"
@@ -277,7 +278,7 @@
           :class="firstTabsIndex == index ? 'firstTabs_item_active' : ''"
         >
           {{ item.name }}
-        </div>
+        </div> -->
         <div class="search">
           <el-input v-model="search" placeholder="输入关键字" clearable>
             <template #append>
@@ -286,7 +287,7 @@
           </el-input>
         </div>
       </div>
-      <div class="allSeconTabs">
+      <!-- <div class="allSeconTabs">
         <div class="seconTabs">
           <div
             v-for="(item, index) in newlabels[firstTabsIndex].secondTags"
@@ -330,7 +331,7 @@
             {{ item }}
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="imgContainer">
@@ -348,7 +349,7 @@
             item.filename.includes('_')?item.filename.split('_',3)[2]:item.filename
           }}</span>
           <!-- 音频播放控件 -->
-          <audio :src="'https://eralab-1317463756.cos.ap-guangzhou.myqcloud.com/materials/' + item.filename + getBrowserExt(item.file_exts)" controls controlsList="nodownload" style="width:100%"></audio>
+          <audio :src="'https://cdncos.eralab.cn/materials/' + item.filename + getBrowserExt(item.file_exts)" controls controlsList="nodownload" style="width:100%"></audio>
         </div>
         <el-image
           v-if="chooseLabel != '音频'"
@@ -356,7 +357,7 @@
           :src="'https://eralab-1317463756.cos.ap-guangzhou.myqcloud.com/materials/' + item.filename + getBrowserExt(item.file_exts)"
           fit="fill"
           :preview-src-list="[
-            'https://eralab-1317463756.cos.ap-guangzhou.myqcloud.com/materials/' +
+            'https://cdncos.eralab.cn/materials/' +
               item.filename +
               '_mediumImg' + getBrowserExt(item.file_exts),
           ]"
@@ -403,7 +404,7 @@
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
-        :page-sizes="[25, 50, 100, 200]"
+        :page-sizes="[20, 40, 80, 100]"
         :small="small"
         :disabled="disabled"
         :background="background"
@@ -719,7 +720,12 @@ const downloadFile = (e, type) => {
     file_id: parseInt(e.id),
     ext: type,
   };
-  window.open("/AIweb_materialSys/materialSystem/getFile/"+filename.file_id+"/"+filename.ext)
+  if(e.type1 == "音频"){
+    window.open('https://cdncos.eralab.cn/materials/' + e.filename + getBrowserExt(e.file_exts))
+  }else{
+    window.open("/AIweb_materialSys/materialSystem/getFile/"+filename.file_id+"/"+filename.ext)
+  }
+  
   // 更新潮币
   getLocalInfo();
 
@@ -1053,7 +1059,7 @@ const currentPage = ref(1);
 // 图片下标
 const startIndex = ref(0);
 const currentImgIndex = ref(0);
-const pageSize = ref(25);
+const pageSize = ref(20);
 const small = ref(false);
 const background = ref(false);
 const disabled = ref(false);
@@ -1276,11 +1282,19 @@ const buiedFiles = ref(null);
 // 已经购买图片
 const buiedFilesFun = () => {};
 
+setInterval(()=>{
+  if(localStorage.getItem("type2") != secondTabsItem.value || localStorage.getItem("type1") != chooseLabel.value){
+    chooseLabel.value = localStorage.getItem("type1");
+    secondTabsItem.value = localStorage.getItem("type2");
+    getImg();
+  }
+},1000)
+
 // 获取图片素材
 const getImg = () => {
   if (search.value == "") {
     getImgsApi({
-      type1: chooseLabel.value,
+      type1: chooseLabel.value ,
 
       type2: secondTabsItem.value,
 
@@ -1339,7 +1353,6 @@ const getImg = () => {
       }else{
         ElMessage.error('请重新登录!');
       }
-      return;
       return;
     });
   } else {
@@ -1728,7 +1741,8 @@ if(localStorage.getItem("userType") == '管理员' || localStorage.getItem("user
 // 当前标签页下标 一级
 const firstTabsIndex = ref(0);
 // 当前选择标签内容 一级
-const chooseLabel = ref(newlabels.value[firstTabsIndex.value].name);
+//const chooseLabel = ref(newlabels.value[firstTabsIndex.value].name);
+const chooseLabel = ref(localStorage.getItem('type1'));
 // 标签页 一级
 const clcikTabs = (item, index) => {
   chooseLabel.value = item.name;
@@ -1756,9 +1770,10 @@ const clcikTabs = (item, index) => {
 };
 // 二级
 const secondTabsIndex = ref(0);
-const secondTabsItem = ref(
-  newlabels.value[firstTabsIndex.value].secondTags[secondTabsIndex.value].name
-);
+// const secondTabsItem = ref(
+//   newlabels.value[firstTabsIndex.value].secondTags[secondTabsIndex.value].name
+// );
+const secondTabsItem = ref(localStorage.getItem('type2'))
 const clcikSecondTabs = (item, index) => {
   secondTabsIndex.value = index;
   secondTabsItem.value = item.name;
@@ -1875,12 +1890,15 @@ const shouldShowNewTag = (createTime)=> {
   justify-content: center;
 }
 .main {
-  width: 100%;
-  min-height: 100vh;
+  /* margin-top: 10px;
+  margin-left: 20px;
+  margin-right: 20px; */
+  background-color: rgb(255, 255, 255,0.5); 
+  border-radius: 10px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  padding-top: 3.125rem;
+  // padding-top: 3.125rem;
   //background-color: #212121;
   // background-image: url("@/assets/bg.png");
   // background-size: 20%;
@@ -1897,7 +1915,7 @@ const shouldShowNewTag = (createTime)=> {
     }
   }
   .firstTabs {
-    display: flex;
+    /* display: flex; */
     font-size: 16px;
     height: 36px;
     line-height: 36px;
@@ -2095,7 +2113,7 @@ const shouldShowNewTag = (createTime)=> {
       width: 100%;
       display: flex;
       flex-wrap: wrap;
-      padding: 2.5rem 8.125rem;
+      padding: 1rem 1rem;
       box-sizing: border-box;
       
 
@@ -2104,10 +2122,16 @@ const shouldShowNewTag = (createTime)=> {
         flex-direction: column;
         box-sizing: border-box;
         overflow: hidden;
-        width: calc((100% - 5rem) / 5);
+        /* width: calc((100% - 5rem) / 5);
         max-width: calc((100% - 5rem) / 5);
-        min-width: calc((100% - 5rem) / 5);
-        margin-right: 0.625rem;
+        min-width: calc((100% - 5rem) / 5); */
+
+        width: calc((100% - 5rem) / 4);
+        /*max-width: calc((100% - 5rem) / 4);
+        min-width: calc((100% - 5rem) / 4);*/
+
+        /*margin-right: 0.625rem;*/
+        margin-left: 0.625rem;
         margin-bottom: 1.25rem;
         border-radius: 0.625rem;
         background-color: white;
@@ -2218,16 +2242,18 @@ const shouldShowNewTag = (createTime)=> {
       display: flex;
       flex-wrap: wrap;
       box-sizing: border-box;
-      padding: 2.5rem 7.5rem;
+      //padding: 2.5rem 7.5rem;
+      padding: 20px;
 
       .img {
         display: flex;
         flex-direction: column;
         box-sizing: border-box;
         overflow: hidden;
-        width: calc((100% - 1.25rem) / 3);
-        max-width: calc((100% - 1.25rem) / 3);
-        min-width: calc((100% - 1.25rem) / 3);
+        width: calc((100% - 10px) / 4);
+        /*max-width: calc((100% - 1.25rem) / 4);
+        min-width: calc((100% - 1.25rem) / 4);*/
+
         margin-right: 0.625rem;
         margin-bottom: 1.25rem;
         border-radius: 0.625rem;
@@ -2344,4 +2370,6 @@ const shouldShowNewTag = (createTime)=> {
   flex-direction: row;
   justify-content: space-between;
 }
+
+
 </style>

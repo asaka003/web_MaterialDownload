@@ -268,20 +268,19 @@
   <!-- 其它提示 -->
   <div class="user">
     <div class="topName">
-      <img src="@/assets/logo3.png" alt="" />
+      <img src="https://cdncos.eralab.cn/materials/logo.gif" alt="" />
+      <img style="margin-left:-40px" src="https://cdncos.eralab.cn/materials/番茄素材网.png" alt="" />
     </div>
     <div class="topCenter">
-      <el-menu
+      <!-- <el-menu
         :default-active="activeIndex"
-        class="el-menu-demo"
         mode="horizontal"
         background-color="#131313"
-        
         text-color="#ffffff"
         @select="handleSelect"
       >
-      <el-menu-item class="menu-item" index="0"><el-icon><HomeFilled /></el-icon>首页</el-menu-item>
-      <el-menu-item class="menu-item" index="1"><el-icon><Guide /></el-icon>素材中心</el-menu-item>
+        <el-menu-item class="menu-item" index="0"><el-icon><HomeFilled /></el-icon>首页</el-menu-item>
+        <el-menu-item class="menu-item" index="1"><el-icon><Guide /></el-icon>素材中心</el-menu-item>
         <el-sub-menu index="2">
           <template #title>
             <span class="menu-item"><el-icon><Brush /></el-icon>AI工具</span>
@@ -292,7 +291,7 @@
         </el-sub-menu>
         <el-menu-item class="menu-item" index="3"><el-icon><Download /></el-icon>软件下载</el-menu-item>
         <el-menu-item class="menu-item" index="4"><el-icon><VideoPlay /></el-icon>课程教学</el-menu-item>
-      </el-menu>
+      </el-menu> -->
     </div>
 
     <div class="allright">
@@ -376,10 +375,14 @@ const router = useRouter();
 // 新的标签页数据
 const newlabels = ref([
   {
-    name: "人物",
+    name: "人物素材",
     secondTags: [
       {
         name: "修仙",
+        fourTags: ["全部", "男", "女", "非人族"],
+      },
+      {
+        name: "古代",
         fourTags: ["全部", "男", "女", "非人族"],
       },
       {
@@ -387,7 +390,7 @@ const newlabels = ref([
         fourTags: ["全部", "男", "女", "非人族"],
       },
       {
-        name: "历史古代",
+        name: "年代",
         thirTags: [
           "全部",
           "通用",
@@ -410,19 +413,13 @@ const newlabels = ref([
       },
 
       {
-        name: "旧年代",
-        fourTags: ["全部", "男", "女"],
-      },
-
-      
-      {
         name: "其他",
-        fourTags: ["其他"],
+        fourTags: ["全部", "男", "女"],
       },
     ],
   },
   {
-    name: "背景图",
+    name: "场景素材",
     secondTags: [
       {
         name: "修仙",
@@ -442,7 +439,7 @@ const newlabels = ref([
         fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "都市",
+        name: "古代",
         thirTags: [
           "全部",
           "住宅楼",
@@ -459,7 +456,10 @@ const newlabels = ref([
         fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "历史古代",
+        name: "都市",
+      },
+      {
+        name: "年代",
         thirTags: [
           "全部",
           "宫殿",
@@ -476,45 +476,7 @@ const newlabels = ref([
         name: "战争",
         fourTags: ["全部", "白天", "黑夜"],
       },
-
-      {
-        name: "旧年代",
-        fourTags: ["全部", "白天", "黑夜"],
-      },
-
     
-      {
-        name: "其他",
-        fourTags: ["其他"],
-      },
-    ],
-  },
-  {
-    name: "道具图",
-    secondTags: [
-      {
-        name: "修仙",
-        thirTags: ["全部", "武器法宝", "书籍", "丹药", "翅膀", "其他"],
-      },
-      {
-        name: "都市",
-        thirTags: ["全部", "武器", "汽车", "日用品", "植物", "其他"],
-        fourTags: ["全部", "白天", "黑夜"],
-      },
-      {
-        name: "历史古代",
-        thirTags: ["全部", "武器", "交通工具", "饮食", "其它"],
-      },
-
-      {
-        name: "战争",
-        fourTags: ["全部", "白天", "黑夜"],
-      },
-
-      {
-        name: "旧年代",
-        fourTags: ["全部", "白天", "黑夜"],
-      },
       {
         name: "其他",
         fourTags: ["其他"],
@@ -525,17 +487,24 @@ const newlabels = ref([
     name: "表情包",
     secondTags: [
       {
-        name: "全部",
-        fourTags: ["全部", "男", "女", "非人族"],
+        name: "男生",
       },
       {
-        name: "男性",
-        thirTags: ["全部", "通用", "秦汉", "三国"],
-        fourTags: ["全部", "男", "女"],
+        name: "女生",
+      },
+    ],
+  },
+  {
+    name: "道具素材",
+    secondTags: [
+      {
+        name: "武器",
       },
       {
-        name: "女性",
-        fourTags: ["其他"],
+        name: "动植物",
+      },
+      {
+        name: "其他",
       },
     ],
   },
@@ -563,12 +532,6 @@ const newlabels = ref([
       {
         name: "常规",   
       },
-      {
-        name: "动物",
-      },
-      {
-        name: "攻击特效",
-      },
     ],
   },
 ]);
@@ -576,18 +539,18 @@ const newlabels = ref([
 //判断用户的身份
 if(localStorage.getItem("userType") == '管理员' || localStorage.getItem("userType") == '专属用户'){
   newlabels.value.push({
-    name: "在下零零玖",
+    name: "大咖专属素材",
     secondTags: [
       {
-        name: "修仙",
+        name: "在下零零玖",
         //thirTags: ["全部", "武器法宝", "书籍", "丹药", "翅膀", "其他"],
       },
       {
-        name: "表情包",
+        name: "奇遇十三太保",
         //fourTags: ["全部", "白天", "黑夜"],
       },
       {
-        name: "道具",
+        name: "在下豆缺",
         //fourTags: ["全部", "白天", "黑夜"],
       },
     ],
@@ -1334,7 +1297,7 @@ html, body {
 
 .user {
   width: 100%;
-  height: 4.125rem;
+  height: 5.125rem;
   display: flex;
   align-items: center;
   position: fixed;
@@ -1343,14 +1306,14 @@ html, body {
   z-index: 99;
   box-sizing: border-box;
   overflow: hidden;
-  background-color: rgb(11, 25, 34);  //背景图
+  background-color: rgb(255, 255, 255,1);
   
 
   @media screen and (max-width: 1280px){
     padding: 0 14px;
   }
   
-  padding: 0 24px;
+  padding: 0 25px;
   .topName {
     display: -ms-flexbox;
     display: flex;
@@ -1359,24 +1322,21 @@ html, body {
     -ms-flex-pack: center;
     justify-content: center;
     width: 9em;
-    height: 4.5em;
+    //height: 4.5em;
     margin-right: .625em;
 
     img {
       display: block;
-      width: 6.375em;
+      width: 9em;
       border-style: none;
     }
   }
   .topCenter{
-      width: 100%;
-      .menu-item{
-        font-size: 1em;
-      }
-      //ul{
-      //  background-color: black;
-      //}
+    width: 100%;
+    .menu-item{
+      font-size: 1em;
     }
+  }
   .allright {
     -ms-flex: 1;
     flex: 1;
@@ -1392,7 +1352,7 @@ html, body {
       outline: none;
       padding: .3125em .625em;
       margin: .3125em .625em;
-      border: 1px solid #ffffff;
+      border: 1px solid #000000;
       border-radius: 4px;
       white-space: nowrap;
       cursor: pointer;
@@ -1400,11 +1360,11 @@ html, body {
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
-      font-size: 1em;
+      font-size: 2em;
       display: flex;
       align-items: center;
       span{
-        color: white;
+        color: black;
       }
       .img {
         width: 0.9375rem;

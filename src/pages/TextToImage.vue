@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout container" >
     <el-container >
-      <el-aside  width="35%">
+      <el-aside  width="35%" class="aside">
             <el-tabs v-model="activeName" class="tabs" @tab-click="handleTapsClick">
                 <el-tab-pane class="tabs" label="二次元模型" name="二次元模型">
                     <div name="textarea-input">
@@ -14,7 +14,7 @@
                             :maxlength="100"
                             placeholder="在此输入您的创意,每个描述词用逗号分开,如:一个女孩，蓝色头发，校园"
                         /><br>
-                        <el-text :style="{'color':'grey'}">创作灵感: <el-text tag="b">绚丽背景，空旷天空，绿茵草地</el-text></el-text> <br>
+                        <el-text :style="{'color':'grey','margin-left': '10px'}">创作灵感: <el-text tag="b">绚丽背景，空旷天空，绿茵草地</el-text></el-text> <br>
                     </div>
                     <div name="img-size" class="top-margin-div">
                         <el-text  tag="b" size="large">图片大小</el-text>
@@ -51,7 +51,7 @@
             </el-tabs>
         </el-aside>
         <el-main >
-            <div>今日剩余AI绘图{{ generateTime }}次</div>
+            <div style="color: black">今日剩余AI绘图{{ generateTime }}次</div>
             <el-button class="img-button" type="primary" @click="downloadImg">下载</el-button>
             <img class="AiImage" @load="loading" v-if="AiImageUrl == ''" src="@/assets/背景.png" alt="">  
             <img class="AiImage" v-loading="loading" v-else :src="AiImageUrl" alt="">     
@@ -116,7 +116,7 @@ const generateImage = () =>{
         background: 'rgba(0, 0, 0, 0.7)',
     })
     TextToImage(generateImageParams.value).then(res =>{
-        AiImageUrl.value = "/gpt/material/GetImage/"+res.data
+        AiImageUrl.value = "https://eralab-1317463756.cos.ap-guangzhou.myqcloud.com/openai/img/"+res.data
         loading.close();
         if(res.code == 403){
             ElMessage.error('输入文字非法!')
@@ -146,9 +146,11 @@ const handleTapsClick = (tab, event) => {
 
 <style lang="scss" scoped>
 .container {
-    margin-top: 100px;
-    margin-left: 50px;
-    margin-right: 50px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: rgb(255, 255, 255,0.5);
+    border-radius: 10px;
 }
 
 .tabs {
@@ -157,6 +159,7 @@ const handleTapsClick = (tab, event) => {
 
 .textarea-style{
     margin-top: 10px;
+    margin-left: 10px;
     width: 93.5%;
     :deep(.el-textarea__inner) {
         color: white;
@@ -169,11 +172,13 @@ const handleTapsClick = (tab, event) => {
 }
 
 .radio-group-div{
-    margin-left: -16px;
+    //margin-left: 30px;
+    justify-content: center;
 }
 
 .submit-div{
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .top-margin-div{
@@ -181,6 +186,7 @@ const handleTapsClick = (tab, event) => {
 }
 .top-margin-text{
     margin-top: 10px;
+    text-align: center;
 }
 
 .AiImage{
@@ -195,13 +201,25 @@ const handleTapsClick = (tab, event) => {
 }
 
 div{
-    color: aliceblue;
+    //color: aliceblue;
+    color: #212121;
 }
 .el-tabs__item{
-    color: aliceblue;
+    //color: aliceblue;
+    color: #212121;
 }
 .el-text{
-    color: aliceblue;
+    //color: aliceblue;
+    color: #212121;
+}
+
+.aside{
+    //background-color: #212121;
+    padding: 10px;
+    border-radius: 10px;
+    margin-left: 20px ;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 </style>
 

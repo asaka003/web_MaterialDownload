@@ -266,7 +266,7 @@ export default {
 
 <style scoped>
 .main{
-    background-color: #212121;
+    /* background-color: #212121; */
 }
 .w-100px{
     margin-left: 10px;

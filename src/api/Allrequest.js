@@ -201,3 +201,21 @@ export const AddUserCollection = (data) => {
 };
 
 
+//删除收藏
+export const DelUserCollection = (id) => {
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/DelUserCollection?id="+id, 
+    method: "post",
+  });
+}
+
+//编辑收藏
+export const EditUserCollection = (data) =>{
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/EditUserCollection", 
+    method: "post",
+    data: data,
+  });
+}
+
+
