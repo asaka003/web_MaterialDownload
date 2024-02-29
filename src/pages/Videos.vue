@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="videoShowList">
         <div class="container">
             <div class="handle-box">
                 <el-input v-model="query.search" placeholder="教程名称" class="handle-input mr10"></el-input>
@@ -9,7 +9,7 @@
             <div class="nav05_centent">
                 <div class="nav05_centent_mb" v-for="video in tableData" :key="video.file_id">
                 <!-- :href="`#/player?file_hash=${video.file_hash}`" -->
-                    <a name="file_url" @click="handlePlayer(video.file_id)">
+                    <a name="file_url" @click="handlePlayer(video.file_id,video.id)">
                         <div :style="{boxShadow: `var(--el-box-shadow-light)`,}">
                             <img :src="`https://cdncos.eralab.cn/materials/`+video.faceImgPath" alt="[]" :style="{}">
                         </div>
@@ -30,6 +30,167 @@
                 ></el-pagination>
             </div>
         </div>    
+    </div>
+    <div style="margin-top:30px" v-if="videoShowPlayer">
+        <h1 style="cursor: pointer;" @click="this.videoShowPlayer = false;this.videoShowList = true">《 返回</h1>
+    </div>
+    <div v-if="videoShowPlayer">
+        <div class="video-player-container">
+            <!-- 设置播放器容器 -->
+            <video id="player-container-id" class="video-player"  preload="auto" playsinline webkit-playsinline x5-playsinline></video>
+        </div>
+        <div class="comments-container">
+            <h3>评论区</h3>
+            <div style="letter-spacing: 1px">
+                <div class="content">
+                    <!-- 一级评论 -->
+                    <div class="first" v-for="(item, index) in comments" :key="index">
+                        <a href="javascript:;" class="first-img">
+                            <!-- 如果当前用户有头像则显示头像,没有则显示默认头像 -->
+                            <img src="@/assets/logo.svg" />
+                            <!-- <img v-if="item.picture" :src="`http://` + item.picture" alt="" />
+                            <img v-else src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" alt="" /> -->
+                        </a>
+                        <div class="first-content">
+                        <!-- 一级评论用户昵称 -->
+                        <h3 class="first-username">{{ item.username }}</h3>
+                        <!-- 一级评论发布时间 -->
+                        <span class="first-time">{{ new Date(item.create_time).toLocaleString() }}</span>
+                        <!-- 一级评论评论内容 -->
+                        <p class="first-comment">
+                            {{ item.content }}
+                        </p>
+                        <!-- 一级评论评论点赞 -->
+                        <div
+                            class="first-right"
+                            @mouseleave="delete_leave(item)"
+                            @mouseover="delete_after(item)"
+                        >
+                            <span
+                                class="delete"
+                                v-if="item.username == this.username"
+                                @click="comment_delete(item.id)"
+                            >删除</span>
+                            <span class="comments" @click="show_comment_area(item)">回复</span>
+                            <!-- 一级评论点赞数 -->
+                            <!-- <span
+                                class="praise"
+                                :class="item.like"
+                                @click="comment_like(item, 0)"
+                            >
+                                <span v-if="item.numbers">{{ item.numbers }}</span>
+                            </span> -->
+                        </div>
+                        <!-- 回复一级评论 -->
+                        <div class="reply-comment" v-if="item.display">
+                            <input
+                            type="text"
+                            placeholder="请输入评论 . . ."
+                            v-model="myReplyComment"
+                            @keyup.enter="sumbit(1,0,item.id,item.user_id,this.myReplyComment)"
+                            @blur="lose(item)"
+                            />
+                            <!-- 0为回复一级评论 -->
+                            <button @click="sumbit(1,0,item.id,item.user_id,this.myReplyComment)">发表评论</button>
+                        </div>
+                        <!-- 次级评论 -->
+                        <div class="second">
+                            <ul style="list-style-type: none; padding:0;margin:0">
+                                <li v-for="(child, child_index) in item.childs" :key="child_index" >
+                                    <div class="top">
+                                    <!-- 次级评论头像,该用户没有头像则显示默认头像 -->
+                                    <a href="JavaScript:;" class="second-img">
+                                        <!-- <img v-if="child.picture" :src="child.picture" />
+                                        <img v-else src="@/assets/logo.svg" /> -->
+                                        <img src="@/assets/logo.svg">
+                                    </a>
+                                    <div class="second-content">
+                                        <!-- 次级评论用户昵称 -->
+                                        <h3 class="second-username">{{ child.username }}</h3>
+                                        <!-- 次级评论评论时间 -->
+                                        <span class="second-time">{{ new Date(child.create_time).toLocaleString() }}</span>
+                                        <!-- 次级评论内容 xxx回复xxx：评论内容-->
+                                        <p class="second-comment">
+                                        <span class="second-reply">
+                                            <span class="to_reply">{{ child.username }}</span>
+                                            回复
+                                            <span class="to_reply">{{ child.reply_username }}</span
+                                            >：
+                                        </span>
+                                        {{ child.content }}
+                                        </p>
+                                        <!-- 次级评论评论点赞 -->
+                                        <div
+                                        class="second-right"
+                                        @mouseleave="delete_leave(child)"
+                                        @mouseover="delete_after(child)"
+                                        >
+                                        <span
+                                            class="delete"
+                                            v-if="child.username == this.username"
+                                            @click="comment_delete(child.id)"
+                                            >删除</span
+                                        >
+                                        <span class="comments" @click="show_comment_area(child)"
+                                            >回复</span
+                                        >
+                                        <!-- 次级评论点赞数 -->
+                                        <!-- <span
+                                            class="praise"
+                                            :class="child.like"
+                                            @click="comment_like(child, 1)"
+                                        >
+                                            <span v-if="child.numbers">{{
+                                            child.numbers
+                                            }}</span></span
+                                        >-->
+                                        </div> 
+                                    </div>
+                                    </div>
+                                    <!-- 回复次级评论 -->
+                                    <div class="reply-comment reply_li" v-if="child.display">
+                                    <input
+                                        type="text"
+                                        placeholder="请输入评论 . . ."
+                                        v-model="myReplyComment"
+                                        @keyup.enter="sumbit(2,child.id,item.id,child.user_id,this.myReplyComment)"
+                                        @blur="lose(child)"
+                                    />
+                                    <!-- 1为回复次级评论 -->
+                                    <button @click="sumbit(2,child.id,item.id,child.user_id,this.myReplyComment)">发表评论</button>
+                                    
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        </div>
+                    </div>
+                    <!-- 暂无评论的空状态 -->
+                    <el-empty description="暂无评论" v-if="show"></el-empty>
+                </div>
+                <div class="head">
+                    <!-- 评论区域如果当前用户有头像则显示头像,没有则显示默认头像 -->
+                    <img src="@/assets/logo.svg" alt="">
+                    <!-- <img v-if="picture" :src="`http://` + picture" alt="" />
+                    <img v-else src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" alt="" /> -->
+                    <!-- 评论框 -->
+                    <input
+                        type="text"
+                        placeholder="请输入评论 . . ."
+                        ref="input"
+                        @focus="obtain"
+                        @blur="lose"
+                        v-model="myComment"
+                        @keyup.enter="sumbit"
+                    />
+                    <!-- 发布按钮 -->
+                    <button @click="sumbit(0,0,0,'',this.myComment)">发表评论</button>
+                </div>
+                <!-- 页码 -->
+            </div>
+
+            
+        </div>
     </div>
 
     <el-dialog v-model="dialogTableVisible" title="上传视频教程">
@@ -75,11 +236,6 @@
             </span>
         </template>
     </el-dialog>
-
-    <el-dialog v-model="PlayerVisible" title="视频播放"  destroy-on-close="true">
-        <!-- 设置播放器容器 -->
-        <video id="player-container-id" preload="auto" width="720" height="480" playsinline webkit-playsinline x5-playsinline></video>
-    </el-dialog>
 </template>
 <script>
 // import TCPlayer from 'tcplayer.js';   //5.0版本以上的需要licenseUrl,因此使用4.7版本,直接在index.html文件里面引用
@@ -89,7 +245,7 @@
 // npm install vod-js-sdk-v6
 //import TcVod from 'vod-js-sdk-v6'  //上传云点播组件
 
-import {getVideoList,GetUploadToken,GetVideoToken,DelVideo} from '../api/video'
+import {getVideoList,GetUploadToken,GetVideoToken,DelVideo,GetVideoComment,UserVideoCommentDel,UserVideoCommentSubmit} from '../api/video'
 
 export default {
     name: 'videos',
@@ -99,6 +255,11 @@ export default {
                 search: '',
                 pageIndex: 1,
                 pageSize: 20
+            },
+            commentParam:{
+                videoId: 0,
+                current: 1,
+                pageSize: 20,
             },
             tableData: [
                 
@@ -110,8 +271,9 @@ export default {
             },
             imageUrl:'',
             dialogTableVisible: false,
-            PlayerVisible: false,
             startUpload: false,
+            videoShowList: true,
+            videoShowPlayer: false,
             formLabelWidth : '140px',
             player:{},
             //uploaderInfos: [],
@@ -120,7 +282,15 @@ export default {
             vcExampleVideoName: '',
             vcExampleCoverName: '',
             UploadToken:'',
-            identity:0
+            identity:0,
+
+            picture:'',
+            myComment:'', 
+            comments:[],
+            myReplyComment:'',
+            show:false,	//暂无条件显示
+
+            username: localStorage.getItem("username")
         };
     },
     created() {
@@ -230,16 +400,15 @@ export default {
         handleChange(){
             this.fileName = this.$refs.UploadVideo.files[0].name
         },
-        handlePlayer(fileId){  //视频播放
-            this.PlayerVisible = true
+        handlePlayer(fileId,videoId){  //视频播放
+            this.videoShowList = false
+            this.videoShowPlayer = true
             var self = this
             //获取视频播放token
             GetVideoToken({
                 "fileId":fileId
             }).then(res =>{
                 var token = res.data.data
-                // console.log(token)
-                // console.log(fileId)
                 setTimeout(() => {
                     self.player = TCPlayer("player-container-id", { // player-container-id 为播放器容器ID，必须与html中一致
                         fileID: fileId, // 请传入需要播放的视频fileID 必须
@@ -250,7 +419,14 @@ export default {
                     });
                 }, 2000)  //TcPlayer初始化在遇到异步操作时可能会出现问题，比如获取不到组件之类的。这个时候可以考虑采用定时器进行操作。
             })
-            
+
+            //获取视频评论
+            this.commentParam = {
+                videoId: videoId,
+                current: 1,
+                pageSize: 20,
+            }
+            this.getCommentData();
         },
         // 分页导航
         handlePageChange(val) {
@@ -270,6 +446,98 @@ export default {
         },
         UploadSubmit(){
             this.vExampleUpload();
+        },
+        // 评价框 失焦
+        lose(m){
+            // m.display = false
+            // this.myComment = ''
+            // this.myReplyComment = ''
+        },
+        // 发表评论
+        sumbit(level,replyId,rootId,replyUserId,comment){
+            UserVideoCommentSubmit({
+                video_id: this.commentParam.videoId,
+                level: level,
+                reply_id: replyId,
+                root_id: rootId,
+                reply_user_id: replyUserId,
+                content: comment,
+            }).then(res =>{
+                ElMessage({
+                    message: "评论成功!",
+                    type: "success",
+                });
+                this.getCommentData();
+            }).catch(err =>{
+                ElMessage({
+                    message: "评论失败!",
+                    type: "error",
+                });
+            })
+            this.myComment = '' 
+            this.myReplyComment = ''
+        },
+        // 显示评论框
+        show_comment_area(m){
+            m.display = true
+        },
+        comment_delete(comment_id){
+            UserVideoCommentDel(comment_id).then(res=>{
+                ElMessage({
+                    message: "删除评论成功!",
+                    type: "success",
+                });
+                this.getCommentData();
+            }).catch(err =>{
+                ElMessage({
+                    message: "删除评论失败!",
+                    type: "error",
+                });
+            })  
+        },
+        delete_leave(m){
+            // m.delete = false
+        },
+        delete_after(m){
+            console.log(m);
+            // m.delete = true
+        },
+        reply_sumbit(m,n,w,t){
+            console.log((m))
+            // console.log(m)
+            // console.log(n)
+            // console.log(w)	//父级的下标
+            // console.log(t)	//子级的下标
+            var index;
+            if(n == '父级'){
+                index = t
+            }else if( n == '子级'){
+                index = t+ 1;
+            }
+            this.comments[w].child.splice(index, 0, {
+                username:'Champion',
+                date:this.current.getFullYear() + '年' + (this.current.getMonth() + 1) + '月' + this.current.getDate() + '日' + this.current.getHours() + ':' + this.current.getMinutes() + ':' + this.current.getSeconds(),
+                content:this.myReplyComment,
+                delete:true,
+                display:false,
+                flag:false,
+                like:'',
+                display:false,	//显示评论区
+                to_username:m.username,
+            })	
+            this.myComment = ''
+            this.myReplyComment = ''
+            m.display = false
+        },
+        getCommentData(){ //获取评论区数据
+            GetVideoComment(this.commentParam.videoId,this.commentParam.current,this.commentParam.pageSize).then(res =>{
+                this.comments = res.data.data
+            }).catch(err =>{
+                ElMessage({
+                    message: "获取评论数据失败!",
+                    type: "error",
+                });
+            })
         },
     }
 };
@@ -326,6 +594,197 @@ export default {
     width: 40px;
     height: 40px;
 }
+
+.video-player-container{
+    padding-top: 30px;
+    justify-content: center;
+    display: flex;
+}
+.video-player{
+    border-radius: 10px;
+    width: 100%;
+    height: 480px;
+}
+
+</style>
+
+<style scoped>
+	/* 评论框 */
+	.head {
+        margin-top: 20px;
+	  background-color: rgb(248, 248, 248);
+	  position: relative;
+	  height: 75px;
+	  border-radius: 5px;
+	}
+	.head img {
+	  width: 55px;
+	  height: 55px;
+	  border-radius: 50%;
+	  position: absolute;
+	  top: 10px;
+	  left: 13px;
+	}
+	/* 评论框 */
+	.head input {
+	  position: absolute;
+	  top: 13px;
+	  left: 80px;
+	  height: 45px;
+	  border-radius: 5px;
+	  outline: none;
+	  width: 65%;
+	  font-size: 20px;
+	  padding: 0 20px;
+	  border: 2px solid #f8f8f8;
+	}
+	/* 发布评论按钮 */
+	.head button {
+	  position: absolute;
+	  top: 13px;
+	  right: 20px;
+	  width: 120px;
+	  height: 48px;
+	  border: 0;
+	  border-radius: 5px;
+	  font-size: 20px;
+	  font-weight: 500;
+	  color: #fff;
+	  background-color: rgb(118, 211, 248);
+	  cursor: pointer;
+	  letter-spacing: 2px;
+	}
+	/* 鼠标经过字体加粗 */
+	.head button:hover {
+	  font-weight: 600;
+	}
+	 
+	/* 评论内容区域 */
+	.content .first {
+	  display: flex;
+	  position: relative;
+	  padding: 10px 10px 0px 0;
+	  text-align: left;
+	}
+	.first .first-img {
+	  flex: 1;
+	  text-align: center;
+	}
+	.first img {
+	  width: 50px;
+	  height: 50px;
+	  border-radius: 50%;
+	}
+	.first-username,
+	.second-username {
+	  color: #504f4f;
+	}
+	.first-content {
+	  flex: 9;
+	}
+	.first-time,
+	.second-time {
+	  color: #767575;
+	}
+	.first-comment,
+	.second-comment {
+	  margin-top: 5px;
+	}
+	/* 右边点赞和评论 */
+	.first-right,
+	.second-right {
+	  position: absolute;
+	  right: 1%;
+	  top: 10px;
+	}
+	.first-right span,
+	.second-right span {
+	  margin-right: 20px;
+	  cursor: pointer;
+	}
+	/* 删除评论 */
+	.delete:hover {
+	  color: red;
+	}
+	/* 评论字体图标 */
+	.comments::before {
+	  /* 想使用的icon的十六制编码，去掉&#x之后的 */
+	  /* content: "\e8b9"; */
+	  /* 必须加 */
+	  font-family: "iconfont";
+	  margin-right: 4px;
+	  font-size: 16px;
+	}
+	/* 点赞字体图标 */
+	.praise::before {
+	  /* 想使用的icon的十六制编码，去掉&#x之后的 */
+	  /* content: "\ec7f"; */
+	  /* 必须加 */
+	  font-family: "iconfont";
+	  margin-right: 4px;
+	  font-size: 19px;
+	}
+	.second {
+	  background-color: #f3f3f3;
+	  margin-top: 10px;
+	}
+	.second li {
+	  padding: 10px 10px 10px 0;
+	  border-bottom: 1px solid rgb(237, 237, 237);
+	}
+	.second .top {
+	  display: flex;
+	  position: relative;
+	}
+	.second-img {
+	  flex: 1;
+	  text-align: center;
+	}
+	.to_reply {
+	  color: rgb(106, 106, 106);
+	}
+	.second-content {
+	  flex: 9;
+	}
+	.second .reply_li {
+	  margin-left: 70px;
+	}
+	/* 评论框 */
+	.reply-comment {
+	  margin: 10px 0 0 0;
+	}
+	.reply-comment input {
+	  height: 40px;
+	  border-radius: 5px;
+	  outline: none;
+	  width: 70%;
+	  font-size: 18px;
+	  padding: 0 20px;
+	  /* border: 2px solid #f8f8f8; */
+	  border: 2px solid skyblue;
+	}
+	/* 发布评论按钮 */
+	.reply-comment button {
+	  width: 15%;
+	  height: 43px;
+	  border: 0;
+	  border-radius: 5px;
+	  font-size: 18px;
+	  font-weight: 500;
+	  color: #fff;
+	  background-color: rgb(118, 211, 248);
+	  cursor: pointer;
+	  letter-spacing: 2px;
+	  margin-left: 20px;
+	}
+	/* 鼠标经过字体加粗 */
+	.reply-comment button:hover {
+	  font-weight: 600;
+	}
+	/* 评论点赞颜色 */
+	.comment-like {
+	  color: red;
+	}
 </style>
 
 <style scoped>

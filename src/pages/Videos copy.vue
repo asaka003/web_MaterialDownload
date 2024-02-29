@@ -90,7 +90,8 @@
 //import TcVod from 'vod-js-sdk-v6'  //上传云点播组件
 
 import {getVideoList,GetUploadToken,GetVideoToken,DelVideo} from '../api/video'
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 export default {
     name: 'videos',
     data() {
@@ -231,6 +232,7 @@ export default {
             this.fileName = this.$refs.UploadVideo.files[0].name
         },
         handlePlayer(fileId){  //视频播放
+            
             this.PlayerVisible = true
             var self = this
             //获取视频播放token

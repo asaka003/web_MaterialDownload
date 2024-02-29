@@ -1105,7 +1105,7 @@ const handleCurrentChange = (number) =>{
             font-size: 1.25rem;
             font-weight: 600;
             padding-bottom: 1.25rem;
-            color: white;
+            color: black;
             // line-height: 2.5rem;
           }
           .moods {
@@ -1209,7 +1209,7 @@ const handleCurrentChange = (number) =>{
             .title {
               line-height: 3rem;
               //color: #000;
-              color: white;
+              color: black;
               font-family: Helvetica Neue, Helvetica, PingFang SC,
                 Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
             }

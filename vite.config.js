@@ -18,16 +18,16 @@ export default defineConfig({
   server: {
     proxy: {
       "/AIweb_materialSys": {
-        target: "https://test.eralab.cn",
+        target: "https://fanqie.eralab.cn",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
       "/AIweb_material": {
-        target: "https://test.eralab.cn",
+        target: "https://fanqie.eralab.cn",
         changeOrigin: true,
       },
       "/gpt":{
-        target: "https://test.eralab.cn",
+        target: "https://fanqie.eralab.cn",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },

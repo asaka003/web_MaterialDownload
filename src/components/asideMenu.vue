@@ -21,6 +21,7 @@
             <el-menu-item index="2-1-1" class="title2">在下零零玖</el-menu-item>
             <el-menu-item index="2-1-2" class="title2">奇遇十三太保</el-menu-item>
             <el-menu-item index="2-1-3" class="title2">在下豆缺</el-menu-item>
+            <el-menu-item index="2-1-4" class="title2">苦瓜真是苦</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2-2">
             <template #title><h3 class="aside-title">人物素材</h3></template>

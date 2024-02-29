@@ -553,6 +553,9 @@ if(localStorage.getItem("userType") == '管理员' || localStorage.getItem("user
         name: "在下豆缺",
         //fourTags: ["全部", "白天", "黑夜"],
       },
+      {
+        name:"苦瓜真是苦"
+      }
     ],
   })
 }
@@ -704,15 +707,17 @@ const loginFun = () => {
     if (res.code == 200) {
       isToLogin.value = false;
       // 数据存储在本地
-      localStorage.setItem("token", res.data.tokne);
+      localStorage.setItem("token", res.data.token);
       localStorage.setItem("identity", res.data.identity);
       localStorage.setItem("phone", res.data.phone);
       localStorage.setItem("balance", res.data.balance);
       localStorage.setItem("userType", res.data.userType);
+      localStorage.setItem("username", res.data.username);
 
       identity.value = res.data.identity;
       phone.value = res.data.phone;
       userBalance.value = res.data.balance;
+      username.value = res.data.username
       
       location.reload(true);
     } else {
@@ -1153,6 +1158,7 @@ const login = () => {
 const userBalance = ref(0);
 const phone = ref("");
 const identity = ref("");
+const username = ref("")
 // 顶部用户信息 end
 
 // 添加激活码

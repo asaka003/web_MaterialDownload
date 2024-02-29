@@ -39,3 +39,26 @@ export const DelVideo = (params) =>{
     params:params
   });
 }
+
+//获取视频评论
+export const GetVideoComment = (videoId,current,pageSize) =>{
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/comment/getVideoComments/"+videoId+"/"+current+"/"+pageSize,
+    method: "get",
+  });
+}
+//评论视频
+export const UserVideoCommentSubmit = (data) =>{
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/comment/userVideoCommentSubmit",
+    method: "post",
+    data: data
+  });
+}
+//删除视频评论
+export const UserVideoCommentDel = (commentId) =>{
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/comment/userVideoCommentDel/"+commentId,
+    method: "post",
+  });
+}
