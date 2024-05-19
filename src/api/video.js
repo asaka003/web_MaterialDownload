@@ -18,7 +18,7 @@ export const UploadFileInfo = (data) =>{
 //获取视频播放token
 export const GetVideoToken = (params)=>{
     return axios.request({
-        url: "/AIweb_materialSys/materialSystem/getVideoToken",
+        url: "/AIweb_materialSys/materialSystem/admin/getVideoToken",
         method: "get",
         params:params
       });
@@ -26,7 +26,7 @@ export const GetVideoToken = (params)=>{
 //获取视频上传token
 export const GetUploadToken = ()=>{
     return axios.request({
-        url: "/AIweb_materialSys/materialSystem/getUploadToken",
+        url: "/AIweb_materialSys/materialSystem/admin/getUploadToken",
         method: "get",
       });
 }
@@ -34,7 +34,7 @@ export const GetUploadToken = ()=>{
 //删除视频
 export const DelVideo = (params) =>{
   return axios.request({
-    url: "/AIweb_materialSys/materialSystem/delVideo",
+    url: "/AIweb_materialSys/materialSystem/admin/delVideo",
     method: "get",
     params:params
   });

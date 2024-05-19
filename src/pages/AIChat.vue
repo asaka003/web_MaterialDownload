@@ -339,6 +339,80 @@
           </el-row>
         </div>
       </div>
+      <div class="ai-create" v-else-if="textType == 'Ai对话'">
+        <div class="ai-top">
+          <div class="message-count">
+            <div class="ai-message">和AI进行自定义话的交流</div>
+            <div class="ai-count">如Ai生成结果不满意，请重新生成试试</div>
+          </div>
+          <div class="ai-button">
+            <el-button type="primary" :loading="loading" @click="toModify">
+              生成
+            </el-button>
+            <el-button type="primary" @click="clearAll"> 重置 </el-button>
+          </div>
+        </div>
+        <div class="ai-content">
+          <el-row>
+            <el-col :span="12">
+              <div class="ai-left" style="">
+                <div class="ai-text">
+                  <el-input
+                    v-model="textarea1"
+                    autosize
+                    maxlength="60000"
+                    show-word-limit
+                    placeholder="请输入你想提出的问题"
+                    type="textarea"
+                  />
+                </div>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <div class="ai-right" style="">
+                <!---->
+                <div class="ai-bottom" style="">
+                  <div class="ai-result ai-adapt">
+                    <!-- <div class="ai-adapt-new-msg"></div> -->
+                    <div class="ai-adapt-new-text">
+                      <div class="textarea2" v-if="!loading && textarea2">
+                        <pre>{{ textarea2 }}</pre>
+                      </div>
+                      <div class="copy-btn" v-if="!loading && textarea2">
+                        <el-icon @click="copyToClipboard(textarea2)"
+                          ><CopyDocument
+                        /></el-icon>
+                      </div>
+                      <div class="no-textarea2" v-if="loading">
+                        <el-button
+                          type=""
+                          :loading="true"
+                          size="large"
+                          :icon="Loading"
+                          plain
+                        >
+                        </el-button>
+                        <div>
+                          Ai正在加速生成中，预计120秒内生成出结果，请稍等
+                          (已等待{{ milliseconds }}s)
+                        </div>
+                      </div>
+                      <!-- <el-input
+                        v-model="textarea1"
+                        autosize
+                        maxlength="60000"
+                        show-word-limit
+                        placeholder="请输入文案"
+                        type="textarea"
+                      /> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -414,6 +488,7 @@ const tabbar = ref([
   { name: "Ai神标题", id: 2 },
   { name: "Ai神开头", id: 3 },
   { name: "Ai神改编", id: 4 },
+  { name: "Ai对话", id:5},
 ]);
 const changeTextType = (name) => {
   textType.value = name;
@@ -492,7 +567,7 @@ const textarea1 = ref("");
 //提示词
 const question = ref("");
 // 文本内容2
-const textarea2 = ref("");
+const textarea2 = ref(localStorage.getItem("textarea2"));  
 
 const textarea2Arr = ref([
  { name: "短标题1", text: "" },
@@ -558,6 +633,7 @@ const toModify = () => {
   //   return;
   // }
 };
+
 const milliseconds = ref(0);
 let timer;
 const startTimer = () => {
@@ -627,6 +703,7 @@ const upload = (item) => {
           }
         } else {
           textarea2.value = res.data;
+          localStorage.setItem("textarea2",textarea2.value)
         }
 
         loading.value = false;
@@ -1037,7 +1114,7 @@ const getGenerateTime = () => {
         .ai-text {
           position: relative;
           :deep(.el-textarea__inner) {
-            height: 67rem !important;
+            height: 30rem !important;
             color: #212121;
             
             background-color: #fff;
@@ -1109,7 +1186,7 @@ const getGenerateTime = () => {
           }
 
           .ai-adapt {
-            height: 67rem;
+            height: 30rem;
 
             display: flex;
             align-items: flex-start;
@@ -1136,7 +1213,7 @@ const getGenerateTime = () => {
               overflow: hidden;
               height: 100%;
               width: 100%;
-              height: 67rem;
+              height: 30rem;
               border: 0.0625rem solid black;
               border-radius: 0.5rem;
               background: #fff;

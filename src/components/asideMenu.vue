@@ -7,10 +7,23 @@
         @close="handleClose"
         @select="selectHanlder"
       >
-        <el-menu-item index="1">
-          <el-icon><Reading /></el-icon>
-          <h2>课程教学</h2>
-        </el-menu-item>
+        <el-sub-menu index="1">
+          <template #title>
+            <el-icon><Reading /></el-icon>
+            <h2>课程教学</h2>
+          </template>
+          <el-menu-item index="1-1" class="title3">动画速成班</el-menu-item>
+          <!-- <el-menu-item index="1-2" class="title3">精细化课程</el-menu-item> -->
+          <el-sub-menu index="1-2">
+            <template #title>
+              <p class="title3">精细化课程</p>
+            </template>
+            <el-menu-item index="1-2-1" class="title3" @click="CourseJump(1)"><a href="https://learn.htknow.com/login">海豚知道</a></el-menu-item>
+            <el-menu-item index="1-2-2" class="title3" @click="CourseJump(2)"><a href="https://web.lizhiweike.com">荔枝微课</a></el-menu-item>
+          </el-sub-menu>
+          <el-menu-item index="1-3" class="title3">十三太保专属文案课</el-menu-item>
+          <el-menu-item index="1-4" class="title3">运营课</el-menu-item>
+        </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
             <el-icon><Setting /></el-icon>
@@ -21,7 +34,8 @@
             <el-menu-item index="2-1-1" class="title2">在下零零玖</el-menu-item>
             <el-menu-item index="2-1-2" class="title2">奇遇十三太保</el-menu-item>
             <el-menu-item index="2-1-3" class="title2">在下豆缺</el-menu-item>
-            <el-menu-item index="2-1-4" class="title2">苦瓜真是苦</el-menu-item>
+            <el-menu-item index="2-1-4" class="title2">雕十三</el-menu-item>
+            
           </el-sub-menu>
           <el-sub-menu index="2-2">
             <template #title><h3 class="aside-title">人物素材</h3></template>
@@ -48,9 +62,13 @@
           </el-sub-menu>
           <el-sub-menu index="2-5">
             <template #title><h3 class="aside-title">道具素材</h3></template>
-            <el-menu-item index="2-5-1" class="title2">武器</el-menu-item>
-            <el-menu-item index="2-5-2" class="title2">动植物</el-menu-item>
-            <el-menu-item index="2-5-3" class="title2">其他</el-menu-item>
+            <el-menu-item index="2-5-1" class="title2">修仙</el-menu-item>
+            <el-menu-item index="2-5-2" class="title2">古代</el-menu-item>
+            <el-menu-item index="2-5-3" class="title2">都市</el-menu-item>
+            <el-menu-item index="2-5-4" class="title2">食物</el-menu-item>
+            <el-menu-item index="2-5-5" class="title2">动物</el-menu-item>
+            <el-menu-item index="2-5-6" class="title2">植物</el-menu-item>
+            <el-menu-item index="2-5-7" class="title2">其他</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2-6">
             <template #title><h3 class="aside-title">特效</h3></template>
@@ -128,7 +146,7 @@ const router = useRouter();
 const materialType = ref([
   {
     name:"大咖专属素材",
-    secondTags:["在下零零玖","奇遇十三太保","在下豆缺"],
+    secondTags:["在下零零玖","奇遇十三太保","在下豆缺","雕十三"],
   },
   {
     name: "人物素材",
@@ -144,7 +162,7 @@ const materialType = ref([
   },
   {
     name: "道具素材",
-    secondTags: ["武器","动植物","其他"],
+    secondTags: ["修仙","古代","都市","食物","动物","植物","其他"],
   },
   {
     name: "特效",
@@ -156,12 +174,31 @@ const materialType = ref([
   },
 ]);
 
+const videoLabels = ref([{name:"动画速成班"},{name:"精细化课程"},{name:"十三太保专属文案课"},{name:"运营课"}])
+
+const ViewMoreCourse = () =>{
+  window.location.href = ""
+}
+
+const CourseJump = (num)=>{
+  if (num == 1){
+     window.location.href = "https://learn.htknow.com/login"
+  }else{
+     window.location.href = "https://web.lizhiweike.com"
+  }
+}
+
 const selectHanlder = (key, keyPath) =>{
     console.log(key,keyPath)
   getCountSync()
   .then((res) => {
-    switch(key){
-      case '1': router.push("/videos");break;
+    switch(key[0]){
+      case '1':
+                var index = keyPath[keyPath.length-1].split("-")
+                localStorage.setItem("videoType",videoLabels.value[Number(index[1])-1].name)
+                //console.log(videoLabels.value[Number(index[1])-1].name)
+                router.push("/videos");
+                break;
       case '3': router.push("/soundAIChart");break;
       case '4': router.push("/AIchat");break;
       case '5': router.push("/TextToImage");break;
@@ -191,6 +228,7 @@ const openNewTab = (num)=>{
 .aside-menu{
     width: 100%;
     border-right: solid 0px var(--el-menu-border-color) ;
+    margin-bottom: 150px;
 }
 .aside-title{
   margin-left:9px;
@@ -198,4 +236,8 @@ const openNewTab = (num)=>{
 .title2{
     margin-left:-11px
   }
+.title3{
+  margin-left: 10px
+}
+
 </style>

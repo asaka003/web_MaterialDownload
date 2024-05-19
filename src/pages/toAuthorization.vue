@@ -19,7 +19,7 @@
           placeholder="示例:https://vip.douyin.com/hVEaxaV/"
         />
       </el-form-item>
-      <el-form-item label="账户昵称" prop="name" style="width: 90%">
+      <el-form-item label="账户昵称" style="width: 90%">
         <el-input
           v-model.number="ruleForm.name"
           placeholder="示例:奇幻历险记"

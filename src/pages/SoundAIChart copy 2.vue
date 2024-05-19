@@ -310,20 +310,21 @@
         </div>
         <div class="content">
           <div class="make-txt">
-            <el-button size="small" type="normal" @click="MultiSoundInsertVisible = true;QueryWordPinyin()">插入多音字</el-button>
+            <el-button size="small" type="normal" @click="MultiSoundInsertVisible = true">插入多音字</el-button>
             <el-button size="small" type="normal" @click="BreakInsertVisible = true">插入停顿</el-button>
             <el-dialog v-model="MultiSoundInsertVisible" title="插入多音字">
               <el-form :model="form">
-                <el-form-item label="输入多音字" :label-width="130">
-                  <el-input v-model="MultiWord" autocomplete="off" @change="QueryWordPinyin()"/>
+                <el-form-item label="输入多音字" :label-width="80">
+                  <el-input v-model="MultiWord" autocomplete="off" />
                 </el-form-item>
-                <el-form-item label="选择多音字" :label-width="130">
+                <el-form-item label="选择多音字" :label-width="80">
                   <el-select
                     v-model="MultiWordSound"
                     placeholder="未选择多音字"
+                    @change="MultiWordChange"
                   >
                     <el-option
-                      v-for="(item,index) in MiltiWordSoundList"
+                      v-for="(item, index) in MiltiWordSoundList"
                       :key="index"
                       :label="item"
                       :value="item"
@@ -334,15 +335,15 @@
               <template #footer>
                 <span class="dialog-footer">
                   <el-button @click="MultiSoundInsertVisible = false">取消</el-button>
-                  <el-button type="primary" @click="MultiWordInsert">
+                  <el-button type="primary" @click="handleCollectionSave">
                     确认
                   </el-button>
                 </span>
               </template>
             </el-dialog>
             <el-dialog v-model="BreakInsertVisible" title="插入停顿">
-              <el-form>
-                <el-form-item label="输入停顿时间(单位:秒)" :label-width="150">
+              <el-form :model="form">
+                <el-form-item label="输入停顿时间(单位:秒)" :label-width="80">
                   <el-input v-model="BreakTime" autocomplete="off" />
                 </el-form-item>
               </el-form>
@@ -355,15 +356,17 @@
                 </span>
               </template>
             </el-dialog>
-            <QuillEditor ref="myQuillEditor"
+            <div class="l-b-m">
+              <el-input
+                v-model="textareaValue"
                 id="textareaContent"
-                theme="snow"
-                v-model:content="textareaValue"
-                :options="data.editorOption"
-                contentType="html"
-                @update:content="setValue()"
-                @selection-change="onSelectionChange"
+                autosize
+                maxlength="300"
+                show-word-limit
+                placeholder="请输入配音内容"
+                type="textarea"
               />
+            </div>
           </div>
           <div>
             <div class="make-cle">
@@ -486,11 +489,6 @@ onMounted(() => {
   getCollectionList();
   userInfoData();
   getZbData();
-
-  const quill = toRaw(myQuillEditor.value).getQuill()
-  if (myQuillEditor.value) {
-    quill.getModule('toolbar')//.addHandler('image', imgHandler)
-  }
 });
 // var audioPlayerDemo = document.getElementById('audioPlayerdemoUrl');
 
@@ -605,6 +603,7 @@ const editCollection = () => {
 const audioUrl = ref("");
 const saveAudioUrl = ref("");
 
+
 const playDemoUrl = (row, index) => {
   zbData.value = zbData.value.map((item) => {
     return { ...item, name: "试听" };
@@ -706,7 +705,6 @@ const handleQuery = (type, values) => {
   getZbData();
 };
 const searchKeyword = ()=>{
-  queryParams.pageNum = 1
   getZbData()
 }
 const zbData = ref([]);
@@ -812,10 +810,9 @@ import {
 } from "@/api/SoundAIChat";
 //文本转语音处理
 const textareaValue = ref("");
-const textareaRange = ref(0);
 const textareaSSMLValue = ref("");
 const templateSSML = ref(`<speak version="1.0" xml:lang="zh-CN" xmlns="http://www.w3.org/2001/10/synthesis">{content}</speak>`)
-const templateMultiSoundWord = ref(`<p phoneme="{sound}">{word}</p>`)
+const templateMultiSoundWord = ref(`<w phoneme="{sound}">{word}</w>`)
 const templateBreak = ref(`<break time="{time}" />`)
 const MultiSoundInsertVisible = ref(false)
 const BreakInsertVisible = ref(false)
@@ -823,118 +820,25 @@ const MultiWord = ref("")
 const MultiWordSound = ref("")
 const MiltiWordSoundList = ref([])
 const BreakTime = ref(0)
-const TextToSSMLMap = new Map()
-var count = 0
-
-// 局部引入
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
-import { toRaw, watch } from 'vue'
-import pinyin from "pinyin";
- 
-const props = defineProps(['value'])
-const emit = defineEmits(['updateValue'])
-const content = ref('')
-const myQuillEditor = ref()
-// 通过watch监听回显，笔者这边使用v-model:content 不能正常回显
-watch(() => props.value, (val) => {
-  toRaw(myQuillEditor.value).setHTML(val)
-}, { deep: true })
-const fileBtn = ref()
-const data = reactive({
-  content: '',
-  editorOption: {
-    modules: {
-      toolbar: [
-        // ['bold', 'italic', 'underline', 'strike'],
-        // [{ 'size': ['small', false, 'large', 'huge'] }],
-        // [{ 'font': [] }],
-        // [{ 'align': [] }],
-        // [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        // [{ 'indent': '-1' }, { 'indent': '+1' }],
-        // [{ 'header': 1 }, { 'header': 2 }],
-        // ['image'],
-        // [{ 'direction': 'rtl' }],
-        //[{ 'color': [] }, { 'background': [] }]
-      ]
-    },
-    placeholder: '请输入配音内容...'
-  }
-})
-
-//查询文字的所有拼音
-const QueryWordPinyin = () =>{
-  if(MultiWord.value.length != 1){
-    ElMessage.error('请输入单个文字')
-    return
-  }
-  MiltiWordSoundList.value = pinyin(MultiWord.value, {
-    heteronym: true,              // 启用多音字模式
-  })[0]
-}
-
-// 抛出更改内容，此处避免出错直接使用文档提供的getHTML方法
-const setValue = () => {
-  // setTimeout(()=>{
-  //   console.log(myQuillEditor.value.getQuill().getSelection().index)
-  //   textareaRange.value = myQuillEditor.value.getQuill().getSelection().index;
-  // },500)
-}
-
-const onSelectionChange = (Range, oldRange, source) => {
-  var range = Range.range
-  MultiWord.value = toRaw(myQuillEditor.value).getText().substring(range.index,range.index+range.length)
-  textareaRange.value = range.index
-};
 
 const MultiWordInsert = () =>{
-  MultiSoundInsertVisible.value = false
-  let color = `rgb(255, `+count+`, 0)`
-  let insertText = MultiWord.value + `(`+MultiWordSound.value+`)`
-  count = count + 1
-  TextToSSMLMap.set('<span style="color: '+color+';">'+insertText+'</span>',templateMultiSoundWord.value.replace("{sound}",MultiWordSound.value).replace("{word}",MultiWord.value))
+  const textarea = document.getElementById("textareaContent")   // 访问textarea DOM元素
+  const cursorPosition = textarea.selectionStart;   // 获取光标位置
+  textareaSSMLValue.value =  textareaValue.value.substring(0,cursorPosition) + 
+                             templateMultiSoundWord.value.replace("{sound}",MultiWordSound.value).replace("{word}",MultiWord) +
+                             textareaValue.value.substring(cursorPosition)
+                             
+}
+
+const textareaRef = ref(null);
+const getCursorPosition = () => {
   
-  let index = myQuillEditor.value.getQuill().selection.savedRange.index
-  //textareaValue.value = textareaValue.value.substring(0,cursorPosition) + MultiWord + textareaValue.value.substring(cursorPosition)
-  myQuillEditor.value.getQuill().insertText(index, insertText, { color: color})
-  myQuillEditor.value.getQuill().insertEmbed(index+insertText.length, 'image', 'https://fanqie.eralab.cn/assets/split.png');
-  //myQuillEditor.value.getQuill().insertText(index+insertText.length+1, ' ', null)
-}
-
-const BreakInsert = () =>{
-  BreakInsertVisible.value = false
-  let insertText = `{停顿`+BreakTime.value+`秒}`
-  TextToSSMLMap.set('<span style="color: blue;">'+insertText+'</span>',templateBreak.value.replace("{time}",BreakTime.value+'s'))
-
-  let index = myQuillEditor.value.getQuill().selection.savedRange.index
-  //textareaValue.value = textareaValue.value.substring(0,cursorPosition) + MultiWord + textareaValue.value.substring(cursorPosition)
-  myQuillEditor.value.getQuill().insertText(index, insertText, { color: 'blue'})
-  myQuillEditor.value.getQuill().insertEmbed(index+insertText.length, 'image', 'https://fanqie.eralab.cn/assets/split.png');
-  //myQuillEditor.value.getQuill().insertText(index+insertText.length+1, ' ', null)
-}
-
-const getSSML = () => {
-  textareaSSMLValue.value =  textareaValue.value
-  for (let [key, value] of TextToSSMLMap) {
-      while (textareaSSMLValue.value.includes(key)) {
-        textareaSSMLValue.value = textareaSSMLValue.value.replace(key, value);
-      }
-      //console.log(textareaSSMLValue.value)
-      //console.log(key,value)
-  }
-  while(textareaSSMLValue.value.includes(`<img src="https://fanqie.eralab.cn/assets/split.png">`)){
-    textareaSSMLValue.value = textareaSSMLValue.value.replace(`<img src="https://fanqie.eralab.cn/assets/split.png">`, '');
-  }
-  textareaSSMLValue.value = textareaSSMLValue.value.replace(`<p>`,'');
-  textareaSSMLValue.value = textareaSSMLValue.value.replace(/<\/p>(?!.*<\/p>)/s,'')
-  textareaSSMLValue.value = templateSSML.value.replace(`{content}`,textareaSSMLValue.value)
-  //console.log(textareaSSMLValue.value)
-  return textareaSSMLValue.value
-}
+  console.log('光标位置:', cursorPosition);
+};
 
 const generateTextToSpeech = () => {
   textToSpeech({
-    text: getSSML(),
+    text: templateSSML.value.replace(`{content}`,textareaSSMLValue.value),
     speaker: makeActive.value,
     symbol_sil: "",
     audio_type: slider.value.type, //生成文件类型

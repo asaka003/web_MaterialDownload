@@ -13,7 +13,7 @@
                         <div :style="{boxShadow: `var(--el-box-shadow-light)`,}">
                             <img :src="`https://cdncos.eralab.cn/materials/`+video.faceImgPath" alt="[]" :style="{}">
                         </div>
-                        <h3 name="title">{{video.file_name}}<el-button class="button-del" type="danger" @click.stop="handleDelete(video.id)" v-if="identity == 1"><el-icon><Delete /></el-icon>删除</el-button></h3>
+                        <h3 name="title">{{video.file_name}}<el-button class="button-del" type="danger" @click.stop="handleDelete(video.file_id)" v-if="identity == 1"><el-icon><Delete /></el-icon>删除</el-button></h3>
                         <p name="time">{{(new Date(video.create_time)).toLocaleString() }}</p>
                     </a>
                     <div>点击播放</div>
@@ -201,20 +201,6 @@
                 <el-button type="primary" @click="handleSelectUpload"><el-icon><UploadFilled /></el-icon>选择上传视频</el-button>
                 <el-text class="w-100px" truncated>{{this.fileName}}</el-text>
             </el-form-item>
-            <el-form-item label="选择视频类型" :label-width="formLabelWidth">
-                <el-select
-                    v-model="uploadVideoType"
-                    placeholder="视频类型"
-                    @change="videoTypeChangeHandler"
-                    >
-                    <el-option
-                        v-for="(item, index) in videoLabels"
-                        :key="index"
-                        :label="item.name"
-                        :value="item.name"
-                    />
-                </el-select>
-            </el-form-item>
             <el-form-item label="选择文件封面" :label-width="formLabelWidth">
                 <el-upload
                     ref="uploadImg"
@@ -232,7 +218,7 @@
             <!-- 上传信息组件	 -->
             <div class="uploaderMsgBox">
                 <div v-if="startUpload">
-                    视频名称：{{this.fileName}}；<br>
+                    视频名称：{{uploaderInfo.videoInfo.name + '.' + uploaderInfo.videoInfo.type}}；<br>
                     上传进度：{{Math.floor(uploaderInfo.progress * 100) + '%'}}；<br>
                     上传结果：{{uploaderInfo.isVideoUploadCancel ? '已取消' : uploaderInfo.isVideoUploadSuccess ? '上传成功' : '上传中'}}；
                     <br>
@@ -261,43 +247,6 @@
 //import TcVod from 'vod-js-sdk-v6'  //上传云点播组件
 
 import {getVideoList,GetUploadToken,GetVideoToken,DelVideo,GetVideoComment,UserVideoCommentDel,UserVideoCommentSubmit} from '../api/video'
-import COS from 'cos-js-sdk-v5';
-
-const cos = new COS({
-    // getAuthorization 必选参数
-    getAuthorization: function (options, callback) {
-        // 初始化时不会调用，只有调用 cos 方法（例如 cos.putObject）时才会进入
-        // 异步获取临时密钥
-        // 服务端 JS 和 PHP 例子：https://github.com/tencentyun/cos-js-sdk-v5/blob/master/server/
-        // 服务端其他语言参考 COS STS SDK ：https://github.com/tencentyun/qcloud-cos-sts-sdk
-        // STS 详细文档指引看：https://cloud.tencent.com/document/product/436/14048
-
-        const url = '/AIweb_materialSys/materialSystem/admin/getTmpSecret'; // url 替换成您自己的后端服务
-        const xhr = new XMLHttpRequest();
-        let data = null;
-        let credentials = null;
-        xhr.open('GET', url, true);
-        xhr.onload = function (e) {
-            try {
-              data = JSON.parse(e.target.responseText);
-              credentials = data.data;
-              //console.log(credentials)
-            } catch (e) {
-            }
-            if (!data || !credentials) {
-              return console.error('credentials invalid:\n' + JSON.stringify(data, null, 2))
-            };
-            callback({
-              TmpSecretId: credentials.tmpSecretId,
-              TmpSecretKey: credentials.tmpSecretKey,
-              SecurityToken: credentials.sessionToken, // 建议返回服务器时间作为签名的开始时间，避免用户浏览器本地时间偏差过大导致签名错误
-              StartTime: credentials.startTime, // 时间戳，单位秒，如：1580000000
-              ExpiredTime: credentials.expiredTime, // 时间戳，单位秒，如：1580000000
-          });
-        };
-        xhr.send();
-    }
-});
 
 export default {
     name: 'videos',
@@ -319,7 +268,6 @@ export default {
             pageTotal: 0,
             uploadFileInfo:{
                 filename: '',
-                video_type:'',
                 fileId: ''
             },
             imageUrl:'',
@@ -343,46 +291,25 @@ export default {
             myReplyComment:'',
             show:false,	//暂无条件显示
 
-            videoType: '',
-            uploadVideoType:'',
-            videoLabels: [{name:"动画速成班"},{name:"精细化课程"},{name:"十三太保专属文案课"},{name:"运营课"}],
-            username: localStorage.getItem("username"),
+            username: localStorage.getItem("username")
         };
     },
     created() {
         this.identity = localStorage.getItem("identity")=='1'?1:0;
         console.log(this.identity);
         this.getData();
-        setInterval(()=>{
-        if(localStorage.getItem("videoType") != this.videoType){
-            this.videoType = localStorage.getItem("videoType");
-            this.getData();
-        }
-        },300)
-        // const xhr = new XMLHttpRequest();
-        // let data = null;
-        // let credentials = null;
-        // xhr.open('GET', url, true);
-        // xhr.onload = function (e) {
-        //     try {
-        //         data = JSON.parse(e.target.responseText);
-        //         credentials = data;
-        //         console.log(data,credentials)
-        //     } catch (e) {
+        //请求上传token
+        GetUploadToken().then(res =>{
+            //console.log(res.data.data)
+            this.UploadToken = res.data.data
+        })
+        var self = this
+        // this.tcVod = new TcVod.default({
+        //     getSignature: function(){
+        //         return self.UploadToken;
         //     }
-        //     if (!data || !credentials) {
-        //         return console.error('credentials invalid:\n' + JSON.stringify(data, null, 2))
-        //     };
-        //     callback({
-        //         TmpSecretId: credentials.tmpSecretId,
-        //         TmpSecretKey: credentials.tmpSecretKey,
-        //         SecurityToken: credentials.sessionToken,
-        //         // 建议返回服务器时间作为签名的开始时间，避免用户浏览器本地时间偏差过大导致签名错误
-        //         StartTime: data.startTime, // 时间戳，单位秒，如：1580000000
-        //         ExpiredTime: data.expiredTime, // 时间戳，单位秒，如：1580000000
-        //     });
-        // };
-        // xhr.send();
+        // })
+        
     },
     methods: {
         //获取用户文件信息列表
@@ -391,7 +318,6 @@ export default {
             var res = getVideoList({
                 pageIndex: (self.query.pageIndex-1)*self.query.pageSize,
                 pageSize: self.query.pageSize,
-                videoType: self.videoType,
                 search: self.query.search
             });
             res.then(response => {
@@ -415,106 +341,51 @@ export default {
         },
         vExampleUpload(){
             var self = this;
+            console.log(this.$refs.UploadVideo.files[0])
+            var mediaFile = this.$refs.UploadVideo.files[0]
+            var uploader = this.tcVod.upload({
+              mediaFile: mediaFile,
+            })
             var uploaderInfo = {
-              //videoInfo: uploader.videoInfo,
+              videoInfo: uploader.videoInfo,
               isVideoUploadSuccess: false,
               isVideoUploadCancel: false,
               progress: 0,
               fileId: '',
+            //   videoUrl: '',
+              cancel: function() {
+                self.uploaderInfo.isVideoUploadCancel = true;
+                uploader.cancel()
+              },
             }
             this.uploaderInfo = uploaderInfo;
-
-            cos.uploadFile({
-                Bucket: 'eralab-1317463756', /* 填入您自己的存储桶，必须字段 */
-                Region: 'ap-guangzhou',  /* 存储桶所在地域，例如ap-beijing，必须字段 */
-                Key: "/videos/"+self.$refs.UploadVideo.files[0].name,  /* 存储在桶里的对象键（例如1.jpg，a/b/test.txt），必须字段 */
-                Body: self.$refs.UploadVideo.files[0], /* 必须，上传文件对象，可以是input[type="file"]标签选择本地文件后得到的file对象 */
-                SliceSize: 1024 * 1024 * 5,     /* 触发分块上传的阈值，超过5MB使用分块上传，非必须 */
-                onTaskReady: function(taskId) {                   /* 非必须 */
-                    console.log(taskId);
-                    self.startUpload = true
-                },
-                onProgress: function (progressData) {           /* 非必须 */
-                    console.log(JSON.stringify(progressData));
-                    self.uploaderInfo.progress = progressData.percent;
-                },
-                onFileFinish: function (err, data, options) {   /* 非必须 */
-                    if(err){
-                        ElMessage({
-                            message: "上传失败!",
-                            type: "error",
-                        });
-                        console.log(err)
-                    }else{
-                        ElMessage({
-                            message: "上传成功!",
-                            type: "success",
-                        });
-                        self.uploaderInfo.isVideoUploadSuccess = true;
-
-                        //上传封面信息
-                        self.uploadFileInfo.filename = self.fileName;
-                        self.uploadFileInfo.fileId = '';
-                        self.uploadFileInfo.video_type = self.uploadVideoType;
-                        self.$refs.uploadImg.submit();
-                        self.dialogTableVisible = false;
-                    }
-                    //console.log(options.Key + '上传' + (err ? '失败' : '完成'));
-                    //self.$refs.UploadVideo.reset();
-                },
-                // 支持自定义headers 非必须
-                // Headers: {
-                //     'x-cos-meta-test': 123
-                // },
-            }, function(err, data) {
-                console.log(err || data);
-            });
-            // var self = this;
-            // console.log(this.$refs.UploadVideo.files[0])
-            // var mediaFile = this.$refs.UploadVideo.files[0]
-            // var uploader = this.tcVod.upload({
-            //   mediaFile: mediaFile,
-            // })
-            // var uploaderInfo = {
-            //   videoInfo: uploader.videoInfo,
-            //   isVideoUploadSuccess: false,
-            //   isVideoUploadCancel: false,
-            //   progress: 0,
-            //   fileId: '',
-            // //   videoUrl: '',
-            //   cancel: function() {
-            //     self.uploaderInfo.isVideoUploadCancel = true;
-            //     uploader.cancel()
-            //   },
-            // }
-            // this.uploaderInfo = uploaderInfo;
-            // this.startUpload = true
+            this.startUpload = true
             
-            // uploader.on('media_progress', function (info) {
-            //   self.uploaderInfo.progress = info.percent;
-            // })
-            // uploader.on('media_upload', function (info) {
-            //   self.uploaderInfo.isVideoUploadSuccess = true;
-            // })
+            uploader.on('media_progress', function (info) {
+              self.uploaderInfo.progress = info.percent;
+            })
+            uploader.on('media_upload', function (info) {
+              self.uploaderInfo.isVideoUploadSuccess = true;
+            })
 
-            // uploader.done().then(function(doneResult) {
-            //   console.log('doneResult', doneResult)
-            //   self.uploaderInfo.fileId = doneResult.fileId;
+            uploader.done().then(function(doneResult) {
+              console.log('doneResult', doneResult)
+              self.uploaderInfo.fileId = doneResult.fileId;
 
-            //   //上传封面信息
-            //   self.uploadFileInfo.filename = self.fileName;
-            //   self.uploadFileInfo.fileId = doneResult.fileId;
-            //   self.$refs.uploadImg.submit();
-            //   self.dialogTableVisible = false;
-            //   ElMessage({
-            //         message: "上传成功!",
-            //         type: "success",
-            //     });
-            //   return;
-            // }).then(function (videoUrl) {
-            // //   this.uploaderInfo.videoUrl = videoUrl
-            //   self.$refs.UploadVideo.reset();
-            // })
+              //上传封面信息
+              self.uploadFileInfo.filename = self.fileName;
+              self.uploadFileInfo.fileId = doneResult.fileId;
+              self.$refs.uploadImg.submit();
+              self.dialogTableVisible = false;
+              ElMessage({
+                    message: "上传成功!",
+                    type: "success",
+                });
+              return;
+            }).then(function (videoUrl) {
+            //   this.uploaderInfo.videoUrl = videoUrl
+              self.$refs.UploadVideo.reset();
+            })
           },
         // 触发搜索按钮
         handleSearch() {

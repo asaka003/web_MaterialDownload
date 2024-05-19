@@ -210,6 +210,30 @@
           />
         </el-select>
         <el-select
+          v-model="chooseThird"
+          placeholder="文件类型3"
+          @change="ThirdTypes"
+        >
+          <el-option
+            v-for="(item, index) in newlabels[chooseFirstIndex].secondTags[chooseSecondIndex].thirTags"
+            :key="index"
+            :label="item.name"
+            :value="item.name"
+          />
+        </el-select>
+        <el-select
+          v-model="chooseFour"
+          placeholder="文件类型4"
+          @change="FourTypes"
+        >
+          <el-option
+            v-for="(item, index) in newlabels[chooseFirstIndex].secondTags[chooseSecondIndex].thirTags[chooseThirdIndex].fourTags"
+            :key="index"
+            :label="item"
+            :value="item"
+          />
+        </el-select>
+        <el-select
           v-model="copyRight"
           placeholder="版权设置"
           @change="copyRights"
@@ -302,9 +326,7 @@
 
       <div class="user_right" v-if="phone != ''">
         <el-dropdown trigger="click">
-          <span class="el-dropdown-link">
-            {{ identity == 1 ? "管理员" : "用户" }} : {{ phone }}</span
-          >
+          <span class="el-dropdown-link">{{ identity == 1 ? "管理员" : "用户"}} {{ username }} </span>
 
           <template #dropdown>
             <el-dropdown-menu>
@@ -376,189 +398,387 @@ const router = useRouter();
 const newlabels = ref([
   {
     name: "人物素材",
-    secondTags: [
+    secondTags:[
       {
         name: "修仙",
-        fourTags: ["全部", "男", "女", "非人族"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部","男生","女生","儿童","老人"],
+          },
+          {
+            name:"常规",
+            fourTags: ["全部","男生","女生","儿童","老人"],
+          },
+          {
+            name:"Q版",
+            fourTags: ["全部","男生","女生","儿童","老人"],
+          }
+        ]
       },
       {
         name: "古代",
-        fourTags: ["全部", "男", "女", "非人族"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"常规",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"Q版",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          }
+        ]
       },
       {
         name: "都市",
-        fourTags: ["全部", "男", "女", "非人族"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"常规",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"Q版",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          }
+        ]
       },
       {
         name: "年代",
-        thirTags: [
-          "全部",
-          "通用",
-          "秦汉",
-          "三国",
-          "秦汉",
-          "唐朝",
-          "三国",
-          "元朝",
-          "宋朝",
-          "明朝",
-          "清朝",
-        ],
-        fourTags: ["全部", "男", "女"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"常规",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"Q版",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          }
+        ]
       },
-
       {
         name: "战争",
-        fourTags: ["全部", "男", "女"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"常规",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"Q版",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          }
+        ]
       },
-
       {
         name: "其他",
-        fourTags: ["全部", "男", "女"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"常规",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          },
+          {
+            name:"Q版",
+            fourTags: ["全部","男生","女生","儿童","老人",],
+          }
+        ]
       },
-    ],
+    ]
   },
   {
     name: "场景素材",
-    secondTags: [
+    secondTags:[
       {
         name: "修仙",
-        thirTags: [
-          "全部",
-          "雪地",
-          "熔岩",
-          "草地",
-          "岩石",
-          "沙漠",
-          "其他野外",
-          "洞穴",
-          "天空",
-          "室内",
-          "建筑",
-        ],
-        fourTags: ["全部", "白天", "黑夜"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          }
+        ]
       },
       {
         name: "古代",
-        thirTags: [
-          "全部",
-          "住宅楼",
-          "学校",
-          "办公室",
-          "医院",
-          "酒店/餐厅",
-          "其他室内",
-          "城市街道",
-          "乡村",
-          "森林野外",
-          "其它室外",
-        ],
-        fourTags: ["全部", "白天", "黑夜"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          }
+        ]
       },
       {
         name: "都市",
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          }
+        ]
       },
       {
         name: "年代",
-        thirTags: [
-          "全部",
-          "宫殿",
-          "城墙外",
-          "府邸",
-          "街道",
-          "战场",
-          "海边",
-          "其他",
-        ],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          }
+        ]
       },
-
       {
         name: "战争",
-        fourTags: ["全部", "白天", "黑夜"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          }
+        ]
       },
-    
       {
         name: "其他",
-        fourTags: ["其他"],
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          }
+        ]
       },
-    ],
+    ]
   },
   {
     name: "表情包",
-    secondTags: [
+    secondTags:[
       {
         name: "男生",
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          }
+        ]
       },
       {
         name: "女生",
+        thirTags:[
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          }
+        ]
       },
-    ],
+    ]
   },
   {
     name: "道具素材",
-    secondTags: [
+    secondTags:[
       {
-        name: "武器",
+        name: "修仙",
+        thirTags: [ 
+          {
+            name:"武器",
+            fourTags: ["全部"],
+          },
+          {
+            name: "仙药",
+            fourTags: ["全部"],
+          },
+          {
+            name: "刀枪",
+            fourTags: ["全部"],
+          },
+        ],
       },
       {
-        name: "动植物",
+        name: "古代",
+        thirTags: [ 
+          {
+            name:"室内",
+            fourTags: ["全部"],
+          },
+          {
+            name: "室外",
+            fourTags: ["全部"],
+          },
+        ],
       },
       {
-        name: "其他",
+        name: "都市",
+        thirTags: [ 
+          {
+            name:"交通工具",
+            fourTags: ["全部"],
+          },
+          {
+            name: "刀枪",
+            fourTags: ["全部"],
+          },
+        ],
       },
-    ],
+      {
+        name:"食物",
+        thirTags: [ 
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          },
+        ],
+      },
+      {
+        name:"动物",
+        thirTags: [ 
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          },
+        ],
+      },
+      {
+        name:"植物",
+        thirTags: [ 
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          },
+        ],
+      },
+      {
+        name:"其他",
+        thirTags: [ 
+          {
+            name:"全部",
+            fourTags: ["全部"],
+          },
+        ],
+      }
+    ]
   },
   {
     name: "特效",
-    secondTags: [
+    secondTags:[
       {
-        name: "常规特效",   
+        name:"常规特效",
+        thirTags: [ 
+          {
+            name: "全部",
+            fourTags: ["全部"],  
+          },
+        ],
       },
       {
-        name: "打斗特效",
+        name:"打斗特效",
+        thirTags: [ 
+          {
+            name: "全部",
+            fourTags: ["全部"],  
+          },
+        ],
       },
       {
-        name: "全屏特效",
+        name:"全屏特效",
+        thirTags: [ 
+          {
+            name: "全部",
+            fourTags: ["全部"],  
+          },
+        ],
       },
-
       {
-        name: "其他",
-      },
-    ],
+        name:"其他",
+        thirTags: [ 
+          {
+            name: "全部",
+            fourTags: ["全部"],  
+          },
+        ],
+      }
+    ]
   },
   {
     name: "音频",
-    secondTags: [
+    secondTags:[
       {
-        name: "常规",   
+        name:"全部",
+        thirTags: [ 
+          {
+            name: "全部",
+            fourTags: ["全部"],  
+          },
+        ],
+      }
+    ]
+  },
+  {
+    name: "大咖专属素材",
+    secondTags:[
+      {
+        name:"在下零零玖",
+        thirTags: [ 
+          {
+            name: "全部",
+            fourTags: ["全部"],  
+          },
+          {
+            name: "人物",
+            fourTags: ["全部"],  
+          },
+          {
+            name: "场景",
+            fourTags: ["全部"],  
+          },
+          {
+            name: "道具",
+            fourTags: ["全部"],  
+          },
+        ],
       },
-    ],
+      {
+        name:"奇遇十三太保",
+        thirTags: [ 
+          {
+            name: "全部",
+            fourTags: ["全部"],  
+          },
+        ],
+      },
+      {
+        name:"在下豆缺",
+        thirTags: [ 
+          {
+            name: "全部",
+            fourTags: ["全部"],  
+          },
+        ],
+      },
+      {
+        name:"雕十三",
+        thirTags: [ 
+          {
+            name: "全部",
+            fourTags: ["全部"],  
+          },
+        ],
+      }
+    ]
   },
 ]);
 
-//判断用户的身份
-if(localStorage.getItem("userType") == '管理员' || localStorage.getItem("userType") == '专属用户'){
-  newlabels.value.push({
-    name: "大咖专属素材",
-    secondTags: [
-      {
-        name: "在下零零玖",
-        //thirTags: ["全部", "武器法宝", "书籍", "丹药", "翅膀", "其他"],
-      },
-      {
-        name: "奇遇十三太保",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
-      {
-        name: "在下豆缺",
-        //fourTags: ["全部", "白天", "黑夜"],
-      },
-      {
-        name:"苦瓜真是苦"
-      }
-    ],
-  })
-}
 
 // 一级选项
 const chooseFirst = ref("");
@@ -571,11 +791,19 @@ const chooseThird = ref("");
 const chooseThirdIndex = ref(0);
 // 四级选项
 const chooseFour = ref("");
+const chooseFourIndex = ref(0);
 //版权选项
 const copyRight = ref(""); 
-const chooseFourIndex = ref(0);
+
 // 选中第一个类型
 const firstTypes = (e) => {
+  chooseFourIndex.value = 0
+  chooseFour.value = ""
+  chooseThirdIndex.value = 0
+  chooseThird.value = ""
+  chooseSecondIndex.value = 0
+  chooseSecond.value = ""
+
   chooseFirst.value = e;
   chooseFirstIndex.value = newlabels.value.findIndex(
     (option) => option.name === chooseFirst.value
@@ -583,10 +811,13 @@ const firstTypes = (e) => {
 };
 // 选中第二个类型
 const SecondTypes = (e) => {
+  chooseFourIndex.value = 0
+  chooseFour.value = ""
+  chooseThirdIndex.value = 0
+  chooseThird.value = ""
+
   chooseSecond.value = e;
-  chooseSecondIndex.value = newlabels.value[
-    chooseFirstIndex.value
-  ].secondTags.findIndex((option) => option.name === chooseSecond.value);
+  chooseSecondIndex.value = newlabels.value[chooseFirstIndex.value].secondTags.findIndex((option) => option.name === chooseSecond.value);
   console.log("第二个选择的下标", chooseSecondIndex.value);
 };
 const copyRights = (e) => {
@@ -594,23 +825,17 @@ const copyRights = (e) => {
 }
 // 选中第三个类型
 const ThirdTypes = (e) => {
-  chooseThird.value = e;
-  console.log(
-    "测试第三",
-    newlabels.value[chooseFirstIndex.value].secondTags[chooseSecondIndex.value]
-      .thirTags
-  );
-  chooseThirdIndex.value = newlabels.value[chooseFirstIndex.value].secondTags[
-    chooseSecondIndex.value
-  ].thirTags.findIndex((option) => option === chooseThird.value);
+  chooseFourIndex.value = 0
+  chooseFour.value = ""
+  chooseThird.value = e
+  chooseThirdIndex.value = newlabels.value[chooseFirstIndex.value].secondTags[chooseSecondIndex.value].thirTags.findIndex((option) => option.name === chooseThird.value);
   console.log("第三个选择的下标", chooseThirdIndex.value);
 };
 // 选中第四个类型
 const FourTypes = (e) => {
   chooseFour.value = e;
-  chooseFourIndex.value = newlabels.value[chooseFirstIndex.value].secondTags[
-    chooseSecondIndex.value
-  ].fourTags.findIndex((option) => option === chooseThird.value);
+  chooseFourIndex.value = newlabels.value[chooseFirstIndex.value].secondTags[chooseSecondIndex.value].thirTags[chooseThirdIndex.value].fourTags.findIndex((option) => option === chooseFour.value);
+  console.log("第四个选择的下标", chooseFirstIndex.value);
 };
 // 弹出框消息自定义
 
@@ -693,6 +918,8 @@ const submitForm = (formEl) => {
     }
   });
 };
+
+const Name = ref("")
 // 用户登录
 const loginFun = () => {
   // 用户登录
@@ -717,7 +944,6 @@ const loginFun = () => {
       identity.value = res.data.identity;
       phone.value = res.data.phone;
       userBalance.value = res.data.balance;
-      username.value = res.data.username
       
       location.reload(true);
     } else {
@@ -1158,7 +1384,7 @@ const login = () => {
 const userBalance = ref(0);
 const phone = ref("");
 const identity = ref("");
-const username = ref("")
+const username = ref("");
 // 顶部用户信息 end
 
 // 添加激活码
@@ -1190,6 +1416,7 @@ const getLocalInfo = async () => {
     identity.value = identityLocal;
   }
   const phoneLocal = localStorage.getItem("phone");
+  username.value = localStorage.getItem("username");
   if (phoneLocal) {
     phone.value = phoneLocal;
     await getCountSync()

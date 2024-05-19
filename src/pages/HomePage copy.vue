@@ -168,6 +168,66 @@
   <!-- 其它提示 -->
   <div class="main">
     <el-backtop :bottom="80"></el-backtop>
+    <!-- <div class="user">
+      <div class="topName">
+        <img src="@/assets/logo.svg" alt="" /> <span>番茄素材网</span>
+      </div>
+      <div class="allright">
+        <div class="user_left" v-if="identity != 1 && phone != ''">
+          潮币: <span>{{ userBalance }}</span>
+          <span @click="topup">去充值</span>
+        </div>
+
+        <div class="user_right" v-if="phone != ''">
+          <el-dropdown trigger="click">
+            <span class="el-dropdown-link">
+              {{ identity == 1 ? "管理员" : "用户" }} : {{ phone }}</span
+            >
+
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="a" @click="changePass"
+                  >修改密码</el-dropdown-item
+                >
+                <el-dropdown-item
+                  @click="toAuthorizationFun"
+                  v-if="identity != 1"
+                  >授权账号</el-dropdown-item
+                >
+                <el-dropdown-item @click="toAdminCheckFun" v-if="identity == 1"
+                  >授权账号查看</el-dropdown-item
+                >
+
+                <el-dropdown-item
+                  command="b"
+                  @click="AddActivationCode"
+                  v-if="identity == 1"
+                  >添加激活码</el-dropdown-item
+                >
+                <el-dropdown-item
+                  command="c"
+                  v-if="identity == 1"
+                  @click="uploadImg"
+                  >上传图片</el-dropdown-item
+                >
+                <el-dropdown-item
+                  command="d"
+                  v-if="identity == 1"
+                  @click="Recharge"
+                  >充值系统</el-dropdown-item
+                >
+                <el-dropdown-item command="b" @click="logout"
+                  >退出</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <img class="img" src="@/assets/toDown.png" alt="" />
+        </div>
+
+        <div class="user_right" @click="login" v-if="phone == ''">登录</div>
+      </div>
+    </div> -->
 
     <el-dialog
       v-model="HomePageMessageVisable"
@@ -193,6 +253,33 @@
     </el-dialog>
 
     <div class="LabelField">
+      <!-- <el-tabs
+        class="demo-tabs"
+        @tab-click="
+          (event) => {
+            handleClick(event, index);
+          }
+        "
+      >
+        <el-tab-pane
+          :label="item"
+          :name="index"
+          v-for="(item, index) in labels"
+          :key="index"
+        ></el-tab-pane>
+      </el-tabs> -->
+
+      <!-- <div class="firstTabs">
+        <div
+          v-for="(item, index) in newlabels"
+          :key="index"
+          @click="clcikTabs(item, index)"
+          class="firstTabs_item"
+          :class="firstTabsIndex == index ? 'firstTabs_item_active' : ''"
+        >
+          {{ item.name }}
+        </div>
+      </div> -->
       <!-- 页面三级标签 -->
       <div class="allSeconTabs">
         <div class="search">
@@ -227,6 +314,22 @@
             {{ item }}
           </div>
         </div>
+        <!-- <div
+          class="seconTabs"
+          v-if="newlabels[firstTabsIndex].thirTags[thirdTabsIndex].fourTags"
+        >
+          <div
+            v-for="(item, index) in newlabels[firstTabsIndex].thirTags[
+              secondTabsIndex
+            ].fourTags"
+            :key="index"
+            @click="clcikFourTabs(item, index)"
+            class="seconTabs_item"
+            :class="fourTabsIndex == index ? 'seconTabs_item_active' : ''"
+          >
+            {{ item }}
+          </div>
+        </div> -->
       </div>
     </div>
 
@@ -270,6 +373,10 @@
           <div class="downLoad">
             <el-button v-if="identity == 1" type="danger" plain :icon="Delete" size="small" style="margin:10px;" 
               @click="deleteImgFun(item)"/>
+            <!-- <span class="money" v-if="item.buy" key="index">已购买 </span>
+            <span class="money" @click="changeMoney(item)"
+              >{{ item.cost }}潮币</span
+            > -->
 
             <el-dropdown trigger="click">
               <!-- <el-button plain :icon="Download"/> -->
@@ -286,6 +393,7 @@
               </template>
             </el-dropdown>
           </div>
+          <!-- <span class="downLoad" @click="imgclickDown(item)">下载</span> -->
         </div>
       </div>
     </div>
@@ -1186,11 +1294,7 @@ setInterval(()=>{
     firstTabsIndex.value = index1
     const index2 = newlabels.value[index1].secondTags.findIndex(obj => obj.name === secondTabsItem.value)
     secondTabsIndex.value = index2
-    
-    thirdTabsIndex.value = 0
-    fourTabsIndex.value = 0
-    console.log(newlabels.value[firstTabsIndex.value].secondTags[secondTabsIndex.value].thirTags[thirdTabsIndex.value])
-    clcikThirdTabs(newlabels.value[firstTabsIndex.value].secondTags[secondTabsIndex.value].thirTags[thirdTabsIndex.value],0)
+    console.log(index1,index2)
 
     getImg();
   }
@@ -1771,15 +1875,6 @@ const newlabels = ref([
             fourTags: ["全部"],  
           },
         ],
-      },
-      {
-        name:"其他",
-        thirTags: [ 
-          {
-            name: "全部",
-            fourTags: ["全部"],  
-          },
-        ],
       }
     ]
   },
@@ -1799,6 +1894,50 @@ const newlabels = ref([
   },
   
 ]);
+
+// if(localStorage.getItem("userType") == '管理员' || localStorage.getItem("userType") == '专属用户'){
+//   newlabels.value.push({
+//     name: "大咖专属素材",
+//     secondTags:[
+//       {
+//         name:"在下零零玖",
+//         thirTags: [ 
+//           {
+//             name: "全部",
+//             fourTags: ["全部"],  
+//           },
+//         ],
+//       },
+//       {
+//         name:"奇遇十三太保",
+//         thirTags: [ 
+//           {
+//             name: "全部",
+//             fourTags: ["全部"],  
+//           },
+//         ],
+//       },
+//       {
+//         name:"在下豆缺",
+//         thirTags: [ 
+//           {
+//             name: "全部",
+//             fourTags: ["全部"],  
+//           },
+//         ],
+//       },
+//       {
+//         name:"雕十三",
+//         thirTags: [ 
+//           {
+//             name: "全部",
+//             fourTags: ["全部"],  
+//           },
+//         ],
+//       }
+//     ]
+//   })
+// }
 
 // 当前标签页下标 一级
 const firstTabsIndex = ref(0);
@@ -1865,7 +2004,7 @@ const clcikThirdTabs = (item, index) => {
   fourTabsIndex.value = 0;
   if (fourTabsItem.value != "") {
     fourTabsItem.value =
-      newlabels.value[firstTabsIndex.value].secondTags[secondTabsIndex.value].thirTags[
+      newlabels.value[firstTabsIndex.value].thirTags[
         thirdTabsIndex.value
       ].fourTags[fourTabsIndex.value];
   }
@@ -1876,7 +2015,6 @@ const clcikThirdTabs = (item, index) => {
 const fourTabsIndex = ref(0);
 const fourTabsItem = ref("");
 const clcikFourTabs = (item, index) => {
-  console.log(item,index)
   fourTabsIndex.value = index;
   fourTabsItem.value = item;
   console.log(thirdTabsItem.value,fourTabsItem.value)
