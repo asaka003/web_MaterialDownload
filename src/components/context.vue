@@ -171,15 +171,6 @@
                       :src="saveAudioUrl"
                     ></audio>
                   </div>
-                  <div>
-                    <el-button
-                      @click="openCollectionSave"
-                      size="large"
-                      icon="Star"
-                      type="primary"
-                      plain
-                      >收藏主播配置</el-button>
-                  </div>
                 </div>
               </div>
               <div class="parameter parameter-right">
@@ -246,7 +237,7 @@
                   </div>
                 </div>
                 <div class="type-v">
-                  <div class="title">音频类型</div>
+                  <div class="title">音频类型(多人配音模式下请保持类型一致)</div>
                   <div class="slider-box">
                     <el-select
                       style="width: 120px"
@@ -299,26 +290,15 @@
       </el-main>
       <el-aside width="33.3%" class="right-aside">
         <div class="t-r-btn">
-          <!-- <button @click="play">播放</button> -->
-          <!-- ，已使用0次 -->
-          <div :style="{color:'#000'}">今日剩余配音{{ generateTime }}次</div>
           <div class="r-btn">
-            <!-- <audio ref="audioRef" src="@/assets/如果你要实现鼠标悬停.mp3"></audio> -->
-            <el-button size="large" type="primary" @click="generateTextToSpeech">配音</el-button>
-            <el-button size="large" type="primary" plain @click="downloadSpeechFile">下载音频</el-button>
+            <el-button size="large" type="primary" @click="saveVioce()">保存</el-button>
+            <el-button size="large" type="danger" @click="deleteVioce()">删除</el-button>
           </div>
         </div>
         <div class="content">
           <div class="make-txt">
-            <div v-if="ModeMultiSpeaker == false" class="context-button-div">
-              <el-button size="small" type="normal" @click="MultiSoundInsertVisible = true;QueryWordPinyin()">插入多音字</el-button>
-              <el-button size="small" type="normal" @click="BreakInsertVisible = true">插入停顿</el-button>
-              <el-button size="small" type="success" @click="ModeMultiSpeaker = true">开启多人配音</el-button>
-            </div>
-            <div v-else class="context-button-div">
-              <el-button size="small" type="normal" @click="AddMultiSpeaker()">插入多人配音文本</el-button>
-              <el-button size="small" type="danger" @click="ModeMultiSpeaker = false">关闭多人配音</el-button>
-            </div>
+            <el-button size="small" type="normal" @click="MultiSoundInsertVisible = true;QueryWordPinyin()">插入多音字</el-button>
+            <el-button size="small" type="normal" @click="BreakInsertVisible = true">插入停顿</el-button>
             <el-dialog v-model="MultiSoundInsertVisible" title="插入多音字">
               <el-form :model="form">
                 <el-form-item label="输入多音字" :label-width="130">
@@ -362,62 +342,22 @@
                 </span>
               </template>
             </el-dialog>
-            <!-- <el-dialog v-model="MultiSpeakerVisible" title="插入多人配音" width="80%">
-              <context v-model:voiceInfo="tempVoiceInfo"></context>
-              <template #footer>
-                <span class="dialog-footer">
-                  <el-button @click="MultiSpeakerVisible = false">取消</el-button>
-                  <el-button type="primary" @click="AddMultiSpeaker()">
-                    确认
-                  </el-button>
-                </span>
-              </template>
-            </el-dialog> -->
+            
             <QuillEditor ref="myQuillEditor"
                 id="textareaContent"
                 theme="snow"
                 v-model:content="textareaValue"
-                v-if="ModeMultiSpeaker == false"
                 :options="data.editorOption"
                 contentType="html"
                 @update:content="setValue()"
                 @selection-change="onSelectionChange"
               />
-            <div v-else class="text-container">
-              <div v-for="(voice, index) in voiceInfoList" :key="index">
-                <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  placement="top-start"
-                >
-                  <template #content> 
-                    主播: {{voice.speaker_name}}<br>
-                    情绪: {{voice.speaker_emotion}}<br>
-                    速度: {{voice.speed}}<br>
-                    音量: {{voice.volume}}<br>
-                    语调: {{voice.pitch}}<br>
-                    点击进行编辑<br>
-                  </template>
-                  <el-button v-if="voice.content == '' || voice.content == null" @click="voice.visible = true;voiceIndex = index;">点此进行编辑</el-button>
-                  <span class="text-span" v-else @click="voice.visible = true;voiceIndex = index;" v-html="voice.content"></span>
-                </el-tooltip>
-                <el-dialog v-model="voice.visible" title="编辑多人配音" width="80%">
-                  <context @updateVoice="handleSaveVoice" @deleteVoice="deleteVoice"></context>
-                </el-dialog>
-              </div>
-            </div>
           </div>
           <div>
             <div class="make-cle">
               <div class="title">
                 <div class="search">
                   <span class="cle-title">我的收藏</span>
-                </div>
-                <div class="edit-delete">
-                  <div v-if="editCollectionButtonVisable == false" @click="editCollectionButtonVisable = true;delCollectionButtonVisable = false"  class="cle-button">编辑</div>
-                  <div v-else @click="editCollectionButtonVisable = false" class="cle-button">取消</div>
-                  <div v-if="delCollectionButtonVisable == false" @click="delCollectionButtonVisable = true;editCollectionButtonVisable = false" class="cle-button">删除</div>
-                  <div v-else @click="delCollectionButtonVisable = false" class="cle-button">取消</div>
                 </div>
               </div>
               <div class="cle-content">
@@ -449,9 +389,6 @@
                       />
                     </el-tooltip><br>
                     <el-text class="remark">{{ collection.remark }}</el-text>
-                    <br>
-                    <el-text v-if="delCollectionButtonVisable == true" @click="deleteCollection(collection.id)" class="del-button">删除</el-text>
-                    <el-text v-if="editCollectionButtonVisable == true" @click="editRemarkVisable = true;editInfo.id = collection.id" class="edit-button">编辑</el-text>
                   </div>
                 </div>
                 <el-dialog v-model="collectionFormVisible" title="收藏主播配置">
@@ -469,21 +406,7 @@
                     </span>
                   </template>
                 </el-dialog>
-                <el-dialog v-model="editRemarkVisable" title="编辑主播备注">
-                  <el-form :model="form">
-                    <el-form-item label="备注" :label-width="80">
-                      <el-input v-model="editInfo.remark" autocomplete="off" />
-                    </el-form-item>
-                  </el-form>
-                  <template #footer>
-                    <span class="dialog-footer">
-                      <el-button @click="editRemarkVisable = false">取消</el-button>
-                      <el-button type="primary" @click="editCollection">
-                        确认
-                      </el-button>
-                    </span>
-                  </template>
-                </el-dialog>
+                
               </div>
             </div>
           </div>
@@ -500,16 +423,13 @@ import UploadInstance from "element-plus";
 import { Search,Delete, Download } from '@element-plus/icons-vue'
 import context from "@/components/context.vue";
 import {
-  GetGenerateTime,
   GetUserCollectionList,
   getTextToSpeechConfig,
   AddUserCollection,
   DelUserCollection,
-  EditUserCollection,
 } from "@/api/Allrequest";
 // 页面渲染
 onMounted(() => {
-  getGenerateTime();
   getCollectionList();
   userInfoData();
   getZbData();
@@ -540,35 +460,7 @@ const editMode = ref(false);
 const openCollectionSave = () =>{
   collectionFormVisible.value = true;
 }
-//添加收藏信息
-const handleCollectionSave = () => {
-  AddUserCollection({
-    headerImage: userInfo.value.headerImage,
-    remark: remark.value,
-    speakerName: userInfo.value.speaker,
-    speaker: makeActive.value,
-    speaker_emotion: speakerEmotion.value,
-    volume: slider.value.yl,
-    speed: slider.value.ld,
-    pitch: slider.value.yd,
-    type: slider.value.type,
-  }).then((res) => {
-    loadinShow.value = false;
-    if (res.code == 200) {
-      if (res.data && res.data.length > 0) {
-        res.data.map((item) => {
-          item.zt = zt;
-          item.bf = bf;
-          item.name = "试听";
-        });
-        zbData.value = [...zbData.value, ...res.data];
-        console.log("=======", zbData.value);
-      }
-    }
-    getCollectionList()
-  });
-  collectionFormVisible.value = false;
-};
+
 //获取收藏列表信息
 const getCollectionList = () =>{
   GetUserCollectionList().then(res =>{
@@ -598,62 +490,6 @@ const collectionReload = (collection) =>{
   slider.value.yl = collection.volume;
   slider.value.yd = collection.pitch;
 }
-const delCollectionButtonVisable = ref(false);
-const editCollectionButtonVisable = ref(false);
-const editRemarkVisable = ref(false);
-//删除收藏主播信息
-const deleteCollection = (id) => {
-    DelUserCollection(id).then(res =>{
-      ElMessage.success('删除成功')
-      getCollectionList();
-    }).catch(err =>{
-      ElMessage.error('删除失败')
-    })
-    
-}
-//编辑收藏主播信息
-const editInfo = ref({
-  id:0,
-  remark:''
-})
-const editCollection = () => {
-    EditUserCollection(editInfo.value).then(res =>{
-      ElMessage.success('编辑成功')
-      getCollectionList();
-    }).catch(err =>{
-      ElMessage.error('编辑失败')
-    })
-    editRemarkVisable.value = false;
-    
-}
-
-//多人配音
-const tempVoiceInfo = ref({})
-const voiceIndex = ref(0)
-const voiceInfoList = ref([])
-const saveAudioUrlList = ref([])
-const AddMultiSpeaker = () =>{
-  voiceInfoList.value.push({
-    visible: false,
-  })
-}
-
-const handleSaveVoice = (voiceInfo)=>{
-  voiceInfoList.value[voiceIndex.value] = voiceInfo.value
-  //console.log("保存结果",voiceInfo.value,voiceInfoList.value)
-  ElMessage({
-    message: "保存成功!",
-    type: "success",
-  });
-};
-const deleteVoice = (value)=>{
-  voiceInfoList.value.splice(voiceIndex.value,1)
-  ElMessage({
-    message: "删除成功!",
-    type: "success",
-  });
-}
-
 // ===================
 const audioUrl = ref("");
 const saveAudioUrl = ref("");
@@ -861,7 +697,7 @@ const processArray = (arr) => {
 
 // ============
 import {
-  textToSpeech,mergeAudios
+  textToSpeech
 } from "@/api/SoundAIChat";
 //文本转语音处理
 const textareaValue = ref("");
@@ -873,13 +709,10 @@ const templateBreak = ref(`<break time="{time}" />`)
 const MultiSoundInsertVisible = ref(false)
 const BreakInsertVisible = ref(false)
 const MultiSpeakerVisible = ref(false)
-const ModeMultiSpeaker = ref(false)
 const MultiWord = ref("")
 const MultiWordSound = ref("")
 const MiltiWordSoundList = ref([])
 const BreakTime = ref(0)
-const MultiSpeakerContent = ref("")
-const MultiSpeaker = ref("")
 
 const TextToSSMLMap = new Map()
 var count = 0
@@ -890,32 +723,14 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import { toRaw, watch } from 'vue'
 import pinyin from "pinyin";
  
-const props = defineProps(['value'])
-const emit = defineEmits(['updateValue'])
 const content = ref('')
 const myQuillEditor = ref()
-// 通过watch监听回显，笔者这边使用v-model:content 不能正常回显
-watch(() => props.value, (val) => {
-  toRaw(myQuillEditor.value).setHTML(val)
-}, { deep: true })
 const fileBtn = ref()
 const data = reactive({
   content: '',
   editorOption: {
-    //readOnly: true,
     modules: {
-      toolbar: [
-        // ['bold', 'italic', 'underline', 'strike'],
-        // [{ 'size': ['small', false, 'large', 'huge'] }],
-        // [{ 'font': [] }],
-        // [{ 'align': [] }],
-        // [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-        // [{ 'indent': '-1' }, { 'indent': '+1' }],
-        // [{ 'header': 1 }, { 'header': 2 }],
-        // ['image'],
-        // [{ 'direction': 'rtl' }],
-        //[{ 'color': [] }, { 'background': [] }]
-      ]
+      toolbar: []
     },
     placeholder: '请输入配音内容...'
   }
@@ -933,12 +748,7 @@ const QueryWordPinyin = () =>{
 }
 
 // 抛出更改内容，此处避免出错直接使用文档提供的getHTML方法
-const setValue = () => {
-  // setTimeout(()=>{
-  //   console.log(myQuillEditor.value.getQuill().getSelection().index)
-  //   textareaRange.value = myQuillEditor.value.getQuill().getSelection().index;
-  // },500)
-}
+const setValue = () => {}
 
 const onSelectionChange = (Range, oldRange, source) => {
   var range = Range.range
@@ -954,10 +764,8 @@ const MultiWordInsert = () =>{
   TextToSSMLMap.set('<span style="color: '+color+';">'+insertText+'</span>',templateMultiSoundWord.value.replace("{sound}",MultiWordSound.value).replace("{word}",MultiWord.value))
   
   let index = myQuillEditor.value.getQuill().selection.savedRange.index
-  //textareaValue.value = textareaValue.value.substring(0,cursorPosition) + MultiWord + textareaValue.value.substring(cursorPosition)
   myQuillEditor.value.getQuill().insertText(index, insertText, { color: color})
   myQuillEditor.value.getQuill().insertEmbed(index+insertText.length, 'image', 'https://fanqie.eralab.cn/assets/split.png');
-  //myQuillEditor.value.getQuill().insertText(index+insertText.length+1, ' ', null)
 }
 
 const BreakInsert = () =>{
@@ -966,10 +774,8 @@ const BreakInsert = () =>{
   TextToSSMLMap.set('<span style="color: blue;">'+insertText+'</span>',templateBreak.value.replace("{time}",BreakTime.value+'s'))
 
   let index = myQuillEditor.value.getQuill().selection.savedRange.index
-  //textareaValue.value = textareaValue.value.substring(0,cursorPosition) + MultiWord + textareaValue.value.substring(cursorPosition)
   myQuillEditor.value.getQuill().insertText(index, insertText, { color: 'blue'})
   myQuillEditor.value.getQuill().insertEmbed(index+insertText.length, 'image', 'https://fanqie.eralab.cn/assets/split.png');
-  //myQuillEditor.value.getQuill().insertText(index+insertText.length+1, ' ', null)
 }
 
 const getSSML = () => {
@@ -978,8 +784,6 @@ const getSSML = () => {
       while (textareaSSMLValue.value.includes(key)) {
         textareaSSMLValue.value = textareaSSMLValue.value.replace(key, value);
       }
-      //console.log(textareaSSMLValue.value)
-      //console.log(key,value)
   }
   while(textareaSSMLValue.value.includes(`<img src="https://fanqie.eralab.cn/assets/split.png">`)){
     textareaSSMLValue.value = textareaSSMLValue.value.replace(`<img src="https://fanqie.eralab.cn/assets/split.png">`, '');
@@ -991,92 +795,31 @@ const getSSML = () => {
   return textareaSSMLValue.value
 }
 
-const generateTextToSpeech = async() => {
-  if (ModeMultiSpeaker.value) {
-    saveAudioUrlList.value = new Array(voiceInfoList.value.length).fill(null);  // 初始化数组，长度与 voiceInfoList 相同
+const voiceInfo = ref({})
+const props = defineProps(['inputVoiceDate']);
 
-    const promises = voiceInfoList.value.map((voice, index) => {
-      return textToSpeech({
-        text: voice.SSMLText,
-        speaker: voice.speaker,
-        symbol_sil: "",
-        audio_type: voice.audio_type, //生成文件类型
-        volume: voice.volume, // 音量,范围0.1->1.0
-        speed: voice.speed, //语速,范围0.5->2.0
-        pitch: voice.pitch, //语调,范围-10->10
-      }).then((res) => {
-        if (res.code == 200) {
-          saveAudioUrlList.value[index] = res.data;  // 将结果存储在对应的索引位置
-        } else if (res.code == 403) {
-          ElMessage.error('请重新登录!');
-          throw new Error('请重新登录!');
-        } else {
-          ElMessage.error('参数有误!');
-          throw new Error('参数有误!');
-        }
-      }).catch(err => {
-        ElMessage.error('请重新登录或次数已用完!');
-        throw err;
-      });
-    });
+console.log(props)
 
-    Promise.all(promises)
-      .then(() => {
-        return mergeAudios({ list: saveAudioUrlList.value});
-      })
-      .then(res => {
-        if (res.code == 200) {
-          saveAudioUrl.value = "/AIweb_materialSys/materialSystem/GetTextToSpeechFile/" + res.data;
-        } else if (res.code == 403) {
-          ElMessage.error('请重新登录!');
-        } else {
-          ElMessage.error('参数有误!');
-        }
-      })
-      .catch(err => {
-        ElMessage.error('请重新登录或次数已用完!');
-      });
-  }else{
-    textToSpeech({
-      text: getSSML(),
-      speaker: makeActive.value,
-      symbol_sil: "",
-      audio_type: slider.value.type, //生成文件类型
-      volume: slider.value.yl, // 音量,范围0.1->1.0
-      speed: slider.value.ld, //语速,范围0.5->2.0
-      pitch: slider.value.yd, //语调,范围-10->10
-    }).then((res) => {
-      if (res.code == 200) {
-        saveAudioUrl.value = "/AIweb_materialSys/materialSystem/GetTextToSpeechFile/" + res.data;
-      }
-      else if(res.code == 403){
-          ElMessage.error('请重新登录!')
-          return;
-      }else{
-          ElMessage.error('参数有误!')
-      }
-    }).catch(err =>{
-      ElMessage.error('请重新登录或次数已用完!')
-    })
-  }
+const emit = defineEmits(['updateVoice','deleteVoice']);
+const saveVioce = () =>{
+    voiceInfo.value = {
+        SSMLText:getSSML(),
+        speaker:makeActive.value,
+        speaker_name: userInfo.value.speaker,
+        speaker_emotion:speakerEmotion.value,
+        symbol_sil:"",
+        audio_type: slider.value.type, //生成文件类型
+        volume: slider.value.yl, // 音量,范围0.1->1.0
+        speed: slider.value.ld, //语速,范围0.5->2.0
+        pitch: slider.value.yd, //语调,范围-10->10
+        content: textareaValue.value,
+        status:"save",
+    }
+    emit('updateVoice', voiceInfo);
 }
-const downloadSpeechFile = () =>{
-  window.open(saveAudioUrl.value)
+const deleteVioce = ()=>{
+    emit('deleteVoice', '');
 }
-const generateTime = ref("");
-const getGenerateTime = () => {
-  GetGenerateTime()
-    .then((res) => {
-      if (res.code == 200) {
-        generateTime.value = res.data.textToSpeech;
-      }
-    })
-    .catch((err) => {
-      ElMessage.error('请重新登录或当日次数已使用完!')
-      //dialogCustomize({ content: err });
-      return;
-    });
-};
 
 const anchorsPageTotal = ref(0);
 const handleCurrentChange = (number) =>{
@@ -1574,33 +1317,4 @@ const handleCurrentChange = (number) =>{
   padding: 20px;
 }
 
-.cle-button:hover {
-  cursor: pointer; /* 鼠标指向时变成手指 */
-  color: blue; /* 字体颜色变成蓝色 */
-}
-
-.del-button{
-  color: red;
-}
-.del-button:hover{
-  cursor: pointer; /* 鼠标指向时变成手指 */
-}
-.edit-button{
-  color: #409eff;
-}
-.edit-button:hover{
-  cursor: pointer; /* 鼠标指向时变成手指 */
-}
-
-.context-button-div{
-  margin-bottom:10px ;
-}
-.text-container{
-  border: 1px solid #ccc;
-  min-height: 100px;
-}
-.text-span:hover {
-  cursor: pointer; /* 鼠标指向时变成手指 */
-  color: #409eff;
-}
 </style>

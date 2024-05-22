@@ -12,17 +12,18 @@
             <el-icon><Reading /></el-icon>
             <h2>课程教学</h2>
           </template>
-          <el-menu-item index="1-1" class="title3">动画速成班</el-menu-item>
+          <el-menu-item index="1-1" class="title3">3D动画开头教学</el-menu-item>
+          <el-menu-item index="1-2" class="title3">动画速成班</el-menu-item>
           <!-- <el-menu-item index="1-2" class="title3">精细化课程</el-menu-item> -->
-          <el-sub-menu index="1-2">
+          <el-sub-menu index="1-3">
             <template #title>
               <p class="title3">精细化课程</p>
             </template>
-            <el-menu-item index="1-2-1" class="title3" @click="CourseJump(1)"><a href="https://learn.htknow.com/login">海豚知道</a></el-menu-item>
-            <el-menu-item index="1-2-2" class="title3" @click="CourseJump(2)"><a href="https://web.lizhiweike.com">荔枝微课</a></el-menu-item>
+            <el-menu-item index="1-3-1" class="title3" @click="CourseJump(1)"><a href="https://learn.htknow.com/login">海豚知道</a></el-menu-item>
+            <el-menu-item index="1-3-2" class="title3" @click="CourseJump(2)"><a href="https://web.lizhiweike.com">荔枝微课</a></el-menu-item>
           </el-sub-menu>
-          <el-menu-item index="1-3" class="title3">十三太保专属文案课</el-menu-item>
-          <el-menu-item index="1-4" class="title3">运营课</el-menu-item>
+          <el-menu-item index="1-4" class="title3">十三太保专属文案课</el-menu-item>
+          <el-menu-item index="1-5" class="title3">运营课</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
@@ -174,7 +175,7 @@ const materialType = ref([
   },
 ]);
 
-const videoLabels = ref([{name:"动画速成班"},{name:"精细化课程"},{name:"十三太保专属文案课"},{name:"运营课"}])
+const videoLabels = ref([{name:"3D动画开头教学"},{name:"动画速成班"},{name:"精细化课程"},{name:"十三太保专属文案课"},{name:"运营课"}])
 
 const ViewMoreCourse = () =>{
   window.location.href = ""

@@ -18,3 +18,12 @@ export const textToSpeech = (data) => {
     data: data,
   });
 }
+
+//合并语音文件
+export const mergeAudios = (data) =>{
+  return axios.request({
+    url: "/AIweb_materialSys/materialSystem/GetMergeAudioFile",
+    method: "post",
+    data: data,
+  });
+}

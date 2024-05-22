@@ -345,7 +345,7 @@ export default {
 
             videoType: '',
             uploadVideoType:'',
-            videoLabels: [{name:"动画速成班"},{name:"精细化课程"},{name:"十三太保专属文案课"},{name:"运营课"}],
+            videoLabels: [{name:"3D动画开头教学"},{name:"动画速成班"},{name:"精细化课程"},{name:"十三太保专属文案课"},{name:"运营课"}],
             username: localStorage.getItem("username"),
         };
     },
