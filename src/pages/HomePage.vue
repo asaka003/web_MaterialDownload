@@ -1585,7 +1585,51 @@ const newlabels = ref([
           {
             name:"全部",
             fourTags: ["全部"],
-          }
+          },
+          {
+            name:"室内",
+            fourTags: ["全部"],
+          },
+          {
+            name:"室外",
+            fourTags: ["全部"],
+          },
+          {
+            name:"建筑",
+            fourTags: ["全部"],
+          },
+          {
+            name:"山石",
+            fourTags: ["全部"],
+          },
+          {
+            name:"林地",
+            fourTags: ["全部"],
+          },
+          {
+            name:"平原",
+            fourTags: ["全部"],
+          },
+          {
+            name:"沙漠",
+            fourTags: ["全部"],
+          },
+          {
+            name:"熔岩",
+            fourTags: ["全部"],
+          },
+          {
+            name:"天空",
+            fourTags: ["全部"],
+          },
+          {
+            name:"洞穴",
+            fourTags: ["全部"],
+          },
+          {
+            name:"河川湖海",
+            fourTags: ["全部"],
+          },
         ]
       },
       {
@@ -1594,7 +1638,47 @@ const newlabels = ref([
           {
             name:"全部",
             fourTags: ["全部"],
-          }
+          },
+          {
+            name:"室内",
+            fourTags: ["全部"],
+          },
+          {
+            name:"室外",
+            fourTags: ["全部"],
+          },
+          {
+            name:"建筑",
+            fourTags: ["全部"],
+          },
+          {
+            name:"山石",
+            fourTags: ["全部"],
+          },
+          {
+            name:"林地",
+            fourTags: ["全部"],
+          },
+          {
+            name:"平原",
+            fourTags: ["全部"],
+          },
+          {
+            name:"沙漠",
+            fourTags: ["全部"],
+          },
+          {
+            name:"天空",
+            fourTags: ["全部"],
+          },
+          {
+            name:"洞穴",
+            fourTags: ["全部"],
+          },
+          {
+            name:"河川湖海",
+            fourTags: ["全部"],
+          },
         ]
       },
       {
@@ -1603,7 +1687,23 @@ const newlabels = ref([
           {
             name:"全部",
             fourTags: ["全部"],
-          }
+          },
+          {
+            name:"室内",
+            fourTags: ["全部"],
+          },
+          {
+            name:"室外",
+            fourTags: ["全部"],
+          },
+          {
+            name:"建筑街道",
+            fourTags: ["全部"],
+          },
+          {
+            name:"野外",
+            fourTags: ["全部"],
+          },
         ]
       },
       {
@@ -1612,7 +1712,23 @@ const newlabels = ref([
           {
             name:"全部",
             fourTags: ["全部"],
-          }
+          },
+          {
+            name:"室内",
+            fourTags: ["全部"],
+          },
+          {
+            name:"室外",
+            fourTags: ["全部"],
+          },
+          {
+            name:"建筑街道",
+            fourTags: ["全部"],
+          },
+          {
+            name:"野外",
+            fourTags: ["全部"],
+          },
         ]
       },
       {
@@ -1621,7 +1737,23 @@ const newlabels = ref([
           {
             name:"全部",
             fourTags: ["全部"],
-          }
+          },
+          {
+            name:"室内",
+            fourTags: ["全部"],
+          },
+          {
+            name:"室外",
+            fourTags: ["全部"],
+          },
+          {
+            name:"建筑街道",
+            fourTags: ["全部"],
+          },
+          {
+            name:"野外",
+            fourTags: ["全部"],
+          },
         ]
       },
       {
@@ -1630,7 +1762,23 @@ const newlabels = ref([
           {
             name:"全部",
             fourTags: ["全部"],
-          }
+          },
+          {
+            name:"室内",
+            fourTags: ["全部"],
+          },
+          {
+            name:"室外",
+            fourTags: ["全部"],
+          },
+          {
+            name:"建筑街道",
+            fourTags: ["全部"],
+          },
+          {
+            name:"野外",
+            fourTags: ["全部"],
+          },
         ]
       },
     ]
@@ -1689,6 +1837,14 @@ const newlabels = ref([
             name: "室外",
             fourTags: ["全部"],
           },
+          {
+            name: "工具",
+            fourTags: ["全部"],
+          },
+          {
+            name: "武器",
+            fourTags: ["全部"],
+          },
         ],
       },
       {
@@ -1700,6 +1856,18 @@ const newlabels = ref([
           },
           {
             name: "刀枪",
+            fourTags: ["全部"],
+          },
+          {
+            name: "室内",
+            fourTags: ["全部"],
+          },
+          {
+            name: "室外",
+            fourTags: ["全部"],
+          },
+          {
+            name: "其他工具",
             fourTags: ["全部"],
           },
         ],
@@ -1797,7 +1965,6 @@ const newlabels = ref([
       }
     ]
   },
-  
 ]);
 
 // 当前标签页下标 一级
